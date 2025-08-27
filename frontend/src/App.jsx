@@ -1,14 +1,20 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import MainLayout from "./layouts/MainLayout";
 
 function App() {
     return (
         <Router>
-            <div className="p-6">
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                </Routes>
-            </div>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <MainLayout>
+                            <HomePage />
+                        </MainLayout>
+                    }
+                />
+            </Routes>
         </Router>
     );
 }

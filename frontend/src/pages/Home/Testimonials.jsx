@@ -1,4 +1,4 @@
-import TestimoialForm from "TestiomialForm";
+import TestimoialForm from "./TestimonialForm";
 
 export default function Testimonails() {
     return (
