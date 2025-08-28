@@ -1,61 +1,62 @@
-// src/pages/VerifyOtp.jsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function VerifyOtp() {
-  const [otp, setOtp] = useState(new Array(6).fill(""));
+function VerifyOTP() {
+  const [otp, setOtp] = useState(Array(6).fill(""));
+  const navigate = useNavigate();
 
   const handleChange = (value, index) => {
-    if (isNaN(value)) return;
+    if (/^[0-9]?$/.test(value)) {
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
 
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Move to next input automatically
-    if (value && index < 5) {
-      document.getElementById(`otp-input-${index + 1}`).focus();
+      // auto focus next box
+      if (value && index < 5) {
+        document.getElementById(`otp-${index + 1}`).focus();
+      }
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Entered OTP: " + otp.join(""));
+  const handleSubmit = () => {
+    if (otp.join("").length === 6) {
+      navigate("/reset-password");
+    } else {
+      alert("Please enter a valid 6-digit OTP.");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-200 px-4">
-      <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-6 sm:p-8">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">
-          Verify OTP
-        </h1>
-        <p className="text-gray-600 text-center mb-6 text-sm sm:text-base">
+    <div className="flex items-center justify-center min-h-screen bg-blue-300 p-4">
+      <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 w-full max-w-md text-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Verify OTP</h2>
+        <p className="text-gray-600 mb-6">
           Enter the 6-digit OTP sent to your email
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex justify-between gap-2 sm:gap-3">
-            {otp.map((data, index) => (
-              <input
-                key={index}
-                id={`otp-input-${index}`}
-                type="text"
-                maxLength="1"
-                value={data}
-                onChange={(e) => handleChange(e.target.value, index)}
-                className="w-10 h-12 sm:w-12 sm:h-14 md:w-14 md:h-16 text-center text-lg sm:text-xl font-semibold border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007799]"
-              />
-            ))}
-          </div>
+        <div className="flex justify-center gap-2 mb-6">
+          {otp.map((digit, index) => (
+            <input
+              key={index}
+              id={`otp-${index}`}
+              type="text"
+              value={digit}
+              maxLength={1}
+              onChange={(e) => handleChange(e.target.value, index)}
+              className="w-10 h-12 sm:w-12 sm:h-14 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg"
+            />
+          ))}
+        </div>
 
-          <button
-            type="submit"
-            className="w-full py-3 rounded-lg text-white font-semibold shadow-md transition transform hover:scale-[1.02]"
-            style={{ backgroundColor: "#007799" }}
-          >
-            Verify OTP
-          </button>
-        </form>
+        <button
+          onClick={handleSubmit}
+          className="w-full bg-[#007799] text-white py-3 rounded-xl font-semibold hover:bg-[#006680] transition"
+        >
+          Verify OTP
+        </button>
       </div>
     </div>
   );
 }
+
+export default VerifyOTP;
