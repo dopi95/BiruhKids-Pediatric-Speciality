@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { FaYoutube, FaTiktok } from "react-icons/fa"; // FontAwesome icons
 
 const VideosPage = () => {
   const [platform, setPlatform] = useState("youtube");
 
-  // Repeat YouTube video 3 times
   const youtubeVideos = Array(3).fill({
     id: Math.random(),
     title: "Health Tips Video",
     description: "Educational health content for your wellness journey.",
-    // autoplay=0 ensures video does NOT start automatically, mute=0 ensures sound is on
     url: "https://www.youtube.com/embed/lz5jpt_k7nA?autoplay=0&mute=0",
   });
 
-  // Repeat TikTok video 3 times
   const tiktokVideos = Array(3).fill({
     id: Math.random(),
     url: "https://www.tiktok.com/@biruhkids/video/7402191353947393286",
@@ -21,7 +19,6 @@ const VideosPage = () => {
 
   const videos = platform === "youtube" ? youtubeVideos : tiktokVideos;
 
-  // Load TikTok embed script whenever platform changes to TikTok
   useEffect(() => {
     if (platform === "tiktok") {
       const existingScript = document.getElementById("tiktok-embed-script");
@@ -46,27 +43,29 @@ const VideosPage = () => {
         </p>
       </div>
 
-      {/* Platform Toggle (Switch Style, Left Side) */}
+      {/* Platform Toggle (FontAwesome icons) */}
       <div className="flex justify-start mt-8 px-4">
         <div className="flex border rounded-full overflow-hidden shadow bg-white">
           <button
             onClick={() => setPlatform("youtube")}
-            className={`px-6 py-2 font-semibold transition ${
+            className={`px-6 py-2 font-semibold flex items-center gap-2 transition ${
               platform === "youtube"
                 ? "bg-red-600 text-white"
-                : "text-gray-700 hover:bg-gray-200"
+                : "text-red-600 hover:bg-gray-200"
             }`}
           >
+            <FaYoutube className={`w-5 h-5 ${platform === "youtube" ? "text-white" : "text-red-600"}`} />
             YouTube
           </button>
           <button
             onClick={() => setPlatform("tiktok")}
-            className={`px-6 py-2 font-semibold transition ${
+            className={`px-6 py-2 font-semibold flex items-center gap-2 transition ${
               platform === "tiktok"
                 ? "bg-black text-white"
-                : "text-gray-700 hover:bg-gray-200"
+                : "text-black hover:bg-gray-200"
             }`}
           >
+            <FaTiktok className={`w-5 h-5 ${platform === "tiktok" ? "text-white" : "text-black"}`} />
             TikTok
           </button>
         </div>
@@ -95,7 +94,7 @@ const VideosPage = () => {
               {platform === "youtube" ? (
                 <iframe
                   className="w-full h-full"
-                  src={video.url} // autoplay=0, mute=0
+                  src={video.url}
                   title={video.title}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -124,7 +123,7 @@ const VideosPage = () => {
         ))}
       </div>
 
-      {/* Stay Updated Section */}
+      {/* Stay Updated Section (FontAwesome icons) */}
       <div className="bg-[#FF7A1A] text-white text-center py-16 px-4 mt-12">
         <h2 className="text-3xl sm:text-4xl font-bold mb-4">
           Stay Updated with Our Latest Content
@@ -137,16 +136,18 @@ const VideosPage = () => {
             href="https://www.youtube.com/@ብሩህkids"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition"
+            className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition flex items-center gap-2 justify-center"
           >
+            <FaYoutube className="w-5 h-5 text-white" />
             YouTube Channel
           </a>
           <a
             href="https://www.tiktok.com/@biruhkids?is_from_webapp=1&sender_device=pc"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-3 bg-black text-white font-semibold rounded-lg shadow hover:bg-gray-800 transition"
+            className="px-6 py-3 bg-black text-white font-semibold rounded-lg shadow hover:bg-gray-800 transition flex items-center gap-2 justify-center"
           >
+            <FaTiktok className="w-5 h-5 text-white" />
             TikTok Channel
           </a>
         </div>
