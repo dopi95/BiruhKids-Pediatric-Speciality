@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Logo from "../assets/logo.jpg";
+import Logo from "../assets/logo.png";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 
 function Header() {
@@ -12,14 +12,14 @@ function Header() {
     }
 
     return (
-        <nav className="w-full sticky top-0 bg-white shadow-md z-50">
+        <nav className="w-full h-[10vh] sticky top-0 bg-white shadow-md z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
                 {/* Logo */}
                 <Link to="/">
                     <img
                         src={Logo}
                         alt="BruhKids Clinic Logo"
-                        className="w-20 h-16"
+                        className="w-20 h-20"
                     />
                 </Link>
 
@@ -50,9 +50,17 @@ function Header() {
 
                 {/* Desktop Right Side */}
                 <div className="hidden md:flex space-x-4 items-center">
-                    <section className="flex items-center gap-1">
-                        <Globe />
-                        <button className="p-2 border">En</button>
+                    <section className="flex items-center">
+                        <Globe
+                            className="w-5 h-5 cursor-pointer"
+                            onClick={toggleLang}
+                        />
+                        <button
+                            className="px-2 cursor-pointer"
+                            onClick={toggleLang}
+                        >
+                            {lang}
+                        </button>
                     </section>
                     <Link
                         to="/book-appointment"
@@ -70,7 +78,7 @@ function Header() {
                         to="/register"
                         className="text-blue-500 font-semibold hover:text-blue-600 transition"
                     >
-                        Register <ChevronRight className="inline mr-0" />
+                        Register
                     </Link>
                 </div>
 
@@ -103,7 +111,6 @@ function Header() {
             {/* Mobile Menu */}
             {isOpen && (
                 <div className="md:hidden absolute top-16 left-0 w-full flex flex-col items-center bg-white px-4 pt-2 pb-4 space-y-4 shadow-md">
-                    <hr className="border border-gray-300 w-full" />
                     <Link
                         to="/"
                         className="block hover:text-orange-500 transition"
@@ -140,7 +147,7 @@ function Header() {
                         to="/signin"
                         className="block text-blue-500 font-semibold hover:text-blue-600 transition"
                     >
-                        Sign In
+                        Sign In <ChevronRight className="inline" />
                     </Link>
                     <Link
                         to="/signup"
