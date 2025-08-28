@@ -1,28 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const VideosPage = () => {
   const [platform, setPlatform] = useState("youtube");
 
-  const youtubeVideos = [
-    {
-      id: 1,
-      title: "Health Tips Video",
-      description: "Educational health content for your wellness journey.",
-      url: "https://www.youtube.com/embed/lz5jpt_k7nA",
-    },
-  ];
+  // Repeat YouTube video 3 times
+  const youtubeVideos = Array(3).fill({
+    id: Math.random(),
+    title: "Health Tips Video",
+    description: "Educational health content for your wellness journey.",
+    url: "https://www.youtube.com/embed/lz5jpt_k7nA",
+  });
 
-  const tiktokVideos = [
-    {
-      id: 1,
-      title: "BiruhKids Sample Video",
-      description: "TikTok sample video for health tips.",
-      url: "https://www.tiktok.com/@biruhkids/video/7402191353947393286",
-      idOnly: "7402191353947393286",
-    },
-  ];
+  // Repeat TikTok video 3 times
+  const tiktokVideos = Array(3).fill({
+    id: Math.random(),
+    title: "BiruhKids Sample Video",
+    description: "TikTok sample video for health tips.",
+    url: "https://www.tiktok.com/@biruhkids/video/7402191353947393286",
+    idOnly: "7402191353947393286",
+  });
 
   const videos = platform === "youtube" ? youtubeVideos : tiktokVideos;
+
+  // Load TikTok embed script whenever platform changes to TikTok
+  useEffect(() => {
+    if (platform === "tiktok") {
+      const existingScript = document.getElementById("tiktok-embed-script");
+      if (!existingScript) {
+        const script = document.createElement("script");
+        script.src = "https://www.tiktok.com/embed.js";
+        script.id = "tiktok-embed-script";
+        script.async = true;
+        document.body.appendChild(script);
+      } else {
+        existingScript.remove();
+        const script = document.createElement("script");
+        script.src = "https://www.tiktok.com/embed.js";
+        script.id = "tiktok-embed-script";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+    }
+  }, [platform]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -61,9 +80,9 @@ const VideosPage = () => {
 
       {/* Videos Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-8 mt-10 flex-grow">
-        {videos.map((video) => (
+        {videos.map((video, index) => (
           <div
-            key={video.id}
+            key={index}
             className="bg-white rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl"
           >
             <div className="w-full h-56 sm:h-64">
@@ -82,7 +101,6 @@ const VideosPage = () => {
                       <blockquote class="tiktok-embed" cite="${video.url}" data-video-id="${video.idOnly}" style="max-width: 605px;min-width: 325px;">
                         <section></section>
                       </blockquote>
-                      <script async src="https://www.tiktok.com/embed.js"></script>
                     `,
                   }}
                 />
@@ -106,7 +124,7 @@ const VideosPage = () => {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <a
-            href="https://www.youtube.com/@biruhkids"
+            href="https://www.youtube.com/@ብሩህkids"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition"
@@ -114,7 +132,7 @@ const VideosPage = () => {
             YouTube Channel
           </a>
           <a
-            href="https://www.tiktok.com/@biruhkids"
+            href="https://www.tiktok.com/@biruhkids?is_from_webapp=1&sender_device=pc"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3 bg-black text-white font-semibold rounded-lg shadow hover:bg-gray-800 transition"
@@ -128,4 +146,3 @@ const VideosPage = () => {
 };
 
 export default VideosPage;
-
