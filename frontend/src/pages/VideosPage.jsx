@@ -1,50 +1,26 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 
 const VideosPage = () => {
   const [platform, setPlatform] = useState("youtube");
 
-  // Predefined video arrays
-  const youtubeVideos = useMemo(() => [
+  const youtubeVideos = [
     {
       id: 1,
-      title: "Healthy Eating Tips",
-      description: "Learn how to plan balanced meals and maintain a healthy diet.",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      title: "Health Tips Video",
+      description: "Educational health content for your wellness journey.",
+      url: "https://www.youtube.com/embed/lz5jpt_k7nA",
     },
-    {
-      id: 2,
-      title: "Exercise for Beginners",
-      description: "Simple exercises to start your fitness journey at home.",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    },
-    {
-      id: 3,
-      title: "Mental Health Awareness",
-      description: "Understanding the importance of mental well-being.",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    },
-  ], []);
+  ];
 
-  const tiktokVideos = useMemo(() => [
+  const tiktokVideos = [
     {
       id: 1,
-      title: "Morning Wellness Routine",
-      description: "Quick tips to energize your morning with simple habits.",
-      url: "https://www.tiktok.com/embed/7123456789012345678",
+      title: "BiruhKids Sample Video",
+      description: "TikTok sample video for health tips.",
+      url: "https://www.tiktok.com/@biruhkids/video/7402191353947393286",
+      idOnly: "7402191353947393286",
     },
-    {
-      id: 2,
-      title: "Healthy Snack Ideas",
-      description: "Easy snacks to keep you healthy and satisfied.",
-      url: "https://www.tiktok.com/embed/7123456789012345679",
-    },
-    {
-      id: 3,
-      title: "Breathing Exercises",
-      description: "Simple techniques to reduce stress and anxiety.",
-      url: "https://www.tiktok.com/embed/7123456789012345680",
-    },
-  ], []);
+  ];
 
   const videos = platform === "youtube" ? youtubeVideos : tiktokVideos;
 
@@ -91,13 +67,26 @@ const VideosPage = () => {
             className="bg-white rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl"
           >
             <div className="w-full h-56 sm:h-64">
-              <iframe
-                className="w-full h-full"
-                src={video.url}
-                title={video.title}
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
+              {platform === "youtube" ? (
+                <iframe
+                  className="w-full h-full"
+                  src={video.url}
+                  title={video.title}
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                      <blockquote class="tiktok-embed" cite="${video.url}" data-video-id="${video.idOnly}" style="max-width: 605px;min-width: 325px;">
+                        <section></section>
+                      </blockquote>
+                      <script async src="https://www.tiktok.com/embed.js"></script>
+                    `,
+                  }}
+                />
+              )}
             </div>
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{video.title}</h2>
@@ -117,7 +106,7 @@ const VideosPage = () => {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <a
-            href="https://www.youtube.com/@yourchannel" // replace with real channel
+            href="https://www.youtube.com/@biruhkids"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition"
@@ -125,7 +114,7 @@ const VideosPage = () => {
             YouTube Channel
           </a>
           <a
-            href="https://www.tiktok.com/@yourchannel" // replace with real channel
+            href="https://www.tiktok.com/@biruhkids"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3 bg-black text-white font-semibold rounded-lg shadow hover:bg-gray-800 transition"
@@ -139,3 +128,4 @@ const VideosPage = () => {
 };
 
 export default VideosPage;
+
