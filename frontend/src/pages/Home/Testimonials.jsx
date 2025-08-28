@@ -13,6 +13,10 @@ export default function Testimonials() {
     const [isOpen, setIsOpen] = useState(false);
     const [current, setCurrent] = useState(0);
     const containerRef = useRef(null);
+    const startXRef = useRef(0);
+    const isDraggingRef = useRef(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isTransitioning, setIsTransitioning] = useState(true);
 
     const testimonials = [
         {
@@ -52,58 +56,46 @@ export default function Testimonials() {
 
     // Determine number of visible cards
     const getVisibleCards = () => {
-        if (window.innerWidth >= 768) return 3; // Tablet and desktop: 3 cards
-        return 1; // Mobile: 1 card
+        return window.innerWidth < 768 ? 1 : 3; // Mobile: 1 card, Desktop: 3 cards
     };
 
     const [visibleCards, setVisibleCards] = useState(getVisibleCards());
 
     useEffect(() => {
-        const handleResize = () => setVisibleCards(getVisibleCards());
+        const handleResize = () => {
+            const mobile = window.innerWidth < 768;
+            setIsMobile(mobile);
+            setVisibleCards(mobile ? 1 : 3);
+        };
+
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     const nextSlide = () => {
+        setIsTransitioning(true);
         setCurrent((prev) => {
-            if (prev >= testimonials.length) {
-                // If we're at the end of the duplicated array, reset to 0 with no transition
+            if (prev >= testimonials.length - 1) {
+                // After transitioning to the duplicate, quickly reset without animation
                 setTimeout(() => {
+                    setIsTransitioning(false);
                     setCurrent(0);
-                    // Temporarily disable transition for the reset
-                    containerRef.current.style.transition = "none";
-                    containerRef.current.style.transform = `translateX(0%)`;
-
-                    // Force reflow
-                    containerRef.current.offsetHeight;
-
-                    // Re-enable transition
-                    containerRef.current.style.transition = "";
-                }, 0);
-                return testimonials.length;
+                }, 500);
+                return prev + 1;
             }
             return prev + 1;
         });
     };
 
     const prevSlide = () => {
+        setIsTransitioning(true);
         setCurrent((prev) => {
-            if (prev === 0) {
-                // If we're at the beginning, jump to the end of the original array (without transition)
+            if (prev <= 0) {
+                // After transitioning to the duplicate, quickly reset without animation
                 setTimeout(() => {
+                    setIsTransitioning(false);
                     setCurrent(testimonials.length - 1);
-                    // Temporarily disable transition for the reset
-                    containerRef.current.style.transition = "none";
-                    containerRef.current.style.transform = `translateX(-${
-                        (100 / visibleCards) * (testimonials.length - 1)
-                    }%)`;
-
-                    // Force reflow
-                    containerRef.current.offsetHeight;
-
-                    // Re-enable transition
-                    containerRef.current.style.transition = "";
-                }, 0);
+                }, 500);
                 return -1;
             }
             return prev - 1;
@@ -113,34 +105,59 @@ export default function Testimonials() {
     // Handle transition end to reset position seamlessly
     const handleTransitionEnd = () => {
         if (current >= testimonials.length) {
-            // Disable transition temporarily
-            containerRef.current.style.transition = "none";
-            containerRef.current.style.transform = `translateX(0%)`;
-
-            // Force reflow
-            containerRef.current.offsetHeight;
-
-            // Re-enable transition
-            containerRef.current.style.transition = "";
-
-            // Reset current to 0
+            setIsTransitioning(false);
             setCurrent(0);
         } else if (current < 0) {
-            // Disable transition temporarily
-            containerRef.current.style.transition = "none";
-            containerRef.current.style.transform = `translateX(-${
-                (100 / visibleCards) * (testimonials.length - 1)
-            }%)`;
-
-            // Force reflow
-            containerRef.current.offsetHeight;
-
-            // Re-enable transition
-            containerRef.current.style.transition = "";
-
-            // Reset current to the last slide
+            setIsTransitioning(false);
             setCurrent(testimonials.length - 1);
         }
+    };
+
+    // Swipe handling for mobile
+    const handleTouchStart = (e) => {
+        isDraggingRef.current = true;
+        startXRef.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e) => {
+        if (!isDraggingRef.current) return;
+
+        const currentX = e.touches[0].clientX;
+        const diffX = startXRef.current - currentX;
+
+        // Add a slight drag effect while swiping
+        if (containerRef.current) {
+            containerRef.current.style.transform = `translateX(calc(-${
+                (100 / visibleCards) * current
+            }% - ${diffX}px))`;
+        }
+    };
+
+    const handleTouchEnd = (e) => {
+        if (!isDraggingRef.current) return;
+
+        const endX = e.changedTouches[0].clientX;
+        const diffX = startXRef.current - endX;
+
+        // Reset transform
+        if (containerRef.current) {
+            containerRef.current.style.transform = `translateX(-${
+                (100 / visibleCards) * current
+            }%)`;
+        }
+
+        // Determine if it's a swipe (more than 50px)
+        if (Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                // Swipe left - go to next slide
+                nextSlide();
+            } else {
+                // Swipe right - go to previous slide
+                prevSlide();
+            }
+        }
+
+        isDraggingRef.current = false;
     };
 
     // Auto-play
@@ -150,7 +167,7 @@ export default function Testimonials() {
     }, [current, visibleCards]);
 
     return (
-        <article className="py-20 bg-gray-50">
+        <article className="py-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -164,27 +181,35 @@ export default function Testimonials() {
 
                 {/* Slider container */}
                 <div className="relative">
-                    <div className="overflow-hidden mx-12">
+                    <div className="overflow-hidden mx-0 md:mx-12">
                         <div
                             ref={containerRef}
-                            className="flex transition-transform duration-500 ease-in-out"
+                            className="flex pb-2"
                             style={{
                                 transform: `translateX(-${
                                     (100 / visibleCards) * current
                                 }%)`,
+                                transition: isTransitioning
+                                    ? "transform 0.5s ease-in-out"
+                                    : "none",
                             }}
                             onTransitionEnd={handleTransitionEnd}
+                            onTouchStart={
+                                isMobile ? handleTouchStart : undefined
+                            }
+                            onTouchMove={isMobile ? handleTouchMove : undefined}
+                            onTouchEnd={isMobile ? handleTouchEnd : undefined}
                         >
                             {duplicatedTestimonials.map(
                                 (testimonial, index) => (
                                     <div
                                         key={index}
-                                        className="px-4 flex-shrink-0"
+                                        className="px-2 md:px-4 flex-shrink-0"
                                         style={{
                                             width: `${100 / visibleCards}%`,
                                         }}
                                     >
-                                        <div className="bg-white p-8 rounded-lg shadow-lg h-full">
+                                        <div className="bg-white p-6 md:p-8 rounded-lg shadow-lg h-full mx-2 md:mx-0">
                                             <div className="flex items-center mb-4">
                                                 {[
                                                     ...Array(
@@ -197,7 +222,7 @@ export default function Testimonials() {
                                                     />
                                                 ))}
                                             </div>
-                                            <p className="text-gray-600 mb-6 italic">
+                                            <p className="text-gray-600 mb-6 italic text-base md:text-lg">
                                                 "{testimonial.content}"
                                             </p>
                                             <div className="flex items-center">
@@ -205,10 +230,10 @@ export default function Testimonials() {
                                                     <Users className="h-6 w-6 text-blue-600" />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold text-gray-900">
+                                                    <h4 className="font-semibold text-gray-900 text-lg md:text-xl">
                                                         {testimonial.name}
                                                     </h4>
-                                                    <p className="text-gray-600 text-sm">
+                                                    <p className="text-gray-600 text-sm md:text-base">
                                                         Patient
                                                     </p>
                                                 </div>
@@ -220,19 +245,23 @@ export default function Testimonials() {
                         </div>
                     </div>
 
-                    {/* Prev/Next buttons */}
-                    <button
-                        onClick={prevSlide}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
-                    >
-                        <ChevronLeft className="h-6 w-6 text-gray-700" />
-                    </button>
-                    <button
-                        onClick={nextSlide}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
-                    >
-                        <ChevronRight className="h-6 w-6 text-gray-700" />
-                    </button>
+                    {/* Prev/Next buttons - hidden on mobile */}
+                    {!isMobile && (
+                        <>
+                            <button
+                                onClick={prevSlide}
+                                className="absolute left-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
+                            >
+                                <ChevronLeft className="h-6 w-6 text-gray-700" />
+                            </button>
+                            <button
+                                onClick={nextSlide}
+                                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
+                            >
+                                <ChevronRight className="h-6 w-6 text-gray-700" />
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 {/* Indicators */}
@@ -240,7 +269,10 @@ export default function Testimonials() {
                     {testimonials.map((_, index) => (
                         <button
                             key={index}
-                            onClick={() => setCurrent(index)}
+                            onClick={() => {
+                                setIsTransitioning(true);
+                                setCurrent(index);
+                            }}
                             className={`h-3 w-3 rounded-full mx-1 ${
                                 current % testimonials.length === index
                                     ? "bg-blue-600"
