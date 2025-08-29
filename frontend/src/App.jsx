@@ -1,4 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 import AppointmentPage from "./pages/AppointmentPage";
 import VideosPage from "./pages/VideosPage";
 import VerifyOtp from "./pages/VerifyOtp";
@@ -7,9 +11,13 @@ import HomePage from "./pages/Home/HomePage";
 import MainLayout from "./layouts/MainLayout";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import ForgotPassword from "./pages/ForgotPassword";
+import Services from "./pages/Services";
 
-function App() {
-    return (
+export default function App() {
+  return (
         <Router>
             <div className>
                 <Routes>
@@ -39,6 +47,28 @@ function App() {
                             <ContactPage />
                         </MainLayout>
                     } />
+                
+                    <Route path="/signin" element={
+                        <MainLayout>
+                            <SignIn />
+                        </MainLayout>
+                    } />
+                    <Route path="/signup" element={
+                        <MainLayout>
+                            <SignUp />
+                        </MainLayout>
+                    } />
+                    <Route path="/forgot-password" element={
+                        <MainLayout>
+                            <ForgotPassword />
+                        </MainLayout>
+                    } />
+                    <Route path="/example/services" element={
+                        <MainLayout>
+                            <Services />
+                        </MainLayout>
+                    } />
+
                     <Route
                         path="/verify"
                         element={
@@ -68,5 +98,3 @@ function App() {
         </Router>
     );
 }
-
-export default App;
