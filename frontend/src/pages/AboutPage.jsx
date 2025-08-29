@@ -249,3 +249,5 @@ const SectionText = ({ children }) => (
 );
 
 export default AboutPage;
+
+
