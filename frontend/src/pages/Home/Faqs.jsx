@@ -58,20 +58,24 @@ export default function Faqs() {
                                     </span>
                                 </div>
                                 {openIndex === index ? (
-                                    <ChevronUp className="h-5 w-5 text-gray-600" />
+                                    <ChevronUp className="h-5 w-5 text-gray-600 transition-transform duration-300" />
                                 ) : (
-                                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                                    <ChevronDown className="h-5 w-5 text-gray-600 transition-transform duration-300" />
                                 )}
                             </button>
 
-                            {/* Answer */}
-                            {openIndex === index && (
+                            {/* Animated Answer */}
+                            <div
+                                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                                    openIndex === index ? "max-h-40" : "max-h-0"
+                                }`}
+                            >
                                 <div className="px-6 pb-6">
                                     <p className="text-gray-600 leading-relaxed pl-7">
                                         {faq.answer}
                                     </p>
                                 </div>
-                            )}
+                            </div>
                         </div>
                     ))}
                 </div>
