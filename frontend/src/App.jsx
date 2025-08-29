@@ -5,6 +5,8 @@ import VerifyOtp from "./pages/VerifyOtp";
 import ResetPassword from "./pages/ResetPassword";
 import HomePage from "./pages/Home/HomePage";
 import MainLayout from "./layouts/MainLayout";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
     return (
@@ -27,6 +29,16 @@ function App() {
                             </MainLayout>
                         }
                     />
+                    <Route path="/about" element={
+                        <MainLayout>
+                            <AboutPage />
+                        </MainLayout>
+                    } />
+                    <Route path="/contact" element={
+                        <MainLayout>
+                            <ContactPage />
+                        </MainLayout>
+                    } />
                     <Route
                         path="/verify"
                         element={
