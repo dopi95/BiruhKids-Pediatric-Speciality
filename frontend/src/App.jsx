@@ -1,19 +1,22 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-
+import HomePage from "./pages/Home/HomePage";
+import MainLayout from "./layouts/MainLayout";
 
 function App() {
-  return (
-    <Router>
-      <Navbar />
-      <div className="p-6">
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <MainLayout>
+                            <HomePage />
+                        </MainLayout>
+                    }
+                />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
