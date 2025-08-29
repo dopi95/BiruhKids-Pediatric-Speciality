@@ -46,6 +46,12 @@ function Header() {
                     >
                         Contact
                     </Link>
+                     <Link
+                        to="/videos"
+                        className="hover:text-orange-500 transition"
+                    >
+                        Videos
+                    </Link>
                 </div>
 
                 {/* Desktop Right Side */}
@@ -63,7 +69,7 @@ function Header() {
                         </button>
                     </section>
                     <Link
-                        to="/book-appointment"
+                        to="/appointment"
                         className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition"
                     >
                         Book Appointment

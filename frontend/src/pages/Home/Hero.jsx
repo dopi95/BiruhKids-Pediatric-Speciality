@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -200,10 +201,10 @@ const Hero = () => {
                                 </p>
                                 <div className="flex flex-col mt-10 gap-4 sm:flex-row sm:justify-center sm:gap-6">
                                     <button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-700 hover:to-orange-800 text-white p-3 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                                        Book Appointment
+                                        <Link to="/appointment">Book Appointment</Link>
                                     </button>
                                     <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                                        Get Started
+                                        <Link to="/register">Get Started</Link>
                                     </button>
                                 </div>
                             </div>

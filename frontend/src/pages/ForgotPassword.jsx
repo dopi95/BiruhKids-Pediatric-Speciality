@@ -41,14 +41,15 @@ export default function ForgotPassword() {
             type="submit"
             className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
           >
-            Send Verification Code
+            <Link to="/verify">Send Verification Code</Link>
+            
           </button>
         </form>
 
         {/* Back to Sign In */}
         <div className="text-center">
           <Link
-            to="/signin"
+            to="/login"
             className="inline-flex items-center text-blue-600 hover:underline"
           >
             <span className="mr-1">←</span> Back to Sign In

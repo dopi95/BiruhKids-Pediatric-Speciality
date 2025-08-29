@@ -48,12 +48,12 @@ export default function App() {
                         </MainLayout>
                     } />
                 
-                    <Route path="/signin" element={
+                    <Route path="/login" element={
                         <MainLayout>
                             <SignIn />
                         </MainLayout>
                     } />
-                    <Route path="/signup" element={
+                    <Route path="/register" element={
                         <MainLayout>
                             <SignUp />
                         </MainLayout>
@@ -63,7 +63,7 @@ export default function App() {
                             <ForgotPassword />
                         </MainLayout>
                     } />
-                    <Route path="/example/services" element={
+                    <Route path="/services" element={
                         <MainLayout>
                             <Services />
                         </MainLayout>

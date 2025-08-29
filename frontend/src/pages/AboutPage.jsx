@@ -181,7 +181,7 @@ const AboutPage = () => {
 
       {/* Impact Section */}
       <SectionWrapper>
-        <section className="bg-[#FF7A1A] text-white py-12 px-4 sm:px-8">
+        <section className=" text-[#FF7A1A] py-12 px-4 sm:px-8">
           <div className="max-w-6xl mx-auto text-center mb-8">
             <h2 className="text-3xl sm:text-4xl font-bold mb-2">Our Impact</h2>
             <p className="max-w-3xl mx-auto text-sm sm:text-base">
