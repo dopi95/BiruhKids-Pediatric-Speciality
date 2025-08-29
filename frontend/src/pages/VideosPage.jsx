@@ -142,7 +142,7 @@ const VideosPage = () => {
             YouTube Channel
           </a>
           <a
-            href="https://www.tiktok.com/@biruhkids?is_from_webapp=1&sender_device=pc"
+            href="https://www.tiktok.com/@biruhkids?_t=ZM-8zHeQeJllLk&_r=1"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3 bg-black text-white font-semibold rounded-lg shadow hover:bg-gray-800 transition flex items-center gap-2 justify-center"

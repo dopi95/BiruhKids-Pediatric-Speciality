@@ -194,7 +194,7 @@ const Services = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20 mt-20">
+      <section className="relative bg-gradient-to-r bg-[#007799] text-white py-20">
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">Our Services</h1>
@@ -236,10 +236,7 @@ const Services = () => {
                   </div>
                 ))}
               </div>
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg flex items-center justify-center transition-colors duration-200 group-hover:bg-blue-500">
-                Book Appointment
-                <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-2" />
-              </button>
+             
             </div>
           </div>
         ))}

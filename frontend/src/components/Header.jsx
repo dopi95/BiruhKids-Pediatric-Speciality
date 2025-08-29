@@ -5,10 +5,15 @@ import { Menu, X, ChevronRight, Globe } from "lucide-react";
 
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const [lang, setLang] = useState("En");
+    const [lang, setLang] = useState("En"); // current language, default English
 
     function toggleLang() {
         setLang((prevLang) => (prevLang === "En" ? "Am" : "En"));
+    }
+
+    // Function to close menu after clicking a link
+    function handleCloseMenu() {
+        setIsOpen(false);
     }
 
     return (
@@ -46,7 +51,7 @@ function Header() {
                     >
                         Contact
                     </Link>
-                     <Link
+                    <Link
                         to="/videos"
                         className="hover:text-orange-500 transition"
                     >
@@ -62,10 +67,10 @@ function Header() {
                             onClick={toggleLang}
                         />
                         <button
-                            className="px-2 cursor-pointer"
+                            className="px-1 cursor-pointer"
                             onClick={toggleLang}
                         >
-                            {lang}
+                            {lang === "En" ? "አማ" : "En"}
                         </button>
                     </section>
                     <Link
@@ -88,7 +93,7 @@ function Header() {
                     </Link>
                 </div>
 
-                {/* Mobile Right Side (EN + Hamburger) */}
+                {/* Mobile Right Side (Lang + Hamburger) */}
                 <div className="md:hidden flex items-center gap-3">
                     <section className="flex items-center">
                         <Globe
@@ -99,7 +104,7 @@ function Header() {
                             className="px-2 cursor-pointer"
                             onClick={toggleLang}
                         >
-                            {lang}
+                            {lang === "En" ? "አማ" : "En"}
                         </button>
                     </section>
 
@@ -119,44 +124,58 @@ function Header() {
                 <div className="md:hidden absolute top-16 left-0 w-full flex flex-col items-center bg-white px-4 pt-2 pb-4 space-y-4 shadow-md">
                     <Link
                         to="/"
+                        onClick={handleCloseMenu}
                         className="block hover:text-orange-500 transition"
                     >
                         Home
                     </Link>
                     <Link
                         to="/about"
+                        onClick={handleCloseMenu}
                         className="block hover:text-orange-500 transition"
                     >
                         About
                     </Link>
                     <Link
                         to="/services"
+                        onClick={handleCloseMenu}
                         className="block hover:text-orange-500 transition"
                     >
                         Services
                     </Link>
                     <Link
                         to="/contact"
+                        onClick={handleCloseMenu}
                         className="block hover:text-orange-500 transition"
                     >
                         Contact
                     </Link>
+                    <Link
+                        to="/videos"
+                        onClick={handleCloseMenu}
+                        className="block hover:text-orange-500 transition"
+                    >
+                        Videos
+                    </Link>
 
                     <Link
-                        to="/book-appointment"
+                        to="/appointment"
+                        onClick={handleCloseMenu}
                         className="block bg-orange-500 text-white px-4 py-2 rounded-lg text-center mt-2 hover:bg-orange-600 transition"
                     >
                         Book Appointment
                     </Link>
                     <hr className="my-4 border border-gray-300 w-full" />
                     <Link
-                        to="/signin"
+                        to="/login"
+                        onClick={handleCloseMenu}
                         className="block text-blue-500 font-semibold hover:text-blue-600 transition"
                     >
                         Sign In <ChevronRight className="inline" />
                     </Link>
                     <Link
-                        to="/signup"
+                        to="/register"
+                        onClick={handleCloseMenu}
                         className="block text-blue-500 font-semibold hover:text-blue-600 transition"
                     >
                         Sign Up

@@ -10,6 +10,7 @@ import {
     Instagram,
     Youtube,
 } from "lucide-react";
+import { FaTiktok, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
     const [email, setEmail] = useState("");
@@ -27,9 +28,8 @@ export default function Footer() {
                     {/* Logo & Description */}
                     <div className="col-span-1">
                         <div className="flex items-center space-x-2 mb-4">
-                            <Heart className="h-8 w-8 text-blue-400" />
                             <span className="text-xl font-bold">
-                                HealthCare Clinic
+                                BiruhKids
                             </span>
                         </div>
                         <p className="text-gray-300 text-sm leading-relaxed mb-4">
@@ -38,30 +38,32 @@ export default function Footer() {
                             is our priority.
                         </p>
                         <div className="flex space-x-3">
+                             <a
+                                href="https://www.youtube.com/@ብሩህkids"
+                                className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                            >
+                                <FaYoutube className="h-8 w-8" />
+                            </a>
+                            
+                            <a
+                                href="https://www.tiktok.com/@biruhkids?_t=ZM-8zHeQeJllLk&_r=1"
+                                className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                            >
+                                <FaTiktok className="h-7 w-7" />
+                            </a>
                             <a
                                 href="#"
                                 className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
                             >
-                                <Facebook className="h-5 w-5" />
+                                <Facebook className="h-7 w-7" />
                             </a>
                             <a
                                 href="#"
                                 className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
                             >
-                                <Twitter className="h-5 w-5" />
+                                <Instagram className="h-7 w-7" />
                             </a>
-                            <a
-                                href="#"
-                                className="text-gray-400 hover:text-orange-400 transition-colors duration-200"
-                            >
-                                <Instagram className="h-5 w-5" />
-                            </a>
-                            <a
-                                href="#"
-                                className="text-gray-400 hover:text-red-400 transition-colors duration-200"
-                            >
-                                <Youtube className="h-5 w-5" />
-                            </a>
+                           
                         </div>
                     </div>
 
