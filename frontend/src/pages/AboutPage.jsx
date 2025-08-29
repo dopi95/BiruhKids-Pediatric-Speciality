@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 // Placeholder images
-const clinicImage = "https://via.placeholder.com/600x400.png?text=Clinic+Image";
-const ceoImage = "https://via.placeholder.com/400x500.png?text=CEO+Image";
+const clinicImage = "https://imgur.com/Jvnc3F4.jpg";
+const ceoImage = "https://imgur.com/Jvnc3F4.jpg";
 
 const AboutPage = () => {
   // Variants
