@@ -14,6 +14,7 @@ import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
+import DoctorManagement from "./pages/Admin/DoctorManagement";
 
 export default function App() {
   return (
@@ -118,6 +119,14 @@ export default function App() {
             element={
               <MainLayout>
                 <AdminDashboard />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/admin/doctor"
+            element={
+              <MainLayout>
+                <DoctorManagement />
               </MainLayout>
             }
           />
