@@ -11,7 +11,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
-
+import UserDashboard from "./pages/userDashboard";
+import Profile from "./pages/profile";
 export default function App() {
     return (
         <Router>
@@ -83,32 +84,48 @@ export default function App() {
                         }
                     />
 
-                    <Route
-                        path="/verify"
-                        element={
-                            <MainLayout>
-                                <VerifyOtp />
-                            </MainLayout>
-                        }
-                    />
-                    <Route
-                        path="/reset-password"
-                        element={
-                            <MainLayout>
-                                <ResetPassword />
-                            </MainLayout>
-                        }
-                    />
-                    <Route
-                        path="/"
-                        element={
-                            <MainLayout>
-                                <HomePage />
-                            </MainLayout>
-                        }
-                    />
-                </Routes>
-            </div>
-        </Router>
-    );
+          <Route
+            path="/verify"
+            element={
+              <MainLayout>
+                <VerifyOtp />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <MainLayout>
+                <ResetPassword />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <MainLayout>
+                <HomePage />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <MainLayout>
+                <UserDashboard />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <MainLayout>
+                <Profile />
+              </MainLayout>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
