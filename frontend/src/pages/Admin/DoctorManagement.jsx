@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Plus, Edit, Trash2, AlertTriangle, Upload } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  AlertTriangle,
+  Upload,
+  Search,
+} from "lucide-react";
 
 export default function DoctorManagement() {
   const [doctors, setDoctors] = useState([
@@ -45,6 +52,7 @@ export default function DoctorManagement() {
   });
 
   const [errors, setErrors] = useState({});
+  const [searchQuery, setSearchQuery] = useState(""); // <-- Search query state
 
   const openModal = (doctor = null) => {
     if (doctor) {
@@ -73,7 +81,6 @@ export default function DoctorManagement() {
     if (name === "photo") setFormData({ ...formData, photo: files[0] });
     else setFormData({ ...formData, [name]: value });
 
-    // Remove error when user types
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -135,6 +142,11 @@ export default function DoctorManagement() {
   const inputClass = (field) =>
     `w-full border p-2 rounded ${errors[field] ? "border-red-500" : ""}`;
 
+  // Filter doctors based on search query
+  const filteredDoctors = doctors.filter((doc) =>
+    doc.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="p-4 sm:p-6 bg-gray-50">
       {/* Header */}
@@ -170,11 +182,23 @@ export default function DoctorManagement() {
 
       {/* Doctors Table */}
       <div className="bg-white rounded-lg shadow-sm">
-        <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200">
+        <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-base sm:text-lg font-semibold text-gray-900">
             <span className="text-2xl">👨‍⚕️ </span>
             All Doctors
           </h2>
+
+          {/* Search Input */}
+          <div className="flex items-center border rounded-lg overflow-hidden">
+            <input
+              type="text"
+              placeholder="Search by name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-3 py-2 outline-none w-60"
+            />
+            <Search className="h-5 w-5 text-gray-400 mr-2" />
+          </div>
         </div>
 
         <div className="w-full overflow-x-auto">
@@ -199,7 +223,7 @@ export default function DoctorManagement() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {doctors.map((doc) => (
+              {filteredDoctors.map((doc) => (
                 <tr key={doc.id} className="hover:bg-gray-50">
                   <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
