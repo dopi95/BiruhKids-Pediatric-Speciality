@@ -168,49 +168,81 @@ export default function DoctorManagement() {
         </div>
       </div>
 
-      {/* Table Title */}
-      <div className="flex items-center mb-4 gap-2">
-        <span className="text-2xl">👨‍⚕️</span>
-        <h3 className="text-xl font-semibold">All Doctors</h3>
-      </div>
+      {/* Doctors Table */}
+      <div className="bg-white rounded-lg shadow-sm">
+        <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+            <span className="text-2xl">👨‍⚕️ </span>
+            All Doctors
+          </h2>
+        </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto mt-6 shadow rounded-lg">
-        <table className="min-w-full border-collapse">
-          <thead>
-            <tr className="bg-blue-50 text-left">
-              <th className="p-2 sm:p-3 border">Doctor</th>
-              <th className="p-2 sm:p-3 border">Field</th>
-              <th className="p-2 sm:p-3 border">Experience</th>
-              <th className="p-2 sm:p-3 border">Email</th>
-              <th className="p-2 sm:p-3 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {doctors.map((doc) => (
-              <tr key={doc.id} className="hover:bg-gray-50">
-                <td className="p-2 sm:p-3 border">{doc.name}</td>
-                <td className="p-2 sm:p-3 border">{doc.field}</td>
-                <td className="p-2 sm:p-3 border">{doc.experience}</td>
-                <td className="p-2 sm:p-3 border">{doc.email}</td>
-                <td className="p-2 sm:p-3 border flex space-x-2">
-                  <button
-                    onClick={() => openModal(doc)}
-                    className="text-green-600 hover:text-green-900 p-1 sm:p-2"
-                  >
-                    <Edit className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => confirmDelete(doc)}
-                    className="text-red-600 hover:text-red-900 p-1 sm:p-2"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </td>
+        <div className="w-full overflow-x-auto">
+          <table className="min-w-[500px] w-full text-sm sm:text-base">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Doctor
+                </th>
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Field
+                </th>
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Experience
+                </th>
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {doctors.map((doc) => (
+                <tr key={doc.id} className="hover:bg-gray-50">
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span className="text-blue-600 font-semibold text-sm sm:text-base">
+                          {doc.name.charAt(4)}
+                        </span>
+                      </div>
+                      <div className="ml-3 sm:ml-4">
+                        <div className="text-sm sm:text-base font-medium text-gray-900">
+                          {doc.name}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm sm:text-base text-gray-900">
+                    {doc.field}
+                  </td>
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm sm:text-base text-gray-900">
+                    {doc.experience}
+                  </td>
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm sm:text-base text-gray-900">
+                    {doc.email}
+                  </td>
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
+                    <button
+                      onClick={() => openModal(doc)}
+                      className="text-green-600 hover:text-green-900 p-1 sm:p-2"
+                    >
+                      <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
+                    </button>
+                    <button
+                      onClick={() => confirmDelete(doc)}
+                      className="text-red-600 hover:text-red-900 p-1 sm:p-2"
+                    >
+                      <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Add/Edit Multi-step Modal */}
