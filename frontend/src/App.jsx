@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import AppointmentPage from "./pages/AppointmentPage";
@@ -15,6 +14,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import DoctorManagement from "./pages/Admin/DoctorManagement";
+import UserManagement from "./pages/Admin/UserManagement";
 
 export default function App() {
   return (
@@ -127,6 +127,14 @@ export default function App() {
             element={
               <MainLayout>
                 <DoctorManagement />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <MainLayout>
+                <UserManagement />
               </MainLayout>
             }
           />
