@@ -1,8 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AppointmentPage from "./pages/AppointmentPage";
 import VideosPage from "./pages/VideosPage";
 import VerifyOtp from "./pages/VerifyOtp";
@@ -17,9 +13,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
 
 export default function App() {
-  return (
+    return (
         <Router>
-            <div className>
+            <div>
                 <Routes>
                     <Route
                         path="/appointment"
@@ -37,37 +33,55 @@ export default function App() {
                             </MainLayout>
                         }
                     />
-                    <Route path="/about" element={
-                        <MainLayout>
-                            <AboutPage />
-                        </MainLayout>
-                    } />
-                    <Route path="/contact" element={
-                        <MainLayout>
-                            <ContactPage />
-                        </MainLayout>
-                    } />
-                
-                    <Route path="/login" element={
-                        <MainLayout>
-                            <SignIn />
-                        </MainLayout>
-                    } />
-                    <Route path="/register" element={
-                        <MainLayout>
-                            <SignUp />
-                        </MainLayout>
-                    } />
-                    <Route path="/forgot-password" element={
-                        <MainLayout>
-                            <ForgotPassword />
-                        </MainLayout>
-                    } />
-                    <Route path="/services" element={
-                        <MainLayout>
-                            <Services />
-                        </MainLayout>
-                    } />
+                    <Route
+                        path="/about"
+                        element={
+                            <MainLayout>
+                                <AboutPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/contact"
+                        element={
+                            <MainLayout>
+                                <ContactPage />
+                            </MainLayout>
+                        }
+                    />
+
+                    <Route
+                        path="/login"
+                        element={
+                            <MainLayout>
+                                <SignIn />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <MainLayout>
+                                <SignUp />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/forgot-password"
+                        element={
+                            <MainLayout>
+                                <ForgotPassword />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/services"
+                        element={
+                            <MainLayout>
+                                <Services />
+                            </MainLayout>
+                        }
+                    />
 
                     <Route
                         path="/verify"
