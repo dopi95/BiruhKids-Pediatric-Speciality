@@ -12,63 +12,33 @@ export default function ServiceManagement() {
     const [Services, setServices] = useState([
         {
             id: 1,
-            title: "Cardiology",
-            description:
+            title_en: "Cardiology",
+            description_en:
                 "Comprehensive heart care including diagnosis, treatment, and prevention of cardiovascular diseases.",
-            features: [
+            features_en: [
                 "ECG & Stress Testing",
                 "Echocardiography",
                 "Cardiac Catheterization",
                 "Heart Disease Prevention",
             ],
+            title_am: "",
+            description_am: "",
+            features_am: [],
         },
         {
             id: 2,
-            title: "Emergency Care",
-            description:
+            title_en: "Emergency Care",
+            description_en:
                 "24/7 emergency services with rapid response team and state-of-the-art emergency equipment.",
-            features: [
+            features_en: [
                 "24/7 Availability",
                 "Trauma Care",
                 "Critical Care",
                 "Emergency Surgery",
             ],
-        },
-        {
-            id: 3,
-            title: "General Medicine",
-            description:
-                "Primary healthcare services for patients of all ages with comprehensive health management.",
-            features: [
-                "Health Checkups",
-                "Chronic Disease Management",
-                "Vaccination",
-                "Health Counseling",
-            ],
-        },
-        {
-            id: 4,
-            title: "Neurology",
-            description:
-                "Specialized care for disorders of the nervous system, brain, and spinal cord.",
-            features: [
-                "Neurological Exams",
-                "EEG Testing",
-                "Stroke Care",
-                "Epilepsy Treatment",
-            ],
-        },
-        {
-            id: 5,
-            title: "Orthopedics",
-            description:
-                "Expert care for bone, joint, muscle, and ligament conditions and injuries.",
-            features: [
-                "Joint Replacement",
-                "Sports Medicine",
-                "Fracture Care",
-                "Physical Therapy",
-            ],
+            title_am: "",
+            description_am: "",
+            features_am: [],
         },
     ]);
 
@@ -79,19 +49,29 @@ export default function ServiceManagement() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        features: [],
+        step: 1,
+        title_en: "",
+        description_en: "",
+        features_en: [],
+        title_am: "",
+        description_am: "",
+        features_am: [],
     });
 
     const openModal = (service = null) => {
-        if (service) setFormData({ ...service });
-        else
+        if (service) {
+            setFormData({ ...service, step: 1 });
+        } else {
             setFormData({
-                title: "",
-                description: "",
-                features: [],
+                step: 1,
+                title_en: "",
+                description_en: "",
+                features_en: [],
+                title_am: "",
+                description_am: "",
+                features_am: [],
             });
+        }
         setEditingService(service);
         setIsModalOpen(true);
     };
@@ -103,16 +83,37 @@ export default function ServiceManagement() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const newService = {
+            id: editingService ? editingService.id : Date.now(),
+            title_en: formData.title_en,
+            description_en: formData.description_en,
+            features_en: formData.features_en,
+            title_am: formData.title_am,
+            description_am: formData.description_am,
+            features_am: formData.features_am,
+        };
+
         if (editingService) {
             setServices(
                 Services.map((s) =>
-                    s.id === editingService.id ? { ...formData, id: s.id } : s
+                    s.id === editingService.id ? newService : s
                 )
             );
         } else {
-            setServices([{ ...formData, id: Date.now() }, ...Services]);
+            setServices([newService, ...Services]);
         }
+
         setIsModalOpen(false);
+        setEditingService(null);
+        setFormData({
+            step: 1,
+            title_en: "",
+            description_en: "",
+            features_en: [],
+            title_am: "",
+            description_am: "",
+            features_am: [],
+        });
     };
 
     const confirmDelete = (service) => {
@@ -127,7 +128,7 @@ export default function ServiceManagement() {
     };
 
     const filteredServices = Services.filter((s) =>
-        s.title.toLowerCase().includes(searchQuery.toLowerCase())
+        s.title_en.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
@@ -192,13 +193,13 @@ export default function ServiceManagement() {
                                     No
                                 </th>
                                 <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                    Title
+                                    Title (EN)
                                 </th>
                                 <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                    Description
+                                    Description (EN)
                                 </th>
                                 <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                    Features
+                                    Features (EN)
                                 </th>
                                 <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                                     Actions
@@ -212,13 +213,13 @@ export default function ServiceManagement() {
                                         {index + 1}
                                     </td>
                                     <td className="px-4 sm:px-6 py-4">
-                                        {s.title}
+                                        {s.title_en}
                                     </td>
                                     <td className="px-4 sm:px-6 py-4">
-                                        {s.description}
+                                        {s.description_en}
                                     </td>
                                     <td className="px-4 sm:px-6 py-4">
-                                        {s.features.join(", ")}
+                                        {s.features_en.join(", ")}
                                     </td>
                                     <td className="px-4 sm:px-6 py-4 flex space-x-2">
                                         <button
@@ -250,67 +251,156 @@ export default function ServiceManagement() {
                                 ? "Edit Service"
                                 : "Add New Service"}
                         </h3>
+
                         <form
-                            onSubmit={handleSubmit}
                             className="grid grid-cols-1 gap-4"
+                            onSubmit={handleSubmit}
                         >
-                            <div className="flex flex-col space-y-1">
-                                <label className="text-sm font-medium">
-                                    Title *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    value={formData.title}
-                                    onChange={handleChange}
-                                    className="w-full border p-2 rounded"
-                                />
-                            </div>
-                            <div className="flex flex-col space-y-1">
-                                <label className="text-sm font-medium">
-                                    Description *
-                                </label>
-                                <textarea
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                    className="w-full border p-2 rounded"
-                                />
-                            </div>
-                            <div className="flex flex-col space-y-1">
-                                <label className="text-sm font-medium">
-                                    Features (comma separated) *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="features"
-                                    value={formData.features.join(", ")}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            features: e.target.value
-                                                .split(",")
-                                                .map((f) => f.trim()),
-                                        })
-                                    }
-                                    className="w-full border p-2 rounded"
-                                />
-                            </div>
-                            <div className="flex justify-end gap-2 mt-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                                >
-                                    Save
-                                </button>
-                            </div>
+                            {/* Step 1: English */}
+                            {formData.step === 1 && (
+                                <>
+                                    <div className="flex flex-col space-y-1">
+                                        <label className="text-sm font-medium">
+                                            Title (English) *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="title_en"
+                                            value={formData.title_en}
+                                            onChange={handleChange}
+                                            className="w-full border p-2 rounded"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col space-y-1">
+                                        <label className="text-sm font-medium">
+                                            Description (English) *
+                                        </label>
+                                        <textarea
+                                            name="description_en"
+                                            value={formData.description_en}
+                                            onChange={handleChange}
+                                            className="w-full border p-2 rounded"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col space-y-1">
+                                        <label className="text-sm font-medium">
+                                            Features (English, comma separated)
+                                            *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="features_en"
+                                            value={formData.features_en.join(
+                                                ", "
+                                            )}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    features_en: e.target.value
+                                                        .split(",")
+                                                        .map((f) => f.trim()),
+                                                })
+                                            }
+                                            className="w-full border p-2 rounded"
+                                        />
+                                    </div>
+
+                                    <div className="flex justify-end gap-2 mt-2">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setIsModalOpen(false)
+                                            }
+                                            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setFormData({
+                                                    ...formData,
+                                                    step: 2,
+                                                })
+                                            }
+                                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Step 2: Amharic */}
+                            {formData.step === 2 && (
+                                <>
+                                    <div className="flex flex-col space-y-1">
+                                        <label className="text-sm font-medium">
+                                            ርዕስ *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="title_am"
+                                            value={formData.title_am}
+                                            onChange={handleChange}
+                                            className="w-full border p-2 rounded"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col space-y-1">
+                                        <label className="text-sm font-medium">
+                                            መግለጫ *
+                                        </label>
+                                        <textarea
+                                            name="description_am"
+                                            value={formData.description_am}
+                                            onChange={handleChange}
+                                            className="w-full border p-2 rounded"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col space-y-1">
+                                        <label className="text-sm font-medium">
+                                            ባህሪያት (በኮማ የተከፋፈሉ) *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="features_am"
+                                            value={formData.features_am.join(
+                                                ", "
+                                            )}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    features_am: e.target.value
+                                                        .split(",")
+                                                        .map((f) => f.trim()),
+                                                })
+                                            }
+                                            className="w-full border p-2 rounded"
+                                        />
+                                    </div>
+
+                                    <div className="flex justify-between gap-2 mt-2">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setFormData({
+                                                    ...formData,
+                                                    step: 1,
+                                                })
+                                            }
+                                            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                                        >
+                                            ተመለስ
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                        >
+                                            አስቀምጥ
+                                        </button>
+                                    </div>
+                                </>
+                            )}
                         </form>
                     </div>
                 </div>
@@ -327,7 +417,7 @@ export default function ServiceManagement() {
                         <p className="text-gray-600 mb-6">
                             Do you really want to delete{" "}
                             <span className="font-semibold">
-                                {serviceToDelete.title}
+                                {serviceToDelete.title_en}
                             </span>
                             ?
                         </p>
