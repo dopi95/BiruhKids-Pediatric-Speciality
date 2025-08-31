@@ -180,7 +180,7 @@ export default function Testimonials() {
                 </div>
 
                 {/* Slider container */}
-                <div className="relative">
+                <div className="w-full relative">
                     <div className="overflow-hidden mx-0 md:mx-12">
                         <div
                             ref={containerRef}
@@ -246,22 +246,21 @@ export default function Testimonials() {
                     </div>
 
                     {/* Prev/Next buttons - hidden on mobile */}
-                    {!isMobile && (
-                        <>
-                            <button
-                                onClick={prevSlide}
-                                className="absolute left-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
-                            >
-                                <ChevronLeft className="h-6 w-6 text-gray-700" />
-                            </button>
-                            <button
-                                onClick={nextSlide}
-                                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
-                            >
-                                <ChevronRight className="h-6 w-6 text-gray-700" />
-                            </button>
-                        </>
-                    )}
+
+                    <>
+                        <button
+                            onClick={prevSlide}
+                            className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
+                        >
+                            <ChevronLeft className="h-6 w-6 text-gray-700" />
+                        </button>
+                        <button
+                            onClick={nextSlide}
+                            className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
+                        >
+                            <ChevronRight className="h-6 w-6 text-gray-700" />
+                        </button>
+                    </>
                 </div>
 
                 {/* Indicators */}

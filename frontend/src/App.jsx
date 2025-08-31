@@ -14,75 +14,75 @@ import Services from "./pages/Services";
 import UserDashboard from "./pages/userDashboard";
 import Profile from "./pages/profile";
 export default function App() {
-  return (
-    <Router>
-      <div className>
-        <Routes>
-          <Route
-            path="/appointment"
-            element={
-              <MainLayout>
-                <AppointmentPage />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/videos"
-            element={
-              <MainLayout>
-                <VideosPage />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <MainLayout>
-                <AboutPage />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <MainLayout>
-                <ContactPage />
-              </MainLayout>
-            }
-          />
+    return (
+        <Router>
+            <div>
+                <Routes>
+                    <Route
+                        path="/appointment"
+                        element={
+                            <MainLayout>
+                                <AppointmentPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/videos"
+                        element={
+                            <MainLayout>
+                                <VideosPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/about"
+                        element={
+                            <MainLayout>
+                                <AboutPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/contact"
+                        element={
+                            <MainLayout>
+                                <ContactPage />
+                            </MainLayout>
+                        }
+                    />
 
-          <Route
-            path="/login"
-            element={
-              <MainLayout>
-                <SignIn />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <MainLayout>
-                <SignUp />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <MainLayout>
-                <ForgotPassword />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/services"
-            element={
-              <MainLayout>
-                <Services />
-              </MainLayout>
-            }
-          />
+                    <Route
+                        path="/login"
+                        element={
+                            <MainLayout>
+                                <SignIn />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <MainLayout>
+                                <SignUp />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/forgot-password"
+                        element={
+                            <MainLayout>
+                                <ForgotPassword />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/services"
+                        element={
+                            <MainLayout>
+                                <Services />
+                            </MainLayout>
+                        }
+                    />
 
           <Route
             path="/verify"

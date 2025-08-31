@@ -158,8 +158,8 @@ export default function DoctorsSlider() {
     }, [current, visibleCards]);
 
     return (
-        <article className="py-20 bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <article className="w-full py-20 bg-gray-50">
+            <div className="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                         Meet Our Doctors
@@ -171,7 +171,7 @@ export default function DoctorsSlider() {
                 </div>
 
                 {/* Slider container */}
-                <div className="relative">
+                <div className="w-full relative">
                     <div className="overflow-hidden mx-0 md:mx-12">
                         <div
                             ref={containerRef}
@@ -227,22 +227,21 @@ export default function DoctorsSlider() {
                     </div>
 
                     {/* Prev/Next buttons - hidden on mobile */}
-                    {!isMobile && (
-                        <>
-                            <button
-                                onClick={prevSlide}
-                                className="absolute left-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
-                            >
-                                <ChevronLeft className="h-6 w-6 text-gray-700" />
-                            </button>
-                            <button
-                                onClick={nextSlide}
-                                className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
-                            >
-                                <ChevronRight className="h-6 w-6 text-gray-700" />
-                            </button>
-                        </>
-                    )}
+
+                    <>
+                        <button
+                            onClick={prevSlide}
+                            className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
+                        >
+                            <ChevronLeft className="h-6 w-6 text-gray-700" />
+                        </button>
+                        <button
+                            onClick={nextSlide}
+                            className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
+                        >
+                            <ChevronRight className="h-6 w-6 text-gray-700" />
+                        </button>
+                    </>
                 </div>
 
                 {/* Indicators */}

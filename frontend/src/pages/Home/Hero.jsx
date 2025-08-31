@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const Hero = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const touchStartX = useRef(null);
     const touchEndX = useRef(null);
@@ -104,14 +103,11 @@ const Hero = () => {
     }, [currentSlide, slides.length]);
 
     useEffect(() => {
-        if (isAutoPlaying) {
-            autoPlayRef.current = setInterval(goToNext, 5000);
-        } else {
-            clearInterval(autoPlayRef.current);
-        }
+        // Always autoplay regardless of hover state
+        autoPlayRef.current = setInterval(goToNext, 3000);
 
         return () => clearInterval(autoPlayRef.current);
-    }, [isAutoPlaying, goToNext]);
+    }, [goToNext]);
 
     const handleTouchStart = (e) => {
         touchStartX.current = e.targetTouches[0].clientX;
@@ -172,8 +168,7 @@ const Hero = () => {
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
-                onMouseEnter={() => setIsAutoPlaying(false)}
-                onMouseLeave={() => setIsAutoPlaying(true)}
+                // Removed onMouseEnter and onMouseLeave handlers that were controlling autoplay
             >
                 {extendedSlides.map((slide, index) => (
                     <div
@@ -201,7 +196,9 @@ const Hero = () => {
                                 </p>
                                 <div className="flex flex-col mt-10 gap-4 sm:flex-row sm:justify-center sm:gap-6">
                                     <button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-700 hover:to-orange-800 text-white p-3 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                                        <Link to="/appointment">Book Appointment</Link>
+                                        <Link to="/appointment">
+                                            Book Appointment
+                                        </Link>
                                     </button>
                                     <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                                         <Link to="/register">Get Started</Link>
