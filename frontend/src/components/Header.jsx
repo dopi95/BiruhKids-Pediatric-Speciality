@@ -60,7 +60,31 @@ function Header() {
                 </div>
 
                 {/* Desktop Right Side */}
-                <div className="hidden md:flex space-x-4 items-center">
+                <div className="hidden md:flex space-x-4 items-center md:gap-4">
+                    <Link
+                        to="/appointment"
+                        className="bg-orange-500 text-white px-4 py-2 rounded-lg shadow-md 
+                           hover:bg-orange-600 hover:scale-105 hover:shadow-lg 
+                           transition-transform duration-300 ease-in-out"
+                    >
+                        Book Appointment
+                    </Link>
+                    <Link
+                        to="/login"
+                        className="relative text-blue-500 font-semibold flex items-center 
+                           hover:text-blue-600 transition group"
+                    >
+                        Login{" "}
+                        <ChevronRight className="inline ml-0 transform transition-transform duration-300 group-hover:translate-x-1" />
+                        <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                    </Link>
+                    <Link
+                        to="/register"
+                        className="relative text-blue-500 font-semibold hover:text-blue-600 transition group"
+                    >
+                        Register
+                        <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                    </Link>
                     <section className="flex items-center">
                         <Globe
                             className="w-5 h-5 cursor-pointer"
@@ -73,24 +97,6 @@ function Header() {
                             {lang === "En" ? "አማ" : "En"}
                         </button>
                     </section>
-                    <Link
-                        to="/appointment"
-                        className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition"
-                    >
-                        Book Appointment
-                    </Link>
-                    <Link
-                        to="/login"
-                        className="text-blue-500 font-semibold hover:text-blue-600 transition"
-                    >
-                        Login <ChevronRight className="inline" />
-                    </Link>
-                    <Link
-                        to="/register"
-                        className="text-blue-500 font-semibold hover:text-blue-600 transition"
-                    >
-                        Register
-                    </Link>
                 </div>
 
                 {/* Mobile Right Side (Lang + Hamburger) */}

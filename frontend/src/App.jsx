@@ -15,131 +15,150 @@ import Services from "./pages/Services";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import DoctorManagement from "./pages/Admin/DoctorManagement";
 import UserManagement from "./pages/Admin/UserManagement";
-
+import UserDashboard from "./pages/userDashboard";
+import Profile from "./pages/profile";
 export default function App() {
-  return (
-    <Router>
-      <div className="min-h-screen flex flex-col">
-        <Routes>
-          {/* Public routes */}
-          <Route
-            path="/"
-            element={
-              <MainLayout>
-                <HomePage />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <MainLayout>
-                <AboutPage />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <MainLayout>
-                <ContactPage />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/services"
-            element={
-              <MainLayout>
-                <Services />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/videos"
-            element={
-              <MainLayout>
-                <VideosPage />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/appointment"
-            element={
-              <MainLayout>
-                <AppointmentPage />
-              </MainLayout>
-            }
-          />
+    return (
+        <Router>
+            <div className="min-h-screen flex flex-col">
+                <Routes>
+                    {/* Public routes */}
+                    <Route
+                        path="/"
+                        element={
+                            <MainLayout>
+                                <HomePage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/about"
+                        element={
+                            <MainLayout>
+                                <AboutPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/contact"
+                        element={
+                            <MainLayout>
+                                <ContactPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/services"
+                        element={
+                            <MainLayout>
+                                <Services />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/videos"
+                        element={
+                            <MainLayout>
+                                <VideosPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/appointment"
+                        element={
+                            <MainLayout>
+                                <AppointmentPage />
+                            </MainLayout>
+                        }
+                    />
 
-          {/* Auth routes */}
-          <Route
-            path="/login"
-            element={
-              <MainLayout>
-                <SignIn />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <MainLayout>
-                <SignUp />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <MainLayout>
-                <ForgotPassword />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/verify"
-            element={
-              <MainLayout>
-                <VerifyOtp />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/reset-password"
-            element={
-              <MainLayout>
-                <ResetPassword />
-              </MainLayout>
-            }
-          />
+                    {/* Auth routes */}
+                    <Route
+                        path="/login"
+                        element={
+                            <MainLayout>
+                                <SignIn />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <MainLayout>
+                                <SignUp />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/forgot-password"
+                        element={
+                            <MainLayout>
+                                <ForgotPassword />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/verify"
+                        element={
+                            <MainLayout>
+                                <VerifyOtp />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/reset-password"
+                        element={
+                            <MainLayout>
+                                <ResetPassword />
+                            </MainLayout>
+                        }
+                    />
 
-          {/* Admin route */}
-          <Route
-            path="/admin"
-            element={
-              <MainLayout>
-                <AdminDashboard />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/admin/doctor"
-            element={
-              <MainLayout>
-                <DoctorManagement />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/admin/users"
-            element={
-              <MainLayout>
-                <UserManagement />
-              </MainLayout>
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
-  );
+                    {/* Protected User Routes */}
+                    <Route
+                        path="/profile"
+                        element={
+                            <MainLayout>
+                                <Profile />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/user-dashboard"
+                        element={
+                            <MainLayout>
+                                <UserDashboard />
+                            </MainLayout>
+                        }
+                    />
+
+                    {/* Admin route */}
+                    <Route
+                        path="/admin"
+                        element={
+                            <MainLayout>
+                                <AdminDashboard />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/admin/doctor"
+                        element={
+                            <MainLayout>
+                                <DoctorManagement />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/admin/users"
+                        element={
+                            <MainLayout>
+                                <UserManagement />
+                            </MainLayout>
+                        }
+                    />
+                </Routes>
+            </div>
+        </Router>
+    );
 }
