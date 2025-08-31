@@ -1,18 +1,42 @@
 import React from "react";
 
-export default function StatsCard({ label, value, change, color, icon: Icon }) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">{label}</p>
-          <p className="text-3xl font-bold text-gray-900">{value}</p>
-          <p className="text-sm text-gray-500 mt-1">{change}</p>
+const colorMap = {
+    blue: "blue",
+    green: "green",
+    purple: "purple",
+    red: "red",
+};
+
+export default function StatsCard({
+    label,
+    value,
+    change,
+    color = "blue",
+    icon: Icon,
+}) {
+    const bgColor = `bg-${colorMap[color]}-100`;
+    const textColor = `text-${colorMap[color]}-600`;
+
+    return (
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 flex-shrink-0 w-full">
+            <div className="flex items-center justify-between">
+                <div className="truncate">
+                    <p className="text-sm font-medium text-gray-600 mb-1 truncate">
+                        {label}
+                    </p>
+                    <p className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">
+                        {value}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1 truncate">
+                        {change}
+                    </p>
+                </div>
+                <div
+                    className={`w-10 h-10 sm:w-12 sm:h-12 ${bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}
+                >
+                    <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${textColor}`} />
+                </div>
+            </div>
         </div>
-        <div className={`w-12 h-12 bg-${color}-100 rounded-lg flex items-center justify-center`}>
-          <Icon className={`h-6 w-6 text-${color}-600`} />
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
