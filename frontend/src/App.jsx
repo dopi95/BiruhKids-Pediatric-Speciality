@@ -17,6 +17,7 @@ import DoctorManagement from "./pages/Admin/DoctorManagement";
 import UserManagement from "./pages/Admin/UserManagement";
 import UserDashboard from "./pages/userDashboard";
 import Profile from "./pages/profile";
+import AppointmentManagement from "./pages/Admin/AppointmentManagement";
 export default function App() {
     return (
         <Router>
@@ -155,6 +156,12 @@ export default function App() {
                             <MainLayout>
                                 <UserManagement />
                             </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/admin/appointments"
+                        element={
+                                <AppointmentManagement />
                         }
                     />
                 </Routes>
