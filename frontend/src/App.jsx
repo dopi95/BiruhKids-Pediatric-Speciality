@@ -15,6 +15,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
+import ResultManagement from "./pages/Admin/ResultManagement";
+import ResultForm from "./pages/Admin/ResultForm";
 
 export default function App() {
   return (
@@ -85,6 +87,18 @@ export default function App() {
                             </MainLayout>
                         }
                     />
+                    <Route
+                        path="admin/results"
+                        element={
+                                <ResultManagement/>
+                        }
+                    />
+                    <Route
+  path="/results/form"
+  element={
+      <ResultForm />
+  }
+/>
                     <Route
                         path="/"
                         element={
