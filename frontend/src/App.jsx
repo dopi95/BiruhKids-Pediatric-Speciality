@@ -12,11 +12,15 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
+import UserDashboard from "./pages/userDashboard";
+import Profile from "./pages/profile";
+// admin imports
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import DoctorManagement from "./pages/Admin/DoctorManagement";
 import UserManagement from "./pages/Admin/UserManagement";
-import UserDashboard from "./pages/userDashboard";
-import Profile from "./pages/profile";
+import AdminManagement from "./pages/Admin/admin-management/AdminManagement";
+import AdminProfile from "./pages/Admin/AdminProfile";
+import ServiceManagement from "./pages/Admin/ServiceManagement";
 export default function App() {
     return (
         <Router>
@@ -136,25 +140,49 @@ export default function App() {
                     <Route
                         path="/admin"
                         element={
-                            <MainLayout>
+      
                                 <AdminDashboard />
-                            </MainLayout>
+              
                         }
                     />
                     <Route
                         path="/admin/doctor"
                         element={
-                            <MainLayout>
+    
                                 <DoctorManagement />
-                            </MainLayout>
+
                         }
                     />
                     <Route
                         path="/admin/users"
                         element={
-                            <MainLayout>
+
                                 <UserManagement />
-                            </MainLayout>
+  
+                        }
+                    />
+                    <Route
+                        path="/admin/admin-management"
+                        element={
+ 
+                                <AdminManagement />
+
+                        }
+                    />
+                    <Route
+                        path="/admin/profile"
+                        element={
+     
+                                <AdminProfile />
+       
+                        }
+                    />
+                    <Route
+                        path="/admin/services"
+                        element={
+     
+                                <ServiceManagement />
+
                         }
                     />
                 </Routes>
