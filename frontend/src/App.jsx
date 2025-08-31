@@ -17,6 +17,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
 import ResultManagement from "./pages/Admin/ResultManagement";
 import ResultForm from "./pages/Admin/ResultForm";
+import AdminVideos from "./pages/Admin/AdminVideos";
+import AdminVideosForm from "./pages/Admin/AdminVideosForm";
 
 export default function App() {
   return (
@@ -93,12 +95,25 @@ export default function App() {
                                 <ResultManagement/>
                         }
                     />
+                    
                     <Route
   path="/results/form"
   element={
       <ResultForm />
   }
 />
+<Route
+                        path="admin/videos"
+                        element={
+                                <AdminVideos/>
+                        }
+                    />
+                    <Route
+                        path="admin/videos/form"
+                        element={
+                                <AdminVideosForm/>
+                        }
+                    />
                     <Route
                         path="/"
                         element={
