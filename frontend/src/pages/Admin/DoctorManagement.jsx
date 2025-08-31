@@ -6,46 +6,65 @@ export default function DoctorManagement() {
     {
       id: 1,
       name: "Dr. Biruh",
+      nameAmh: "",
       field: "Pediatrics",
+      fieldAmh: "",
       experience: "10 years",
+      experienceAmh: "",
       email: "biruh@example.com",
       photo: null,
     },
     {
       id: 2,
       name: "Dr. Dagi",
+      nameAmh: "",
       field: "Operation",
+      fieldAmh: "",
       experience: "15 years",
+      experienceAmh: "",
       email: "dagi@example.com",
       photo: null,
     },
   ]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [doctorToDelete, setDoctorToDelete] = useState(null);
   const [editingDoctor, setEditingDoctor] = useState(null);
+  const [step, setStep] = useState(1);
+
   const [formData, setFormData] = useState({
     name: "",
+    nameAmh: "",
     field: "",
+    fieldAmh: "",
     experience: "",
+    experienceAmh: "",
     email: "",
     photo: null,
   });
 
+  const [errors, setErrors] = useState({});
+
   const openModal = (doctor = null) => {
     if (doctor) {
       setEditingDoctor(doctor);
-      setFormData(doctor);
+      setFormData({ ...doctor });
     } else {
       setEditingDoctor(null);
       setFormData({
         name: "",
+        nameAmh: "",
         field: "",
+        fieldAmh: "",
         experience: "",
+        experienceAmh: "",
         email: "",
         photo: null,
       });
     }
+    setErrors({});
+    setStep(1);
     setIsModalOpen(true);
   };
 
@@ -53,10 +72,43 @@ export default function DoctorManagement() {
     const { name, value, files } = e.target;
     if (name === "photo") setFormData({ ...formData, photo: files[0] });
     else setFormData({ ...formData, [name]: value });
+
+    // Remove error when user types
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
+
+  const validateStep1 = () => {
+    const { name, email, field, experience } = formData;
+    const newErrors = {};
+    if (!name) newErrors.name = "This field is required";
+    if (!email) newErrors.email = "This field is required";
+    if (!field) newErrors.field = "This field is required";
+    if (!experience) newErrors.experience = "This field is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep2 = () => {
+    const { nameAmh, fieldAmh, experienceAmh, email } = formData;
+    const newErrors = {};
+    if (!nameAmh) newErrors.nameAmh = "This field is required";
+    if (!fieldAmh) newErrors.fieldAmh = "This field is required";
+    if (!experienceAmh) newErrors.experienceAmh = "This field is required";
+    if (!email) newErrors.email = "This field is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNext = () => {
+    if (validateStep1()) setStep(2);
+  };
+
+  const handleBack = () => setStep(1);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validateStep2()) return;
+
     if (editingDoctor) {
       setDoctors(
         doctors.map((doc) =>
@@ -64,7 +116,6 @@ export default function DoctorManagement() {
         )
       );
     } else {
-      // Add new doctor at the top
       setDoctors([{ ...formData, id: Date.now() }, ...doctors]);
     }
     setIsModalOpen(false);
@@ -74,31 +125,33 @@ export default function DoctorManagement() {
     setDoctorToDelete(doctor);
     setIsDeleteModalOpen(true);
   };
+
   const handleDelete = () => {
     setDoctors(doctors.filter((doc) => doc.id !== doctorToDelete.id));
     setDoctorToDelete(null);
     setIsDeleteModalOpen(false);
   };
 
+  const inputClass = (field) =>
+    `w-full border p-2 rounded ${errors[field] ? "border-red-500" : ""}`;
+
   return (
     <div className="p-4 sm:p-6 bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Doctor Management
-              </h1>
-              <p>Adding and Deleting Doctor's</p>
-            </div>
-            <button
-              onClick={() => openModal()}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
-            >
-              <Plus className="h-4 w-4 mr-2" /> Add Admin
-            </button>
+        <div className="px-6 py-4 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Doctor Management
+            </h1>
+            <p>Adding and Deleting Doctor's</p>
           </div>
+          <button
+            onClick={() => openModal()}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"
+          >
+            <Plus className="h-4 w-4 mr-2" /> Add Doctor
+          </button>
         </div>
       </div>
 
@@ -122,7 +175,7 @@ export default function DoctorManagement() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto shadow rounded-lg">
+      <div className="overflow-x-auto mt-6 shadow rounded-lg">
         <table className="min-w-full border-collapse">
           <thead>
             <tr className="bg-blue-50 text-left">
@@ -134,19 +187,9 @@ export default function DoctorManagement() {
             </tr>
           </thead>
           <tbody>
-            {doctors.length === 0 && (
-              <tr>
-                <td colSpan="5" className="p-3 text-center text-gray-500">
-                  No doctors found.
-                </td>
-              </tr>
-            )}
             {doctors.map((doc) => (
               <tr key={doc.id} className="hover:bg-gray-50">
-                <td className="p-2 sm:p-3 border flex items-center space-x-2">
-                  <span className="text-blue-600 text-lg">👨‍⚕️</span>
-                  <span>{doc.name}</span>
-                </td>
+                <td className="p-2 sm:p-3 border">{doc.name}</td>
                 <td className="p-2 sm:p-3 border">{doc.field}</td>
                 <td className="p-2 sm:p-3 border">{doc.experience}</td>
                 <td className="p-2 sm:p-3 border">{doc.email}</td>
@@ -170,98 +213,210 @@ export default function DoctorManagement() {
         </table>
       </div>
 
-      {/* Add/Edit Modal */}
+      {/* Add/Edit Multi-step Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50 p-4">
-          <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-full sm:max-w-2xl shadow-lg overflow-y-auto max-h-[90vh]">
+          <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-2xl shadow-lg overflow-y-auto max-h-[90vh]">
             <h3 className="text-xl font-semibold mb-4">
-              {editingDoctor ? "Edit Doctor" : "Add New Doctor"}
+              {editingDoctor ? "Edit Doctor" : "Add New Doctor"} - Step {step}
             </h3>
+
             <form
               onSubmit={handleSubmit}
               className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             >
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium">Full Name *</label>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Enter full name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium">Email *</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium">Field *</label>
-                <input
-                  type="text"
-                  name="field"
-                  placeholder="Enter field"
-                  value={formData.field}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium">Experience *</label>
-                <input
-                  type="text"
-                  name="experience"
-                  placeholder="Years of experience"
-                  value={formData.experience}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
-              <div className="col-span-1 sm:col-span-2 flex flex-col space-y-2">
-                <label className="text-sm font-medium">Photo</label>
-                <label className="flex items-center justify-center w-full h-28 sm:h-32 border-2 border-dashed rounded cursor-pointer hover:bg-gray-50">
-                  <Upload className="w-6 h-6 text-gray-500 mr-2" />
-                  <span className="text-gray-500">
-                    {formData.photo
-                      ? formData.photo.name
-                      : "Upload Doctor Photo"}
-                  </span>
-                  <input
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={handleChange}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-              <div className="col-span-1 sm:col-span-2 flex flex-col sm:flex-row justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                >
-                  {editingDoctor ? "Update" : "Save"}
-                </button>
-              </div>
+              {/* Step 1 */}
+              {step === 1 && (
+                <>
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm font-medium">Full Name *</label>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Enter full name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className={inputClass("name")}
+                    />
+                    {errors.name && (
+                      <p className="text-red-500 text-sm">{errors.name}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm font-medium">Email *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Enter email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={inputClass("email")}
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm">{errors.email}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm font-medium">Field *</label>
+                    <input
+                      type="text"
+                      name="field"
+                      placeholder="Enter field"
+                      value={formData.field}
+                      onChange={handleChange}
+                      className={inputClass("field")}
+                    />
+                    {errors.field && (
+                      <p className="text-red-500 text-sm">{errors.field}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm font-medium">Experience *</label>
+                    <input
+                      type="text"
+                      name="experience"
+                      placeholder="Years of experience"
+                      value={formData.experience}
+                      onChange={handleChange}
+                      className={inputClass("experience")}
+                    />
+                    {errors.experience && (
+                      <p className="text-red-500 text-sm">
+                        {errors.experience}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="col-span-1 sm:col-span-2 flex flex-col space-y-2">
+                    <label className="text-sm font-medium">Photo</label>
+                    <label className="flex items-center justify-center w-full h-28 sm:h-32 border-2 border-dashed rounded cursor-pointer hover:bg-gray-50">
+                      <Upload className="w-6 h-6 text-gray-500 mr-2" />
+                      <span className="text-gray-500">
+                        {formData.photo
+                          ? formData.photo.name
+                          : "Upload Doctor Photo"}
+                      </span>
+                      <input
+                        type="file"
+                        name="photo"
+                        accept="image/*"
+                        onChange={handleChange}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  <div className="col-span-1 sm:col-span-2 flex justify-end gap-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* Step 2 */}
+              {step === 2 && (
+                <>
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm font-medium">ሙሉ ስም *</label>
+                    <input
+                      type="text"
+                      name="nameAmh"
+                      placeholder="የሙሉ ስም ያስገቡ"
+                      value={formData.nameAmh}
+                      onChange={handleChange}
+                      className={inputClass("nameAmh")}
+                    />
+                    {errors.nameAmh && (
+                      <p className="text-red-500 text-sm">{errors.nameAmh}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm font-medium">ሙያ *</label>
+                    <input
+                      type="text"
+                      name="fieldAmh"
+                      placeholder="የምርምር መስክ ያስገቡ"
+                      value={formData.fieldAmh}
+                      onChange={handleChange}
+                      className={inputClass("fieldAmh")}
+                    />
+                    {errors.fieldAmh && (
+                      <p className="text-red-500 text-sm">{errors.fieldAmh}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm font-medium">የስራ ልምድ *</label>
+                    <input
+                      type="text"
+                      name="experienceAmh"
+                      placeholder="የስራ ልምድ"
+                      value={formData.experienceAmh}
+                      onChange={handleChange}
+                      className={inputClass("experienceAmh")}
+                    />
+                    {errors.experienceAmh && (
+                      <p className="text-red-500 text-sm">
+                        {errors.experienceAmh}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm font-medium">ኢሜል *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Enter email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={inputClass("email")}
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm">{errors.email}</p>
+                    )}
+                  </div>
+
+                  <div className="col-span-1 sm:col-span-2 flex justify-end gap-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={handleBack}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </>
+              )}
             </form>
           </div>
         </div>
