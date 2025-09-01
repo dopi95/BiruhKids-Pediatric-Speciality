@@ -12,12 +12,12 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
+import UserDashboard from "./pages/userDashboard";
+import Profile from "./pages/profile";
+// admin imports
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import DoctorManagement from "./pages/Admin/DoctorManagement";
 import UserManagement from "./pages/Admin/UserManagement";
-import UserDashboard from "./pages/userDashboard";
-import Profile from "./pages/profile";
-import AppointmentManagement from "./pages/Admin/AppointmentManagement";
 export default function App() {
     return (
         <Router>
@@ -132,31 +132,34 @@ export default function App() {
                             </MainLayout>
                         }
                     />
+                    <Route
+                        path="/change-password"
+                        element={
+                            <MainLayout>
+                                <ChangePassword backPath="/profile" />
+                            </MainLayout>
+                        }
+                    />
 
                     {/* Admin route */}
-                    <Route
-                        path="/admin"
-                        element={
-                            <MainLayout>
-                                <AdminDashboard />
-                            </MainLayout>
-                        }
-                    />
+                    <Route path="/admin" element={<AdminDashboard />} />
                     <Route
                         path="/admin/doctor"
-                        element={
-                            <MainLayout>
-                                <DoctorManagement />
-                            </MainLayout>
-                        }
+                        element={<DoctorManagement />}
+                    />
+                    <Route path="/admin/users" element={<UserManagement />} />
+                    <Route
+                        path="/admin/admin-management"
+                        element={<AdminManagement />}
+                    />
+                    <Route path="/admin/profile" element={<AdminProfile />} />
+                    <Route
+                        path="/admin/services"
+                        element={<ServiceManagement />}
                     />
                     <Route
-                        path="/admin/users"
-                        element={
-                            <MainLayout>
-                                <UserManagement />
-                            </MainLayout>
-                        }
+                        path="/admin/change-password"
+                        element={<ChangePassword backPath="/admin/profile" />}
                     />
                     <Route
                         path="/admin/appointments"

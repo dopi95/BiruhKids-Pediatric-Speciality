@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { ProfileHeader } from "../components/profile/ProfileHeader";
-import { PersonalInfoForm } from "../components/profile/PersonalInfoForm";
-import { EmergencyContactForm } from "../components/profile/EmergencyContactForm";
-import { AccountActions } from "../components/profile/AccountActions";
+import { ProfileHeader } from "../../components/profile/ProfileHeader";
+import { PersonalInfoForm } from "../../components/profile/PersonalInfoForm";
+import { EmergencyContactForm } from "../../components/profile/EmergencyContactForm";
+import { AccountActions } from "../../components/profile/AccountActions";
 
-export default function Profile() {
+export default function AdminProfile() {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
-        firstName: "John",
+        firstName: "Tim",
         lastName: "Doe",
         email: "john.doe@email.com",
         phone: "+251 11 123 4567",
@@ -20,6 +20,8 @@ export default function Profile() {
         insuranceProvider: "Ethiopian Insurance Corporation",
         policyNumber: "EIC123456789",
     });
+
+    const role = "admin"; // or superAdmin
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -57,7 +59,7 @@ export default function Profile() {
                 onEdit={() => setIsEditing(true)}
                 onCancel={handleCancel}
                 onSave={handleSubmit}
-                role="user"
+                role="admin"
             />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <form onSubmit={handleSubmit}>
@@ -66,6 +68,7 @@ export default function Profile() {
                             formData={formData}
                             isEditing={isEditing}
                             handleChange={handleChange}
+                            role={role}
                         />
                         <EmergencyContactForm
                             formData={formData}
@@ -73,7 +76,7 @@ export default function Profile() {
                             handleChange={handleChange}
                         />
                     </div>
-                    <AccountActions showDelete={false} role="user" />
+                    <AccountActions showDelete={false} role="admin" />
                 </form>
             </div>
         </div>
