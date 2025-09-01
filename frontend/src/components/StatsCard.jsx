@@ -1,5 +1,3 @@
-import React from "react";
-
 const colorMap = {
     blue: "blue",
     green: "green",
@@ -10,7 +8,6 @@ const colorMap = {
 export default function StatsCard({
     label,
     value,
-    change,
     color = "blue",
     icon: Icon,
 }) {
@@ -27,14 +24,15 @@ export default function StatsCard({
                     <p className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">
                         {value}
                     </p>
-                    <p className="text-sm text-gray-500 mt-1 truncate">
-                        {change}
-                    </p>
                 </div>
                 <div
                     className={`w-10 h-10 sm:w-12 sm:h-12 ${bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}
                 >
-                    <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${textColor}`} />
+                    {Icon && (
+                        <Icon
+                            className={`h-5 w-5 sm:h-6 sm:w-6 ${textColor}`}
+                        />
+                    )}
                 </div>
             </div>
         </div>
