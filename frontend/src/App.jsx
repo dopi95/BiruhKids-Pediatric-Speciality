@@ -1,8 +1,5 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import AppointmentPage from "./pages/AppointmentPage";
 import VideosPage from "./pages/VideosPage";
 import VerifyOtp from "./pages/VerifyOtp";
@@ -15,21 +12,41 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
-import ResultManagement from "./pages/Admin/ResultManagement";
-import ResultForm from "./pages/Admin/ResultForm";
-import AdminVideos from "./pages/Admin/AdminVideos";
-import AdminVideosForm from "./pages/Admin/AdminVideosForm";
-
 export default function App() {
-  return (
+    return (
         <Router>
-            <div className>
+            <div className="min-h-screen flex flex-col">
                 <Routes>
+                    {/* Public routes */}
                     <Route
-                        path="/appointment"
+                        path="/"
                         element={
                             <MainLayout>
-                                <AppointmentPage />
+                                <HomePage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/about"
+                        element={
+                            <MainLayout>
+                                <AboutPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/contact"
+                        element={
+                            <MainLayout>
+                                <ContactPage />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/services"
+                        element={
+                            <MainLayout>
+                                <Services />
                             </MainLayout>
                         }
                     />
@@ -41,38 +58,40 @@ export default function App() {
                             </MainLayout>
                         }
                     />
-                    <Route path="/about" element={
-                        <MainLayout>
-                            <AboutPage />
-                        </MainLayout>
-                    } />
-                    <Route path="/contact" element={
-                        <MainLayout>
-                            <ContactPage />
-                        </MainLayout>
-                    } />
-                
-                    <Route path="/login" element={
-                        <MainLayout>
-                            <SignIn />
-                        </MainLayout>
-                    } />
-                    <Route path="/register" element={
-                        <MainLayout>
-                            <SignUp />
-                        </MainLayout>
-                    } />
-                    <Route path="/forgot-password" element={
-                        <MainLayout>
-                            <ForgotPassword />
-                        </MainLayout>
-                    } />
-                    <Route path="/services" element={
-                        <MainLayout>
-                            <Services />
-                        </MainLayout>
-                    } />
+                    <Route
+                        path="/appointment"
+                        element={
+                            <MainLayout>
+                                <AppointmentPage />
+                            </MainLayout>
+                        }
+                    />
 
+                    {/* Auth routes */}
+                    <Route
+                        path="/login"
+                        element={
+                            <MainLayout>
+                                <SignIn />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <MainLayout>
+                                <SignUp />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/forgot-password"
+                        element={
+                            <MainLayout>
+                                <ForgotPassword />
+                            </MainLayout>
+                        }
+                    />
                     <Route
                         path="/verify"
                         element={
@@ -89,37 +108,57 @@ export default function App() {
                             </MainLayout>
                         }
                     />
-                    <Route
-                        path="admin/results"
-                        element={
-                                <ResultManagement/>
-                        }
-                    />
-                    
-                    <Route
-  path="/results/form"
-  element={
-      <ResultForm />
-  }
-/>
-<Route
-                        path="admin/videos"
-                        element={
-                                <AdminVideos/>
-                        }
-                    />
-                    <Route
-                        path="admin/videos/form"
-                        element={
-                                <AdminVideosForm/>
-                        }
-                    />
-                    <Route
-                        path="/"
+
+                    {/* Protected User Routes */}
+                   
+
                         element={
                             <MainLayout>
-                                <HomePage />
+                                <Profile />
                             </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/user-dashboard"
+                        element={
+                            <MainLayout>
+                                <UserDashboard />
+                            </MainLayout>
+                        }
+                    />
+                    <Route
+                        path="/change-password"
+                        element={
+                            <MainLayout>
+                                <ChangePassword backPath="/profile" />
+                            </MainLayout>
+                        }
+                    />
+
+                    {/* Admin route */}
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route
+                        path="/admin/doctor"
+                        element={<DoctorManagement />}
+                    />
+                    <Route path="/admin/users" element={<UserManagement />} />
+                    <Route
+                        path="/admin/admin-management"
+                        element={<AdminManagement />}
+                    />
+                    <Route path="/admin/profile" element={<AdminProfile />} />
+                    <Route
+                        path="/admin/services"
+                        element={<ServiceManagement />}
+                    />
+                    <Route
+                        path="/admin/change-password"
+                        element={<ChangePassword backPath="/admin/profile" />}
+                    />
+                    <Route
+                        path="/admin/appointments"
+                        element={
+                                <AppointmentManagement />
                         }
                     />
                 </Routes>
