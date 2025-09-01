@@ -15,35 +15,30 @@ const ResultManagement = () => {
       name: "John Smith",
       phone: "+2519345678",
       email: "john.smith@email.com",
-      status: "Pending Results",
     },
     {
       id: 2,
       name: "Sarah Johnson",
       phone: "+251 11 234 5678",
       email: "sarah.j@email.com",
-      status: "Results Sent",
     },
     {
       id: 3,
       name: "Michael Brown",
       phone: "+251 11 345 6789",
       email: "michael.brown@email.com",
-      status: "Pending Results",
     },
     {
       id: 4,
       name: "Emily Davis",
       phone: "+251 11 456 7890",
       email: "emily.davis@email.com",
-      status: "Results Sent",
     },
     {
       id: 5,
       name: "David Wilson",
       phone: "+251 11 567 8901",
       email: "david.wilson@email.com",
-      status: "Pending Results",
     },
   ];
 
@@ -57,7 +52,7 @@ const ResultManagement = () => {
   });
 
   const handleSendResult = (patient) => {
-    navigate("/results/form", { state: { patient } });
+    navigate("/admin/results/form", { state: { patient } });
   };
 
   return (
@@ -147,9 +142,6 @@ const ResultManagement = () => {
                       Contact
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Actions
                     </th>
                   </tr>
@@ -177,30 +169,13 @@ const ResultManagement = () => {
                           {patient.email}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`px-2 py-1 inline-flex text-xs font-semibold rounded-full ${
-                            patient.status === "Results Sent"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-orange-100 text-orange-800"
-                          }`}
-                        >
-                          {patient.status}
-                        </span>
-                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button
                           onClick={() => handleSendResult(patient)}
-                          className={`inline-flex items-center px-3 py-2 rounded-md transition-colors duration-200 ${
-                            patient.status === "Pending Results"
-                              ? "text-white bg-blue-600 hover:bg-blue-700"
-                              : "text-blue-700 bg-blue-100 hover:bg-blue-200"
-                          }`}
+                          className="inline-flex items-center px-3 py-2 rounded-md transition-colors duration-200 text-white bg-blue-600 hover:bg-blue-700"
                         >
                           <Send className="h-3 w-3 mr-1" />
-                          {patient.status === "Pending Results"
-                            ? "Send Result"
-                            : "Update Result"}
+                          Send Result
                         </button>
                       </td>
                     </tr>
@@ -233,30 +208,13 @@ const ResultManagement = () => {
                   <p className="text-sm">
                     <span className="font-medium">Phone:</span> {patient.phone}
                   </p>
-                  <p className="mt-1">
-                    <span
-                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        patient.status === "Results Sent"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-orange-100 text-orange-800"
-                      }`}
-                    >
-                      {patient.status}
-                    </span>
-                  </p>
 
                   <button
                     onClick={() => handleSendResult(patient)}
-                    className={`mt-3 w-full flex items-center justify-center px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
-                      patient.status === "Pending Results"
-                        ? "text-white bg-blue-600 hover:bg-blue-700"
-                        : "text-blue-700 bg-blue-100 hover:bg-blue-200"
-                    }`}
+                    className="mt-3 w-full flex items-center justify-center px-3 py-2 rounded-md text-sm transition-colors duration-200 text-white bg-blue-600 hover:bg-blue-700"
                   >
                     <Send className="h-3 w-3 mr-1" />
-                    {patient.status === "Pending Results"
-                      ? "Send Result"
-                      : "Update Result"}
+                    Send Result
                   </button>
                 </div>
               ))}
