@@ -14,20 +14,10 @@ const TestimonialManagement = () => {
   const [filterStatus, setFilterStatus] = useState("all");
 
   const stats = [
-    {
-      label: "Total Testimonials",
-      value: "389",
-      change: "+23 this month",
-      color: "blue",
-    },
-    { label: "Approved", value: "342", change: "+18 approved", color: "green" },
-    {
-      label: "Pending Review",
-      value: "23",
-      change: "5 new today",
-      color: "orange",
-    },
-    { label: "Rejected", value: "24", change: "2 this month", color: "red" },
+    { label: "Total Testimonials", value: "389", color: "blue" },
+    { label: "Approved", value: "342", color: "green" },
+    { label: "Pending Review", value: "23", color: "orange" },
+    { label: "Rejected", value: "24", color: "red" },
   ];
 
   const testimonials = [
@@ -167,7 +157,10 @@ const TestimonialManagement = () => {
           {/* Stats */}
           <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-4">
             {stats.map((stat, index) => (
-              <div key={index} className="p-6 bg-white rounded-lg shadow-sm">
+              <div
+                key={index}
+                className="p-6 bg-white rounded-lg shadow-sm transition transform hover:scale-15 hover:shadow-lg"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="mb-1 text-sm font-medium text-gray-600">
@@ -176,7 +169,6 @@ const TestimonialManagement = () => {
                     <p className="text-3xl font-bold text-gray-900">
                       {stat.value}
                     </p>
-                    <p className="mt-1 text-sm text-gray-500">{stat.change}</p>
                   </div>
                   <div
                     className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center`}
