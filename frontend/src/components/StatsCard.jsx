@@ -1,18 +1,6 @@
-const colorMap = {
-    blue: "blue",
-    green: "green",
-    purple: "purple",
-    red: "red",
-};
-
-export default function StatsCard({
-    label,
-    value,
-    color = "blue",
-    icon: Icon,
-}) {
-    const bgColor = `bg-${colorMap[color]}-100`;
-    const textColor = `text-${colorMap[color]}-600`;
+export default function StatsCard({ label, value, color, icon: Icon }) {
+    const bgColor = `bg-${color}-100`;
+    const textColor = `text-${color}-600`;
 
     return (
         <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 flex-shrink-0 w-full">
