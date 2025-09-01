@@ -10,28 +10,27 @@ import {
 } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 
-
 const AdminDashboard = () => {
   const stats = [
     {
       icon: Users,
       label: "Registered Users",
       value: "2,547",
-      change: "+12% this month",
+      change: "", // removed +12% this month
       color: "blue",
     },
     {
       icon: UserCheck,
-      label: "Active Doctors",
+      label: "Doctors", // changed text
       value: "45",
-      change: "+3 new doctors",
+      change: "", // removed +3 new doctors
       color: "green",
     },
     {
       icon: FileText,
       label: "Results Submitted",
       value: "1,284",
-      change: "+18% this month",
+      change: "", // removed +18% this month
       color: "orange",
     },
     {
@@ -45,7 +44,7 @@ const AdminDashboard = () => {
       icon: Mail,
       label: "Newsletter Subscribers",
       value: "8,923",
-      change: "+156 this week",
+      change: "", // removed +156 this week
       color: "pink",
     },
     {
@@ -58,13 +57,7 @@ const AdminDashboard = () => {
   ];
 
   const quickActions = [
-    {
-      title: "Add New User",
-      description: "Register a new patient",
-      link: "/admin/users",
-      icon: Users,
-      color: "blue",
-    },
+    // Removed Add New User
     {
       title: "Upload Results",
       description: "Send test results to patients",
@@ -111,7 +104,7 @@ const AdminDashboard = () => {
         <div className="bg-white shadow-sm border-b">
           <div className="px-6 py-4 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mt-14">
+              <h1 className="text-2xl font-bold text-gray-900 mt-14 md:mt-0">
                 Admin Dashboard
               </h1>
               <p className="text-gray-600">
@@ -144,7 +137,9 @@ const AdminDashboard = () => {
                   <p className="text-3xl font-bold text-gray-900">
                     {stat.value}
                   </p>
-                  <p className="text-sm text-gray-500 mt-1">{stat.change}</p>
+                  {stat.change && (
+                    <p className="text-sm text-gray-500 mt-1">{stat.change}</p>
+                  )}
                 </div>
                 <div
                   className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center`}

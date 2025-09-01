@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Search, Trash2, Users, AlertTriangle, Edit } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 
-
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [userList, setUserList] = useState([
@@ -12,7 +11,6 @@ const UserManagement = () => {
       email: "john.smith@email.com",
       phone: "+251 11 123 4567",
       joinDate: "2024-12-15",
-      appointments: 5,
     },
     {
       id: 2,
@@ -20,7 +18,6 @@ const UserManagement = () => {
       email: "sarah.j@email.com",
       phone: "+251 11 234 5678",
       joinDate: "2024-11-20",
-      appointments: 8,
     },
     {
       id: 3,
@@ -28,7 +25,6 @@ const UserManagement = () => {
       email: "michael.brown@email.com",
       phone: "+251 11 345 6789",
       joinDate: "2024-10-05",
-      appointments: 2,
     },
     {
       id: 4,
@@ -36,7 +32,6 @@ const UserManagement = () => {
       email: "emily.davis@email.com",
       phone: "+251 11 456 7890",
       joinDate: "2025-01-02",
-      appointments: 1,
     },
     {
       id: 5,
@@ -44,7 +39,6 @@ const UserManagement = () => {
       email: "david.wilson@email.com",
       phone: "+251 11 567 8901",
       joinDate: "2024-09-18",
-      appointments: 12,
     },
   ]);
 
@@ -58,7 +52,6 @@ const UserManagement = () => {
     {
       label: "Total Users",
       value: userList.length.toString(),
-      change: "+12%",
       color: "blue",
     },
   ];
@@ -105,11 +98,11 @@ const UserManagement = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-            <AdminSidebar />
+      <AdminSidebar />
 
       <div className="flex-1">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b mt-12">
+         <div className="bg-white shadow-sm border-b mt-12 md:mt-0">
           <div className="px-4 sm:px-6 py-4 text-center sm:text-left">
             <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
               User Management
@@ -135,15 +128,6 @@ const UserManagement = () => {
                     </p>
                     <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                       {stat.value}
-                    </p>
-                    <p
-                      className={`text-xs sm:text-sm mt-1 ${
-                        stat.change.startsWith("+")
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {stat.change} from last month
                     </p>
                   </div>
                   <div
@@ -193,9 +177,6 @@ const UserManagement = () => {
                       Contact
                     </th>
                     <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      Appointments
-                    </th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -227,9 +208,6 @@ const UserManagement = () => {
                         <div className="text-xs sm:text-sm text-gray-500">
                           {user.phone}
                         </div>
-                      </td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {user.appointments}
                       </td>
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
                         <button

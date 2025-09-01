@@ -38,7 +38,7 @@ const AdminVideosForm = () => {
       <div className="flex-1">
         {/* Header */}
         <div className="bg-white shadow-sm border-b">
-          <div className="px-6 py-4 flex items-center space-x-4 mt-14">
+          <div className="px-6 py-4 flex items-center space-x-4 mt-14 md:mt-0">
             <button
               onClick={() => navigate('/admin/videos')}
               className="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"

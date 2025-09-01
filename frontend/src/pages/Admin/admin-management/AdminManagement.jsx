@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Plus, UserCog } from "lucide-react";
+import { Plus, UserCog, Trash2 } from "lucide-react";
 import StatsCard from "../../../components/StatsCard";
 import AdminTable from "./AdminTable";
 import AddAdminModal from "./AddAdminModal";
 import AdminSidebar from "../../../components/AdminSidebar";
-
 
 export default function AdminManagement() {
     const [showAddForm, setShowAddForm] = useState(false);
@@ -121,46 +120,54 @@ export default function AdminManagement() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
-                              <AdminSidebar />
+        <div className="flex min-h-screen bg-gray-50">
+            {/* Sidebar */}
+            <AdminSidebar />
 
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                        Admin Management
-                    </h1>
-                    <p className="text-gray-600">
-                        Manage administrator accounts and permissions
-                    </p>
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-x-auto">
+                <div className="flex justify-between items-center mb-6 flex-wrap gap-3 mt-14 md:mt-0">
+                    <div>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                            Admin Management
+                        </h1>
+                        <p className="text-gray-600">
+                            Manage administrator accounts and permissions
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => setShowAddForm(true)}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
+                    >
+                        <Plus className="h-4 w-4 mr-2" /> Add Admin
+                    </button>
                 </div>
-                <button
-                    onClick={() => setShowAddForm(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
-                >
-                    <Plus className="h-4 w-4 mr-2" /> Add Admin
-                </button>
-            </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                {stats.map((stat, i) => (
-                    <StatsCard key={i} {...stat} icon={UserCog} />
-                ))}
-            </div>
+                {/* Stats */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    {stats.map((stat, i) => (
+                        <StatsCard key={i} {...stat} icon={UserCog} />
+                    ))}
+                </div>
 
-            {/* Modal */}
-            {showAddForm && (
-                <AddAdminModal
-                    formData={formData}
-                    onClose={() => setShowAddForm(false)}
-                    onSubmit={handleSubmit}
-                    onChange={handleInputChange}
-                    onPermissionChange={handlePermissionChange}
+                {/* Modal */}
+                {showAddForm && (
+                    <AddAdminModal
+                        formData={formData}
+                        onClose={() => setShowAddForm(false)}
+                        onSubmit={handleSubmit}
+                        onChange={handleInputChange}
+                        onPermissionChange={handlePermissionChange}
+                    />
+                )}
+
+                {/* Admin Table */}
+                <AdminTable
+                    admins={admins}
+                    onDelete={handleDeleteAdmin}
+                    deleteIcon={Trash2} // ✅ force delete icon everywhere
                 />
-            )}
-
-            {/* Admin Table */}
-            <AdminTable admins={admins} onDelete={handleDeleteAdmin} />
+            </div>
         </div>
     );
 }

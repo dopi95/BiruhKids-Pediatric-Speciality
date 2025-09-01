@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 
-
 export default function ServiceManagement() {
     const [Services, setServices] = useState([
         {
@@ -134,114 +133,122 @@ export default function ServiceManagement() {
     );
 
     return (
-        <div className="p-4 sm:p-6 bg-gray-50">
-                  <AdminSidebar />
-
-            <div className="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                        Service Management
-                    </h1>
-                    <p>Adding and Deleting Services</p>
-                </div>
-                <button
-                    onClick={() => openModal()}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"
-                >
-                    <Plus className="h-4 w-4 mr-2" /> Add Service
-                </button>
+        <div className="flex min-h-screen bg-gray-50">
+            {/* Sidebar (always visible on all screens) */}
+            <div className="w-64 bg-white shadow-lg">
+                <AdminSidebar />
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-8">
-                <div className="bg-white shadow rounded-lg p-4 sm:p-6 flex items-center justify-between">
+            {/* Main Content */}
+            <div className="flex-1 p-4 sm:p-6">
+                <div className="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center mt-14 md:mt-0">
                     <div>
-                        <h2 className="text-gray-600 text-sm font-medium">
-                            Total Services
+                        <h1 className="text-2xl font-bold text-gray-900">
+                            Service Management
+                        </h1>
+                        <p>Adding and Deleting Services</p>
+                    </div>
+                    <button
+                        onClick={() => openModal()}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"
+                    >
+                        <Plus className="h-4 w-4 mr-2" /> Add Service
+                    </button>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-8">
+                    <div className="bg-white shadow rounded-lg p-4 sm:p-6 flex items-center justify-between">
+                        <div>
+                            <h2 className="text-gray-600 text-sm font-medium">
+                                Total Services
+                            </h2>
+                            <p className="text-2xl font-bold">
+                                {Services.length}
+                            </p>
+                        </div>
+                        <div className="bg-blue-100 text-blue-600 p-3 rounded-full text-xl">
+                            <Settings />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Table */}
+                <div className="bg-white rounded-lg shadow-sm">
+                    <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <h2 className="text-base sm:text-lg font-semibold text-gray-900 flex gap-1 items-center">
+                            <span className="text-2xl">
+                                <Settings />
+                            </span>
+                            All Services
                         </h2>
-                        <p className="text-2xl font-bold">{Services.length}</p>
+                        <div className="flex items-center border rounded-lg overflow-hidden w-full sm:w-auto">
+                            <input
+                                type="text"
+                                placeholder="Search by title..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="px-3 py-2 outline-none flex-1 sm:w-60"
+                            />
+                            <Search className="h-5 w-5 text-gray-400 mr-2" />
+                        </div>
                     </div>
-                    <div className="bg-blue-100 text-blue-600 p-3 rounded-full text-xl">
-                        <Settings />
-                    </div>
-                </div>
-            </div>
 
-            {/* Table */}
-            <div className="bg-white rounded-lg shadow-sm">
-                <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200 flex justify-between items-center">
-                    <h2 className="text-base sm:text-lg font-semibold text-gray-900 flex gap-1 items-center">
-                        <span className="text-2xl">
-                            <Settings />{" "}
-                        </span>
-                        All Services
-                    </h2>
-                    <div className="flex items-center border rounded-lg overflow-hidden">
-                        <input
-                            type="text"
-                            placeholder="Search by title..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="px-3 py-2 outline-none w-60"
-                        />
-                        <Search className="h-5 w-5 text-gray-400 mr-2" />
-                    </div>
-                </div>
-
-                <div className="w-full overflow-x-auto">
-                    <table className="min-w-[500px] w-full text-sm sm:text-base">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                    No
-                                </th>
-                                <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                    Title (EN)
-                                </th>
-                                <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                    Description (EN)
-                                </th>
-                                <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                    Features (EN)
-                                </th>
-                                <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {filteredServices.map((s, index) => (
-                                <tr key={s.id} className="hover:bg-gray-50">
-                                    <td className="px-4 sm:px-6 py-4">
-                                        {index + 1}
-                                    </td>
-                                    <td className="px-4 sm:px-6 py-4">
-                                        {s.title_en}
-                                    </td>
-                                    <td className="px-4 sm:px-6 py-4">
-                                        {s.description_en}
-                                    </td>
-                                    <td className="px-4 sm:px-6 py-4">
-                                        {s.features_en.join(", ")}
-                                    </td>
-                                    <td className="px-4 sm:px-6 py-4 flex space-x-2">
-                                        <button
-                                            onClick={() => openModal(s)}
-                                            className="text-green-600 hover:text-green-900 p-1 sm:p-2"
-                                        >
-                                            <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
-                                        </button>
-                                        <button
-                                            onClick={() => confirmDelete(s)}
-                                            className="text-red-600 hover:text-red-900 p-1 sm:p-2"
-                                        >
-                                            <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
-                                        </button>
-                                    </td>
+                    <div className="w-full overflow-x-auto">
+                        <table className="min-w-[500px] w-full text-sm sm:text-base">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
+                                        No
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
+                                        Title (EN)
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
+                                        Description (EN)
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
+                                        Features (EN)
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions
+                                    </th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {filteredServices.map((s, index) => (
+                                    <tr key={s.id} className="hover:bg-gray-50">
+                                        <td className="px-4 sm:px-6 py-4">
+                                            {index + 1}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4">
+                                            {s.title_en}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4">
+                                            {s.description_en}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4">
+                                            {s.features_en.join(", ")}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4 flex space-x-2">
+                                            <button
+                                                onClick={() => openModal(s)}
+                                                className="text-green-600 hover:text-green-900 p-1 sm:p-2"
+                                            >
+                                                <Edit className="h-4 w-4 sm:h-5 sm:w-5" />
+                                            </button>
+                                            <button
+                                                onClick={() => confirmDelete(s)}
+                                                className="text-red-600 hover:text-red-900 p-1 sm:p-2"
+                                            >
+                                                <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -287,8 +294,7 @@ export default function ServiceManagement() {
                                     </div>
                                     <div className="flex flex-col space-y-1">
                                         <label className="text-sm font-medium">
-                                            Features (English, comma separated)
-                                            *
+                                            Features (English, comma separated) *
                                         </label>
                                         <input
                                             type="text"
