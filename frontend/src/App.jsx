@@ -168,7 +168,7 @@ export default function App() {
             element={<AppointmentManagement />}
           />
           <Route path="/admin/results" element={<ResultManagement />} />
-          <Route path="/results/form" element={<ResultForm />} />
+          <Route path="/admin/results/form" element={<ResultForm />} />
           <Route path="/admin/videos" element={<AdminVideos />} />
 
           <Route path="/admin/videos/form" element={<AdminVideosForm />} />
