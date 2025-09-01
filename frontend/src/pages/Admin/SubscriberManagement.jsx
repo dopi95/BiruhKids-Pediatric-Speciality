@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, Download, Send, Search, Filter, Calendar } from "lucide-react";
+import { Mail, Send, Search, Filter, Calendar } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 
 const SubscriberManagement = () => {
@@ -10,22 +10,14 @@ const SubscriberManagement = () => {
     {
       label: "Total Subscribers",
       value: "8,923",
-      change: "+156 this week",
       color: "blue",
     },
     {
       label: "Active Subscribers",
       value: "8,645",
-      change: "96.9% active",
       color: "green",
     },
-    {
-      label: "New This Month",
-      value: "542",
-      change: "+23% growth",
-      color: "orange",
-    },
-    { label: "Unsubscribed", value: "278", change: "3.1% rate", color: "red" },
+    { label: "Unsubscribed", value: "278", color: "red" },
   ];
 
   const subscribers = [
@@ -34,50 +26,30 @@ const SubscriberManagement = () => {
       email: "john.smith@email.com",
       subscribedAt: "2025-01-08",
       status: "Active",
-      source: "Footer Signup",
-      lastEmail: "2025-01-09",
-      opens: 12,
-      clicks: 8,
     },
     {
       id: 2,
       email: "sarah.j@email.com",
       subscribedAt: "2025-01-07",
       status: "Active",
-      source: "Newsletter Popup",
-      lastEmail: "2025-01-09",
-      opens: 15,
-      clicks: 12,
     },
     {
       id: 3,
       email: "michael.brown@email.com",
       subscribedAt: "2025-01-06",
       status: "Active",
-      source: "Footer Signup",
-      lastEmail: "2025-01-09",
-      opens: 8,
-      clicks: 3,
     },
     {
       id: 4,
       email: "emily.davis@email.com",
       subscribedAt: "2025-01-05",
       status: "Unsubscribed",
-      source: "Contact Form",
-      lastEmail: "2025-01-06",
-      opens: 2,
-      clicks: 0,
     },
     {
       id: 5,
       email: "david.wilson@email.com",
       subscribedAt: "2025-01-04",
       status: "Active",
-      source: "Footer Signup",
-      lastEmail: "2025-01-09",
-      opens: 20,
-      clicks: 15,
     },
   ];
 
@@ -107,15 +79,9 @@ const SubscriberManagement = () => {
       return;
     }
     console.log("Send newsletter to:", selectedSubscribers);
-    // Placeholder for newsletter sending logic
     alert(
       `Newsletter will be sent to ${selectedSubscribers.length} subscribers`
     );
-  };
-
-  const handleExportSubscribers = () => {
-    console.log("Export subscribers");
-    // Placeholder for export logic
   };
 
   return (
@@ -137,13 +103,6 @@ const SubscriberManagement = () => {
               </div>
               <div className="flex space-x-3">
                 <button
-                  onClick={handleExportSubscribers}
-                  className="flex items-center px-4 py-2 text-white transition-colors duration-200 bg-green-600 rounded-lg hover:bg-green-700"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Export List
-                </button>
-                <button
                   onClick={handleSendNewsletter}
                   className="flex items-center px-4 py-2 text-white transition-colors duration-200 bg-blue-600 rounded-lg hover:bg-blue-700"
                 >
@@ -157,9 +116,12 @@ const SubscriberManagement = () => {
 
         <div className="p-6">
           {/* Stats */}
-          <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-3">
             {stats.map((stat, index) => (
-              <div key={index} className="p-6 bg-white rounded-lg shadow-sm">
+              <div
+                key={index}
+                className="p-6 bg-white rounded-lg shadow-sm transition transform hover:scale-15 hover:shadow-lg"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="mb-1 text-sm font-medium text-gray-600">
@@ -168,7 +130,6 @@ const SubscriberManagement = () => {
                     <p className="text-3xl font-bold text-gray-900">
                       {stat.value}
                     </p>
-                    <p className="mt-1 text-sm text-gray-500">{stat.change}</p>
                   </div>
                   <div
                     className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center`}
@@ -304,16 +265,7 @@ const SubscriberManagement = () => {
                       Status
                     </th>
                     <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                      Source
-                    </th>
-                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                      Engagement
-                    </th>
-                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                       Subscribed
-                    </th>
-                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                      Last Email
                     </th>
                   </tr>
                 </thead>
@@ -349,27 +301,11 @@ const SubscriberManagement = () => {
                           {subscriber.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                        {subscriber.source}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                        <div className="flex space-x-4">
-                          <span className="text-blue-600">
-                            {subscriber.opens} opens
-                          </span>
-                          <span className="text-green-600">
-                            {subscriber.clicks} clicks
-                          </span>
-                        </div>
-                      </td>
                       <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                         <div className="flex items-center">
                           <Calendar className="w-4 h-4 mr-1" />
                           {subscriber.subscribedAt}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        {subscriber.lastEmail}
                       </td>
                     </tr>
                   ))}
