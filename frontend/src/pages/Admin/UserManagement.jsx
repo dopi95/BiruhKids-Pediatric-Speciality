@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Search, Trash2, Users, AlertTriangle, Edit } from "lucide-react";
+import AdminSidebar from "../../components/AdminSidebar";
+
 
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -103,9 +105,11 @@ const UserManagement = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+            <AdminSidebar />
+
       <div className="flex-1">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white shadow-sm border-b mt-12">
           <div className="px-4 sm:px-6 py-4 text-center sm:text-left">
             <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
               User Management

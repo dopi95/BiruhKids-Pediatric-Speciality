@@ -7,6 +7,8 @@ import {
     Search,
     Settings,
 } from "lucide-react";
+import AdminSidebar from "../../components/AdminSidebar";
+
 
 export default function ServiceManagement() {
     const [Services, setServices] = useState([
@@ -133,7 +135,8 @@ export default function ServiceManagement() {
 
     return (
         <div className="p-4 sm:p-6 bg-gray-50">
-            {/* Header */}
+                  <AdminSidebar />
+
             <div className="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">

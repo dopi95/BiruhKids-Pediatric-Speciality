@@ -3,6 +3,8 @@ import { ProfileHeader } from "../../components/profile/ProfileHeader";
 import { PersonalInfoForm } from "../../components/profile/PersonalInfoForm";
 import { EmergencyContactForm } from "../../components/profile/EmergencyContactForm";
 import { AccountActions } from "../../components/profile/AccountActions";
+import AdminSidebar from "../../components/AdminSidebar";
+
 
 export default function AdminProfile() {
     const [isEditing, setIsEditing] = useState(false);
@@ -54,6 +56,8 @@ export default function AdminProfile() {
 
     return (
         <div className="min-h-screen bg-gray-50">
+                              <AdminSidebar />
+
             <ProfileHeader
                 isEditing={isEditing}
                 onEdit={() => setIsEditing(true)}

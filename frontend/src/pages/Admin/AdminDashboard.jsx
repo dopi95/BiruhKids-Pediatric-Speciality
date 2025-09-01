@@ -8,6 +8,8 @@ import {
   UserCheck,
   Calendar,
 } from "lucide-react";
+import AdminSidebar from "../../components/AdminSidebar";
+
 
 const AdminDashboard = () => {
   const stats = [
@@ -102,14 +104,14 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* <AdminSidebar /> */}
+      <AdminSidebar />
 
       <div className="flex-1">
         {/* Header */}
         <div className="bg-white shadow-sm border-b">
           <div className="px-6 py-4 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-gray-900 mt-14">
                 Admin Dashboard
               </h1>
               <p className="text-gray-600">

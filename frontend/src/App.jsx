@@ -12,6 +12,20 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import DoctorManagement from "./pages/Admin/DoctorManagement";
+import UserManagement from "./pages/Admin/UserManagement";
+import AdminManagement from "./pages/Admin/admin-management/AdminManagement";
+import AdminProfile from "./pages/Admin/AdminProfile";
+import ServiceManagement from "./pages/Admin/ServiceManagement";
+import ChangePassword from "./pages/ChangePassword";
+import UserDashboard from "./pages/userDashboard";
+import Profile from "./pages/profile";
+import AppointmentManagement from "./pages/Admin/AppointmentManagement";
+import ResultManagement from "./pages/Admin/ResultManagement";
+import ResultForm from "./pages/Admin/ResultForm";
+import AdminVideos from "./pages/Admin/AdminVideos";
+import AdminVideosForm from "./pages/Admin/AdminVideosForm";
 export default function App() {
     return (
         <Router>
@@ -34,6 +48,7 @@ export default function App() {
                             </MainLayout>
                         }
                     />
+                    
                     <Route
                         path="/contact"
                         element={
@@ -110,8 +125,8 @@ export default function App() {
                     />
 
                     {/* Protected User Routes */}
-                   
-
+                    <Route
+                        path="/profile"
                         element={
                             <MainLayout>
                                 <Profile />
@@ -138,12 +153,12 @@ export default function App() {
                     {/* Admin route */}
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route
-                        path="/admin/doctor"
+                        path="/admin/doctors"
                         element={<DoctorManagement />}
                     />
                     <Route path="/admin/users" element={<UserManagement />} />
                     <Route
-                        path="/admin/admin-management"
+                        path="/admin/admins"
                         element={<AdminManagement />}
                     />
                     <Route path="/admin/profile" element={<AdminProfile />} />
@@ -159,6 +174,31 @@ export default function App() {
                         path="/admin/appointments"
                         element={
                                 <AppointmentManagement />
+                        }
+                    />
+                    <Route
+                        path="/admin/results"
+                        element={
+                                <ResultManagement/>
+                        }
+                    />
+                     <Route
+                        path="/results/form"
+                        element={
+                                <ResultForm />
+                        }
+                    />
+                             <Route
+                        path="/admin/videos"
+                        element={
+                                <AdminVideos />
+                        }
+                    />
+                     
+                    <Route
+                        path="/admin/videos/form"
+                        element={
+                                <AdminVideosForm/>
                         }
                     />
                 </Routes>

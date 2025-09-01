@@ -35,7 +35,7 @@ const AdminSidebar = () => {
     { path: "/admin/testimonials", icon: MessageSquare, label: "Testimonials" },
     { path: "/admin/subscribers", icon: Mail, label: "Subscribers" },
     { path: "/admin/admins", icon: UserCog, label: "Admins" },
-    { path: "/profile", icon: User, label: "Profile" },
+    { path: "/admin/profile", icon: User, label: "Profile" },
   ];
 
   return (

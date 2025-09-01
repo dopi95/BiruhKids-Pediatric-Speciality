@@ -7,6 +7,7 @@ import {
   Upload,
   Search,
 } from "lucide-react";
+import AdminSidebar from "../../components/AdminSidebar";
 
 export default function DoctorManagement() {
   const [doctors, setDoctors] = useState([
@@ -149,7 +150,7 @@ export default function DoctorManagement() {
 
   return (
     <div className="p-4 sm:p-6 bg-gray-50">
-      {/* Header */}
+            <AdminSidebar />
       <div className="bg-white shadow-sm border-b">
         <div className="px-6 py-4 flex justify-between items-center">
           <div>

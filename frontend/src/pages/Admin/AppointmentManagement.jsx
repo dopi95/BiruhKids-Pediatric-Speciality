@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { CheckSquare, CalendarDays } from "lucide-react";
+import AdminSidebar from "../../components/AdminSidebar";
+
 
 const AppointmentManagement = () => {
   // Sample appointments (replace with API data later)
@@ -40,7 +42,8 @@ const AppointmentManagement = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      {/* Header */}
+            <AdminSidebar />
+
       <div className="bg-white shadow-sm rounded-lg p-6 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Appointment Management</h1>
         <p className="text-gray-600">Manage and review patient appointments</p>
