@@ -5,7 +5,6 @@ import { EmergencyContactForm } from "../../components/profile/EmergencyContactF
 import { AccountActions } from "../../components/profile/AccountActions";
 import AdminSidebar from "../../components/AdminSidebar";
 
-
 export default function AdminProfile() {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -55,33 +54,35 @@ export default function AdminProfile() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-                              <AdminSidebar />
+        <div className="flex min-h-screen bg-gray-50">
+            <AdminSidebar />
 
-            <ProfileHeader
-                isEditing={isEditing}
-                onEdit={() => setIsEditing(true)}
-                onCancel={handleCancel}
-                onSave={handleSubmit}
-                role="admin"
-            />
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <form onSubmit={handleSubmit}>
-                    <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-                        <PersonalInfoForm
-                            formData={formData}
-                            isEditing={isEditing}
-                            handleChange={handleChange}
-                            role={role}
-                        />
-                        <EmergencyContactForm
-                            formData={formData}
-                            isEditing={isEditing}
-                            handleChange={handleChange}
-                        />
-                    </div>
-                    <AccountActions showDelete={false} role="admin" />
-                </form>
+            <div className="flex-1">
+                <ProfileHeader
+                    isEditing={isEditing}
+                    onEdit={() => setIsEditing(true)}
+                    onCancel={handleCancel}
+                    onSave={handleSubmit}
+                    role="admin"
+                />
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <form onSubmit={handleSubmit}>
+                        <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+                            <PersonalInfoForm
+                                formData={formData}
+                                isEditing={isEditing}
+                                handleChange={handleChange}
+                                role={role}
+                            />
+                            <EmergencyContactForm
+                                formData={formData}
+                                isEditing={isEditing}
+                                handleChange={handleChange}
+                            />
+                        </div>
+                        <AccountActions showDelete={false} role="admin" />
+                    </form>
+                </div>
             </div>
         </div>
     );
