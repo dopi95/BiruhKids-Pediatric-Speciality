@@ -139,7 +139,7 @@ const TestimonialManagement = () => {
         <div className="flex min-h-screen bg-gray-50">
             <AdminSidebar />
 
-            <div className="flex-1">
+            <div className="flex-1 mt-20 sm:mt-0">
                 {/* Header */}
                 <div className="bg-white border-b shadow-sm">
                     <div className="px-6 py-4">
@@ -278,12 +278,7 @@ const TestimonialManagement = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                                        <button className="flex items-center text-sm text-blue-600 hover:text-blue-700">
-                                            <Eye className="w-4 h-4 mr-1" />
-                                            View Full Details
-                                        </button>
-
+                                    <div className="flex items-center justify-end pt-4 border-t border-gray-200">
                                         <div className="flex space-x-2">
                                             {testimonial.status ===
                                                 "pending" && (

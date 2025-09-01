@@ -91,7 +91,7 @@ const SubscriberManagement = () => {
         <div className="flex min-h-screen bg-gray-50">
             <AdminSidebar />
 
-            <div className="flex-1">
+            <div className="flex-1 mt-20 sm:mt-0">
                 {/* Header */}
                 <div className="bg-white border-b shadow-sm">
                     <div className="px-6 py-4">

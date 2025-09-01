@@ -4,7 +4,6 @@ import {
   Calendar,
   FileText,
   User,
-  Bell,
   Download,
   Eye,
   StickyNote,
@@ -71,14 +70,10 @@ const UserDashboard = () => {
                 Welcome back, John!
               </h1>
               <p className="text-gray-600 mt-1">
-                Here's your health dashboard overview
+                Here's your Results dashboard overview
               </p>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200">
-                <Bell className="h-6 w-6" />
-                <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-              </button>
               <Link
                 to="/profile"
                 className="flex items-center space-x-3 cursor-pointer"
@@ -216,10 +211,6 @@ const UserDashboard = () => {
                 Update Profile
               </p>
             </Link>
-            <button className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 text-center">
-              <Bell className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">Notifications</p>
-            </button>
           </div>
         </div>
       </div>
