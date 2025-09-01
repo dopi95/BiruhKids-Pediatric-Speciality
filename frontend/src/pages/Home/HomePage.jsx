@@ -4,6 +4,7 @@ import Services from "./Services";
 import Doctors from "./Doctors";
 import Testimonials from "./Testimonials";
 import Faq from "./Faqs";
+import GoogleMap from "../../components/GoogleMap";
 
 function HomePage() {
     return (
@@ -14,6 +15,7 @@ function HomePage() {
             <Doctors />
             <Testimonials />
             <Faq />
+            <GoogleMap />
         </>
     );
 }

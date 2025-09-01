@@ -226,22 +226,7 @@ const Hero = () => {
                 <ChevronRight size={24} />
             </button>
 
-            <div className="hidden md:flex absolute bottom-8 left-1/2 transform -translate-x-1/2 space-x-3 z-10">
-                {slides.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => goToSlide(index)}
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                            index === getActualSlideIndex()
-                                ? "bg-white scale-125"
-                                : "bg-white bg-opacity-50 hover:bg-opacity-75"
-                        }`}
-                        aria-label={`Go to slide ${index + 1}`}
-                    />
-                ))}
-            </div>
-
-            <div className="md:hidden flex flex-col absolute right-4 top-1/2 transform -translate-y-1/2 space-y-3 z-10">
+            <div className="flex absolute bottom-8 left-1/2 transform -translate-x-1/2 space-x-3 z-10">
                 {slides.map((_, index) => (
                     <button
                         key={index}
