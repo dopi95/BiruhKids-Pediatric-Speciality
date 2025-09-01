@@ -18,11 +18,6 @@ import Profile from "./pages/profile";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import DoctorManagement from "./pages/Admin/DoctorManagement";
 import UserManagement from "./pages/Admin/UserManagement";
-import AdminManagement from "./pages/Admin/admin-management/AdminManagement";
-import AdminProfile from "./pages/Admin/AdminProfile";
-import ServiceManagement from "./pages/Admin/ServiceManagement";
-
-import ChangePassword from "./pages/ChangePassword";
 export default function App() {
     return (
         <Router>
@@ -165,6 +160,12 @@ export default function App() {
                     <Route
                         path="/admin/change-password"
                         element={<ChangePassword backPath="/admin/profile" />}
+                    />
+                    <Route
+                        path="/admin/appointments"
+                        element={
+                                <AppointmentManagement />
+                        }
                     />
                 </Routes>
             </div>
