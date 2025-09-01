@@ -12,6 +12,7 @@ const ResultForm = () => {
 
   const [formData, setFormData] = useState({
     patientName: "",
+    doctorName: "", // ✅ doctor name field
     phoneNumber: "",
     email: "",
     testDate: todayDate,
@@ -48,6 +49,7 @@ const ResultForm = () => {
   const validate = () => {
     let newErrors = {};
     if (!formData.patientName) newErrors.patientName = "Patient name is required";
+    if (!formData.doctorName) newErrors.doctorName = "Doctor name is required"; // ✅ validation
     if (!formData.phoneNumber) newErrors.phoneNumber = "Phone number is required";
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.testDate) newErrors.testDate = "Test date is required";
@@ -70,6 +72,7 @@ const ResultForm = () => {
       // Reset form fields
       setFormData({
         patientName: "",
+        doctorName: "",
         phoneNumber: "",
         email: "",
         testDate: todayDate,
@@ -189,7 +192,7 @@ const ResultForm = () => {
             <input
               type="file"
               name="resultFile"
-              ref={fileInputRef} // ✅ to reset file input
+              ref={fileInputRef}
               onChange={handleChange}
               className={`w-full text-sm sm:text-base ${
                 errors.resultFile ? "border-red-500" : ""
@@ -215,6 +218,23 @@ const ResultForm = () => {
             </label>
           </div>
 
+          {/* ✅ Doctor Name (moved here above Additional Notes) */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Doctor Name</label>
+            <input
+              type="text"
+              name="doctorName"
+              value={formData.doctorName}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
+                errors.doctorName ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.doctorName && (
+              <p className="text-red-500 text-xs mt-1">{errors.doctorName}</p>
+            )}
+          </div>
+
           {/* Additional Notes */}
           <div>
             <label className="block text-sm font-medium mb-1">
@@ -229,7 +249,7 @@ const ResultForm = () => {
             />
           </div>
 
-          {/* ✅ Success message moved just above buttons */}
+          {/* ✅ Success message */}
           {submitted && (
             <div className="flex items-center justify-center mb-4 text-green-600 font-medium bg-green-50 border border-green-200 rounded-lg p-3">
               <CheckCircle className="w-5 h-5 mr-2" />
