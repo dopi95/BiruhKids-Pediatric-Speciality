@@ -12,12 +12,6 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Services from "./pages/Services";
-import UserDashboard from "./pages/userDashboard";
-import Profile from "./pages/profile";
-// admin imports
-import AdminDashboard from "./pages/Admin/AdminDashboard";
-import DoctorManagement from "./pages/Admin/DoctorManagement";
-import UserManagement from "./pages/Admin/UserManagement";
 export default function App() {
     return (
         <Router>
@@ -116,8 +110,8 @@ export default function App() {
                     />
 
                     {/* Protected User Routes */}
-                    <Route
-                        path="/profile"
+                   
+
                         element={
                             <MainLayout>
                                 <Profile />
