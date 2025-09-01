@@ -1,40 +1,60 @@
 import React, { useState } from "react";
-import { Play, Plus, Trash2, Edit, Youtube, Music2 } from "lucide-react";
+import { Play, Plus, Trash2, Edit, Youtube, Music2, X } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 
 const AdminVideos = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("youtube");
+  const [editVideo, setEditVideo] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
   const platforms = [
     { id: "youtube", name: "YouTube" },
     { id: "tiktok", name: "TikTok" },
   ];
 
-  // Real videos
-  const youtubeVideos = [
+  const [youtubeVideos, setYoutubeVideos] = useState([
     {
       id: 1,
       title: "Biruh Kids - YouTube Video",
       description: "Educational video from Biruh Kids on YouTube.",
       url: "https://www.youtube.com/embed/lz5jpt_k7nA?autoplay=0&mute=0",
+      titleAm: "ብሩህ ልጆች - የዩቱብ ቪዲዮ",
+      descriptionAm: "ከብሩህ ልጆች በዩቱብ ላይ የትምህርት ቪዲዮ።",
     },
-  ];
+  ]);
 
-  const tiktokVideos = [
+  const [tiktokVideos, setTiktokVideos] = useState([
     {
       id: 1,
       url: "https://www.tiktok.com/@biruhkids/video/7402191353947393286",
     },
-  ];
+  ]);
 
   const currentVideos =
     selectedPlatform === "youtube" ? youtubeVideos : tiktokVideos;
 
-  const handleDeleteVideo = (videoId) => {
-    if (window.confirm("Are you sure you want to delete this video?")) {
-      console.log("Delete video:", videoId);
-      // Placeholder for delete logic
+  // Handle Save Changes
+  const handleSave = (updatedVideo) => {
+    if (selectedPlatform === "youtube") {
+      setYoutubeVideos((prev) =>
+        prev.map((v) => (v.id === updatedVideo.id ? updatedVideo : v))
+      );
+    } else {
+      setTiktokVideos((prev) =>
+        prev.map((v) => (v.id === updatedVideo.id ? updatedVideo : v))
+      );
     }
+    setEditVideo(null);
+  };
+
+  // Handle Delete
+  const confirmDelete = (videoId) => {
+    if (selectedPlatform === "youtube") {
+      setYoutubeVideos((prev) => prev.filter((v) => v.id !== videoId));
+    } else {
+      setTiktokVideos((prev) => prev.filter((v) => v.id !== videoId));
+    }
+    setShowDeleteConfirm(null);
   };
 
   // Stats
@@ -166,11 +186,14 @@ const AdminVideos = () => {
                             {video.description}
                           </p>
                           <div className="flex space-x-2">
-                            <button className="p-1 text-green-600 hover:text-green-700">
+                            <button
+                              onClick={() => setEditVideo(video)}
+                              className="p-1 text-green-600 hover:text-green-700"
+                            >
                               <Edit className="h-4 w-4" />
                             </button>
                             <button
-                              onClick={() => handleDeleteVideo(video.id)}
+                              onClick={() => setShowDeleteConfirm(video.id)}
                               className="p-1 text-red-600 hover:text-red-700"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -195,11 +218,14 @@ const AdminVideos = () => {
                           ></script>
 
                           <div className="flex justify-end space-x-2 mt-3">
-                            <button className="p-1 text-green-600 hover:text-green-700">
+                            <button
+                              onClick={() => setEditVideo(video)}
+                              className="p-1 text-green-600 hover:text-green-700"
+                            >
                               <Edit className="h-4 w-4" />
                             </button>
                             <button
-                              onClick={() => handleDeleteVideo(video.id)}
+                              onClick={() => setShowDeleteConfirm(video.id)}
                               className="p-1 text-red-600 hover:text-red-700"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -234,6 +260,148 @@ const AdminVideos = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {editVideo && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
+            <button
+              onClick={() => setEditVideo(null)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {selectedPlatform === "youtube" ? (
+              <>
+                <h2 className="text-xl font-bold mb-4">Edit YouTube Video</h2>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input
+                  type="text"
+                  className="w-full mb-3 px-4 py-2 border rounded-lg"
+                  placeholder="Title"
+                  value={editVideo.title}
+                  onChange={(e) =>
+                    setEditVideo({ ...editVideo, title: e.target.value })
+                  }
+                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Video URL</label>
+                <input
+                  type="url"
+                  className="w-full mb-3 px-4 py-2 border rounded-lg"
+                  placeholder="Video URL"
+                  value={editVideo.url}
+                  onChange={(e) =>
+                    setEditVideo({ ...editVideo, url: e.target.value })
+                  }
+                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea
+                  className="w-full mb-3 px-4 py-2 border rounded-lg"
+                  placeholder="Description"
+                  value={editVideo.description}
+                  onChange={(e) =>
+                    setEditVideo({ ...editVideo, description: e.target.value })
+                  }
+                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title (Amharic)</label>
+                <input
+                  type="text"
+                  className="w-full mb-3 px-4 py-2 border rounded-lg"
+                  placeholder="Title (Amharic)"
+                  value={editVideo.titleAm}
+                  onChange={(e) =>
+                    setEditVideo({ ...editVideo, titleAm: e.target.value })
+                  }
+                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description (Amharic)</label>
+                <textarea
+                  className="w-full mb-3 px-4 py-2 border rounded-lg"
+                  placeholder="Description (Amharic)"
+                  value={editVideo.descriptionAm}
+                  onChange={(e) =>
+                    setEditVideo({
+                      ...editVideo,
+                      descriptionAm: e.target.value,
+                    })
+                  }
+                />
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => setEditVideo(null)}
+                    className="px-4 py-2 border rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleSave(editVideo)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-xl font-bold mb-4">Edit TikTok Video</h2>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Video URL</label>
+                <input
+                  type="url"
+                  className="w-full mb-3 px-4 py-2 border rounded-lg"
+                  placeholder="Video URL"
+                  value={editVideo.url}
+                  onChange={(e) =>
+                    setEditVideo({ ...editVideo, url: e.target.value })
+                  }
+                />
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => setEditVideo(null)}
+                    className="px-4 py-2 border rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleSave(editVideo)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirm Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
+            <h2 className="text-lg font-bold mb-4 text-gray-900">
+              Are you sure?
+            </h2>
+            <p className="text-gray-600 mb-6">
+              This action cannot be undone. The video will be permanently
+              removed.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="px-4 py-2 border rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => confirmDelete(showDeleteConfirm)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

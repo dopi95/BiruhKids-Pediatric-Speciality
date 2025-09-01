@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Upload, FileText, CheckCircle, ArrowLeft, Send } from 'lucide-react';
+import { Upload, FileText, CheckCircle, ArrowLeft, Send, Mail } from 'lucide-react';
 import AdminSidebar from '../../components/AdminSidebar';
 
 const ResultForm = () => {
@@ -12,19 +12,45 @@ const ResultForm = () => {
   const [formData, setFormData] = useState({
     patientName: '',
     phoneNumber: '',
+    email: '',
     testDate: todayDate,
     resultFile: null,
     notes: '',
-    priority: 'Normal'
+    priority: 'Normal',
+    notifyByEmail: false,
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
 
+  // Prefill from query (phone and id for update)
   useEffect(() => {
     const phone = searchParams.get('phone');
+    const id = searchParams.get('id');
+
     if (phone) {
       setFormData(prev => ({ ...prev, phoneNumber: phone }));
+    }
+
+    if (id) {
+      setIsUpdateMode(true);
+      // Fetch existing result for update
+      fetch(`/api/results/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          setFormData({
+            patientName: data.patientName || '',
+            phoneNumber: data.phoneNumber || '',
+            email: data.email || '',
+            testDate: data.testDate || todayDate,
+            resultFile: null, // user can re-upload if needed
+            notes: data.notes || '',
+            priority: data.priority || 'Normal',
+            notifyByEmail: data.notifyByEmail || false,
+          });
+        })
+        .catch(err => console.error("Error fetching result:", err));
     }
   }, [searchParams]);
 
@@ -34,9 +60,10 @@ const ResultForm = () => {
   };
 
   const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: type === "checkbox" ? checked : value
     }));
   };
 
@@ -47,7 +74,8 @@ const ResultForm = () => {
     if (!formData.patientName.trim()) validationErrors.push('Patient name is required');
     if (!formData.phoneNumber.trim()) validationErrors.push('Phone number is required');
     if (!formData.testDate) validationErrors.push('Test date is required');
-    if (!formData.resultFile) validationErrors.push('Result file is required');
+    if (!isUpdateMode && !formData.resultFile) validationErrors.push('Result file is required');
+    if (!formData.email.trim()) validationErrors.push('Email is required');
 
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
@@ -55,12 +83,34 @@ const ResultForm = () => {
     }
 
     setErrors([]);
-    console.log('Result submitted:', formData);
-    setIsSubmitted(true);
 
-    setTimeout(() => {
-      navigate('/admin/results');
-    }, 3000);
+    // Example: send to backend
+    const payload = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== null) {
+        payload.append(key, formData[key]);
+      }
+    });
+
+    const id = searchParams.get('id');
+    const url = isUpdateMode ? `/api/results/${id}` : "/api/results";
+    const method = isUpdateMode ? "PUT" : "POST";
+
+    fetch(url, {
+      method,
+      body: payload,
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Result submitted:", data);
+        setIsSubmitted(true);
+        setTimeout(() => {
+          navigate('/admin/results');
+        }, 3000);
+      })
+      .catch(err => {
+        console.error("Error submitting result:", err);
+      });
   };
 
   if (isSubmitted) {
@@ -71,15 +121,18 @@ const ResultForm = () => {
           <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 sm:p-8 text-center">
             <CheckCircle className="h-14 w-14 sm:h-16 sm:w-16 text-green-500 mx-auto mb-4" />
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
-              Result Sent Successfully!
+              {isUpdateMode ? "Result Updated Successfully!" : "Result Sent Successfully!"}
             </h2>
             <p className="text-gray-600 mb-6 text-sm sm:text-base">
-              The test result has been uploaded and sent to the patient via email and SMS.
+              {isUpdateMode
+                ? "The test result has been updated successfully."
+                : "The test result has been uploaded and sent to the patient."}
             </p>
             <div className="bg-gray-50 p-4 rounded-lg mb-6 text-left space-y-2">
               <p><strong>Patient:</strong> {formData.patientName}</p>
               <p><strong>Phone:</strong> {formData.phoneNumber}</p>
               <p><strong>Date:</strong> {formData.testDate}</p>
+              <p><strong>Email:</strong> {formData.email}</p>
             </div>
             <p className="text-xs sm:text-sm text-gray-600 mb-4">
               Redirecting to Result Management...
@@ -112,8 +165,12 @@ const ResultForm = () => {
                 <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
               <div>
-                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Upload Test Result</h1>
-                <p className="text-sm sm:text-base text-gray-600">Send test results to patient</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
+                  {isUpdateMode ? "Update Test Result" : "Upload Test Result"}
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600">
+                  {isUpdateMode ? "Edit and save the test result" : "Send test results to patient"}
+                </p>
               </div>
             </div>
           </div>
@@ -180,27 +237,57 @@ const ResultForm = () => {
                   </div>
                 </div>
 
-                {/* Test Date (auto-filled, readonly) */}
+                {/* Email */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="Date" className="block text-sm font-medium text-gray-700 mb-2">
-                      Date *
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email *
                     </label>
                     <input
-                      type="date"
-                      id="Date"
-                      name="Date"
-                      value={formData.testDate}
-                      readOnly
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 text-sm sm:text-base"
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-200 text-sm sm:text-base"
+                      placeholder="example@gmail.com"
                     />
                   </div>
+                  <div className="flex items-center pt-6">
+                    <input
+                      type="checkbox"
+                      id="notifyByEmail"
+                      name="notifyByEmail"
+                      checked={formData.notifyByEmail}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor="notifyByEmail" className="ml-2  text-sm text-gray-700 flex items-center">
+                      <Mail className="h-4 w-4 mr-1 text-blue-500" /> Notify Patient by Email
+                    </label>
+                  </div>
+                </div>
+
+                {/* Date */}
+                <div>
+                  <label htmlFor="Date" className="block text-sm font-medium text-gray-700 mb-2">
+                    Date *
+                  </label>
+                  <input
+                    type="date"
+                    id="Date"
+                    name="Date"
+                    value={formData.testDate}
+                    readOnly
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 text-sm sm:text-base"
+                  />
                 </div>
 
                 {/* File Upload */}
                 <div>
                   <label htmlFor="resultFile" className="block text-sm font-medium text-gray-700 mb-2">
-                    Upload Result File *
+                    Upload Result File {isUpdateMode ? "(leave empty to keep existing)" : "*"}
                   </label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 text-center hover:border-blue-500 transition-colors duration-200">
                     <input
@@ -210,7 +297,7 @@ const ResultForm = () => {
                       accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
                       onChange={handleFileChange}
                       className="hidden"
-                      required
+                      {...(!isUpdateMode && { required: true })}
                     />
                     <label htmlFor="resultFile" className="cursor-pointer">
                       <Upload className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
@@ -236,11 +323,11 @@ const ResultForm = () => {
                     onChange={handleChange}
                     rows={4}
                     className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-200 resize-none text-sm sm:text-base"
-                    placeholder="Enter any additional notes or instructions for the patient..."
+                    placeholder="Enter any additional notes..."
                   ></textarea>
                 </div>
 
-                {/* Submit Buttons */}
+                {/* Submit */}
                 <div className="flex flex-col sm:flex-row justify-end sm:space-x-4 space-y-3 sm:space-y-0 pt-6 border-t border-gray-200">
                   <button
                     type="button"
@@ -254,7 +341,7 @@ const ResultForm = () => {
                     className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center text-sm sm:text-base"
                   >
                     <Send className="h-4 w-4 mr-2" />
-                    Send Result to Patient
+                    {isUpdateMode ? "Save Changes" : "Send Result to Patient"}
                   </button>
                 </div>
               </div>

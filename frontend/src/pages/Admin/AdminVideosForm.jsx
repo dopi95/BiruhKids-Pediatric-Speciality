@@ -31,6 +31,15 @@ const AdminVideosForm = () => {
     navigate('/admin/videos');
   };
 
+  const handleNext = () => {
+    // Validate English form before moving to Amharic step
+    if (!formData.title.trim() || !formData.url.trim() || !formData.description.trim()) {
+      alert("Please fill in Title, Video URL, and Description before continuing.");
+      return;
+    }
+    setStep(2);
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <AdminSidebar />
@@ -118,7 +127,7 @@ const AdminVideosForm = () => {
 
                       <div className="flex justify-end space-x-4 pt-6 border-t">
                         <button type="button" onClick={handleCancel} className="px-6 py-3 border rounded-lg">Cancel</button>
-                        <button type="button" onClick={() => setStep(2)} className="px-6 py-3 bg-blue-600 text-white rounded-lg flex items-center">
+                        <button type="button" onClick={handleNext} className="px-6 py-3 bg-blue-600 text-white rounded-lg flex items-center">
                           <Play className="h-4 w-4 mr-2" /> Next (Amharic)
                         </button>
                       </div>
@@ -159,11 +168,16 @@ const AdminVideosForm = () => {
                         />
                       </div>
 
-                      <div className="flex justify-end space-x-4 pt-6 border-t">
-                        <button type="button" onClick={handleCancel} className="px-6 py-3 border rounded-lg">Cancel</button>
-                        <button type="submit" className="px-6 py-3 bg-green-600 text-white rounded-lg flex items-center">
-                          <Play className="h-4 w-4 mr-2" /> Submit
+                      <div className="flex justify-between pt-6 border-t">
+                        <button type="button" onClick={() => setStep(1)} className="px-6 py-3 border rounded-lg">
+                          Back
                         </button>
+                        <div className="flex space-x-4">
+                          <button type="button" onClick={handleCancel} className="px-6 py-3 border rounded-lg">Cancel</button>
+                          <button type="submit" className="px-6 py-3 bg-green-600 text-white rounded-lg flex items-center">
+                            <Play className="h-4 w-4 mr-2" /> Submit
+                          </button>
+                        </div>
                       </div>
                     </>
                   )}
