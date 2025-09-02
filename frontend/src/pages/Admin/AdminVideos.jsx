@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Play, Plus, Trash2, Edit, Youtube, Music2, X } from "lucide-react";
-import AdminSidebar from "../../components/AdminSidebar";
 import StatsCard from "../../components/StatsCard";
 
 const AdminVideos = () => {
@@ -82,8 +81,6 @@ const AdminVideos = () => {
     ];
     return (
         <div className="flex min-h-screen bg-gray-50">
-            <AdminSidebar />
-
             <div className="flex-1">
                 {/* Header */}
                 <div className="bg-white shadow-sm border-b">

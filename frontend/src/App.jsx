@@ -28,6 +28,7 @@ import AdminVideos from "./pages/Admin/AdminVideos";
 import AdminVideosForm from "./pages/Admin/AdminVideosForm";
 import TestimonialManagement from "./pages/Admin/TestimonialManagement";
 import SubscriberManagement from "./pages/Admin/SubscriberManagement";
+import AdminLayout from "./layouts/AdminLayout";
 export default function App() {
     return (
         <Router>
@@ -153,44 +154,118 @@ export default function App() {
                     />
 
                     {/* Admin route */}
-                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route
+                        path="/admin"
+                        element={
+                            <AdminLayout>
+                                <AdminDashboard />
+                            </AdminLayout>
+                        }
+                    />
                     <Route
                         path="/admin/doctors"
-                        element={<DoctorManagement />}
+                        element={
+                            <AdminLayout>
+                                <DoctorManagement />
+                            </AdminLayout>
+                        }
                     />
-                    <Route path="/admin/users" element={<UserManagement />} />
-                    <Route path="/admin/admins" element={<AdminManagement />} />
-                    <Route path="/admin/profile" element={<AdminProfile />} />
+                    <Route
+                        path="/admin/users"
+                        element={
+                            <AdminLayout>
+                                <UserManagement />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path="/admin/admins"
+                        element={
+                            <AdminLayout>
+                                <AdminManagement />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path="/admin/profile"
+                        element={
+                            <AdminLayout>
+                                <AdminProfile />
+                            </AdminLayout>
+                        }
+                    />
                     <Route
                         path="/admin/services"
-                        element={<ServiceManagement />}
+                        element={
+                            <AdminLayout>
+                                <ServiceManagement />
+                            </AdminLayout>
+                        }
                     />
                     <Route
                         path="/admin/change-password"
-                        element={<ChangePassword backPath="/admin/profile" />}
+                        element={
+                            <AdminLayout>
+                                <ChangePassword backPath="/admin/profile" />
+                            </AdminLayout>
+                        }
                     />
                     <Route
                         path="/admin/appointments"
-                        element={<AppointmentManagement />}
+                        element={
+                            <AdminLayout>
+                                <AppointmentManagement />
+                            </AdminLayout>
+                        }
                     />
                     <Route
                         path="/admin/results"
-                        element={<ResultManagement />}
+                        element={
+                            <AdminLayout>
+                                <ResultManagement />
+                            </AdminLayout>
+                        }
                     />
-                    <Route path="/admin/results/form" element={<ResultForm />} />
-                    <Route path="/admin/videos" element={<AdminVideos />} />
+                    <Route
+                        path="/admin/results/form"
+                        element={
+                            <AdminLayout>
+                                <ResultForm />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path="/admin/videos"
+                        element={
+                            <AdminLayout>
+                                <AdminVideos />
+                            </AdminLayout>
+                        }
+                    />
 
                     <Route
                         path="/admin/videos/form"
-                        element={<AdminVideosForm />}
+                        element={
+                            <AdminLayout>
+                                <AdminVideosForm />
+                            </AdminLayout>
+                        }
                     />
                     <Route
                         path="/admin/testimonials"
-                        element={<TestimonialManagement />}
+                        element={
+                            <AdminLayout>
+                                <TestimonialManagement />
+                            </AdminLayout>
+                        }
                     />
                     <Route
                         path="/admin/subscribers"
-                        element={<SubscriberManagement />}
+                        element={
+                            <AdminLayout>
+                                <SubscriberManagement />
+                            </AdminLayout>
+                        }
                     />
                 </Routes>
             </div>

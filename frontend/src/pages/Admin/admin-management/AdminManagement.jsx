@@ -3,7 +3,6 @@ import { Plus, UserCog, Trash2 } from "lucide-react";
 import StatsCard from "../../../components/StatsCard";
 import AdminTable from "./AdminTable";
 import AddAdminModal from "./AddAdminModal";
-import AdminSidebar from "../../../components/AdminSidebar";
 
 export default function AdminManagement() {
     const [showAddForm, setShowAddForm] = useState(false);
@@ -120,10 +119,7 @@ export default function AdminManagement() {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            {/* Sidebar */}
-            <AdminSidebar />
-
+        <div className="bg-gray-50">
             {/* Main Content */}
             <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-x-auto">
                 <div className="flex justify-between items-center mb-6 flex-wrap gap-3 mt-14 md:mt-0">

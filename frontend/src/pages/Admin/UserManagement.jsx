@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Search, Trash2, Users, AlertTriangle, Edit } from "lucide-react";
-import AdminSidebar from "../../components/AdminSidebar";
 import StatsCard from "../../components/StatsCard";
 
 const UserManagement = () => {
@@ -99,10 +98,8 @@ const UserManagement = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <AdminSidebar />
-
-            <div className="flex-1">
+        <div className="bg-gray-50">
+            <div>
                 {/* Header */}
                 <div className="bg-white shadow-sm border-b mt-12 md:mt-0">
                     <div className="px-4 sm:px-6 py-4 text-center sm:text-left">
@@ -150,7 +147,7 @@ const UserManagement = () => {
                         </div>
 
                         <div className="w-full overflow-x-auto">
-                            <table className="min-w-[500px] w-full text-sm sm:text-base">
+                            <table className="w-full text-sm sm:text-base">
                                 <thead className="bg-gray-50">
                                     <tr>
                                         <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">

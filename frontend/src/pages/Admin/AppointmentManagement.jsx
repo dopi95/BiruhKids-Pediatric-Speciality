@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { CheckSquare, CalendarDays } from "lucide-react";
-import AdminSidebar from "../../components/AdminSidebar";
 import StatsCard from "../../components/StatsCard";
 
 const AppointmentManagement = () => {
@@ -56,12 +55,7 @@ const AppointmentManagement = () => {
     ];
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            {/* Sidebar */}
-            <div className="bg-white shadow-lg">
-                <AdminSidebar />
-            </div>
-
+        <div className="bg-gray-50">
             {/* Main Content */}
             <div className="flex-1 p-4 sm:p-6">
                 <div className="bg-white shadow-sm rounded-lg p-6 mb-6 mt-14 md:mt-0">

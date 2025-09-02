@@ -130,7 +130,7 @@ const ChangePassword = ({ backPath }) => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 mt-20 sm:mt-0">
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

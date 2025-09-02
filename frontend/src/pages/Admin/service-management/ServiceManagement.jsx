@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ServiceModal from "./ServiceModal";
 import ServiceCard from "../../../components/ServiceCard";
 import { Plus, AlertTriangle, Settings, Search } from "lucide-react";
-import AdminSidebar from "../../../components/AdminSidebar";
 import StatsCard from "../../../components/StatsCard";
 
 export default function ServiceManagement() {
@@ -134,10 +133,6 @@ export default function ServiceManagement() {
 
     return (
         <div className="flex min-h-screen bg-gray-50">
-            {/* Sidebar (always visible on all screens) */}
-            <div className="bg-white shadow-lg">
-                <AdminSidebar />
-            </div>
             {/* Main Content */}
             <div className="flex-1 p-4 sm:p-6">
                 <div className="bg-white shadow-sm border-b px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between items-center mt-14 md:mt-0">

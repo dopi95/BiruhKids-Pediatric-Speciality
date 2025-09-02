@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
     Plus,
     Edit,
@@ -8,7 +8,6 @@ import {
     Search,
     Stethoscope,
 } from "lucide-react";
-import AdminSidebar from "../../components/AdminSidebar";
 import StatsCard from "../../components/StatsCard";
 
 export default function DoctorManagement() {
@@ -156,13 +155,10 @@ export default function DoctorManagement() {
 
     return (
         <div className="flex">
-            {/* Sidebar */}
-            <AdminSidebar />
-
             {/* Main Content */}
             <div className="flex-1 p-4 sm:p-6 bg-gray-50 ml-0 md:ml-30 mt-14 md:mt-0">
                 <div className="bg-white shadow-sm border-b">
-                    <div className="px-6 py-4 flex justify-between items-center">
+                    <div className="px-6 py-4 flex flex-col sm:flex-row gap-5 justify-between items-center">
                         <div>
                             <h1 className="text-2xl font-bold text-gray-900">
                                 Doctor Management
@@ -200,14 +196,14 @@ export default function DoctorManagement() {
                                 placeholder="Search by name..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="px-3 py-2 outline-none w-60"
+                                className="px-3 py-2 outline-none sm:w-60"
                             />
                             <Search className="h-5 w-5 text-gray-400 mr-2" />
                         </div>
                     </div>
 
-                    <div className="w-full overflow-x-auto">
-                        <table className="min-w-[500px] w-full text-sm sm:text-base">
+                    <div className="overflow-x-auto">
+                        <table className="text-sm sm:text-base">
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
@@ -230,7 +226,7 @@ export default function DoctorManagement() {
                                         key={doc.id}
                                         className="hover:bg-gray-50"
                                     >
-                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                        <td className="px-4 sm:px-6 py-4">
                                             <div className="flex items-center">
                                                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center">
                                                     <span className="text-blue-600 font-semibold text-sm sm:text-base">
@@ -244,13 +240,13 @@ export default function DoctorManagement() {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm sm:text-base text-gray-900">
+                                        <td className="px-4 sm:px-6 py-4 text-sm sm:text-base text-gray-900">
                                             {doc.field}
                                         </td>
-                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm sm:text-base text-gray-900">
+                                        <td className="px-4 sm:px-6 py-4 text-sm sm:text-base text-gray-900">
                                             {doc.experience}
                                         </td>
-                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
+                                        <td className="px-4 sm:px-6 py-4 text-sm font-medium flex space-x-2">
                                             <button
                                                 onClick={() => openModal(doc)}
                                                 className="text-green-600 hover:text-green-900 p-1 sm:p-2"
