@@ -284,8 +284,8 @@ Message: ${form.message}
                             <MapPin className="text-[#007799] mt-1" />
                             <div>
                                 <h4 className="font-semibold">Our Location</h4>
+                                <p>Torhayloch, 100 meters from augusta bridge</p>
                                 <p>Addis Ababa, Ethiopia</p>
-                                <p>Piassa Sefer</p>
                             </div>
                         </div>
 
@@ -293,8 +293,9 @@ Message: ${form.message}
                             <Phone className="text-[#007799] mt-1" />
                             <div>
                                 <h4 className="font-semibold">Phone Numbers</h4>
-                                <p>+251 911 111 111</p>
-                                <p>+251 922 222 222</p>
+                                <p>+251996505319</p>
+                                <p>+251939602927</p>
+                                <p>+251984650912</p>
                             </div>
                         </div>
 
@@ -304,8 +305,7 @@ Message: ${form.message}
                                 <h4 className="font-semibold">
                                     Email Addresses
                                 </h4>
-                                <p>info@healthcare.com</p>
-                                <p>support@healthcare.com</p>
+                                <p>biruhkidsclinic@gmail.com</p>
                             </div>
                         </div>
 

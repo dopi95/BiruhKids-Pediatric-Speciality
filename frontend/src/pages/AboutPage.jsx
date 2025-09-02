@@ -33,26 +33,31 @@ const AboutPage = () => {
       {/* Our Story Section */}
       <SectionWrapper>
         <div className="py-16 px-4 sm:px-6 lg:px-12 flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12">
-          <SectionImage src={clinicImage} alt="Clinic Building" />
+          <SectionImage src={clinicImage} alt="Clinic Building"/>
+        
           <SectionText>
             <h2 className="text-3xl font-bold mb-4 text-center lg:text-left">Our Story</h2>
             <p className="text-gray-700 leading-relaxed">
-              Founded in 2010, HealthCare Clinic began with a simple yet powerful vision:
-              to provide world-class healthcare services that are accessible, compassionate,
-              and centered around our patients' needs.
-            </p>
+              Biruh Kids was established in November 2024 as a premier pediatric specialty clinic in Addis Ababa, Ethiopia. 
+              Over the last eight months, we have been dedicated to providing comprehensive healthcare services for children, 
+              working tirelessly towards obtaining institutional status. At Biruh Kids, we currently offer a range of 
+              specialized services including Outpatient Department (OPD), emergency care, laboratory services,
+               and ultrasound diagnostics to ensure that every child receives the highest standard of medical attention.</p>
+
+              <p className="text-gray-700 leading-relaxed mt-2">
+              Our state-of-the-art facilities are equipped with advanced technology to support the diagnosis and treatment 
+              of various pediatric conditions. Whether it’s routine consultations or emergency interventions, our team of 
+              skilled doctors and specialists is committed to delivering exceptional care in a comfortable and 
+              compassionate environment, ensuring that every child’s health and well-being are our top priorities.</p>
+
             <p className="text-gray-700 leading-relaxed mt-2">
-              What started as a small clinic with just a few dedicated healthcare professionals
-              has grown into a comprehensive medical facility serving thousands of patients
-              across our community. Our journey has been marked by continuous growth,
-              innovation, and an unwavering commitment to excellence.
-            </p>
-            <p className="text-gray-700 leading-relaxed mt-2">
-              Over the years, we have expanded our services, invested in cutting-edge technology,
-              and built a team of exceptional medical professionals who share our passion
-              for healing and caring. Today, we stand as a trusted healthcare partner, known
-              for our clinical excellence and patient-centered approach.
-            </p>
+              Among our staff are some of the most experienced pediatricians, radiologists, pediatric nurses, and 
+              laboratory technicians in Ethiopia.
+              Biruh Kids stands out for its design, which is specifically tailored to meet the unique 
+              healthcare needs of children, ensuring that we provide comprehensive care for virtually 
+              every pediatric condition. We are proud to have built our reputation by offering the highest 
+              quality services and utilizing state-of-the-art medical equipment, all while maintaining 
+              affordable pricing.</p>
           </SectionText>
         </div>
       </SectionWrapper>
@@ -83,26 +88,36 @@ const AboutPage = () => {
           variants={containerVariants}
         >
           <motion.div
-            className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-center text-center border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
+            className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start text-left border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
             variants={cardVariants}
           >
-            <FaEye className="text-[#007799] text-4xl mb-4" />
-            <h3 className="text-xl font-bold mb-2">Our Vision</h3>
+            <div className="flex items-center gap-3 mb-4">
+              <FaEye className="text-[#007799] text-3xl" />
+              <h3 className="text-xl font-bold">Our Vision</h3>
+            </div>
             <p className="text-gray-700 leading-relaxed">
-              To be the leading pediatric specialty clinic providing world-class care
-              with compassion and innovation.
+              To be recognized as a center of excellence in pediatric specialty care, 
+              where every child is valued, every family is supported, and every life is given the 
+              opportunity to grow in health and happiness. 
+              We envision a future where access, compassion, and innovation create brighter 
+              possibilities for children everywhere.
             </p>
           </motion.div>
 
           <motion.div
-            className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-center text-center border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
+            className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start text-left border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
             variants={cardVariants}
           >
-            <FaHeart className="text-[#FF7A1A] text-4xl mb-4" />
-            <h3 className="text-xl font-bold mb-2">Our Mission</h3>
+            <div className="flex items-center gap-3 mb-4">
+              <FaHeart className="text-[#FF7A1A] text-3xl" />
+              <h3 className="text-xl font-bold">Our Mission</h3>
+            </div>
             <p className="text-gray-700 leading-relaxed">
-              Deliver exceptional, patient-centered pediatric care while fostering trust
-              and wellness for every child.
+              Our mission is to deliver outstanding pediatric care that blends advanced 
+              medical expertise with genuine compassion. We are committed to working 
+              alongside families, providing evidence-based treatments in a child-friendly 
+              environment, and nurturing not only physical health but also resilience, 
+              confidence, and emotional well-being in every child we serve.
             </p>
           </motion.div>
         </motion.div>
@@ -114,34 +129,49 @@ const AboutPage = () => {
           <div className="max-w-6xl mx-auto text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">Our Core Values</h2>
             <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">
-              These fundamental principles guide our decisions, shape our culture,
-              and define who we are as a healthcare organization.
+              These principles define who we are and guide every decision we make 
+              in our mission to serve children and families with integrity and care.
             </p>
           </div>
 
           <motion.div
-            className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-center"
+            className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-left"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={containerVariants}
           >
-            <motion.div className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-center border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer" variants={cardVariants}>
-              <FaHandsHelping className="text-[#007799] text-4xl mb-4" />
-              <h3 className="text-xl font-bold mb-2">Compassion</h3>
-              <p className="text-gray-700 leading-relaxed">We prioritize empathy and understanding in every interaction.</p>
+            <motion.div className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer" variants={cardVariants}>
+              <div className="flex items-center gap-3 mb-4">
+                <FaHandsHelping className="text-[#007799] text-3xl" />
+                <h3 className="text-xl font-bold">Compassion</h3>
+              </div>
+              <p className="text-gray-700 leading-relaxed">
+                We place empathy at the heart of care, listening deeply, 
+                responding kindly, and honoring every child’s unique needs and experiences.
+              </p>
             </motion.div>
 
-            <motion.div className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-center border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer" variants={cardVariants}>
-              <FaMedal className="text-[#FF7A1A] text-4xl mb-4" />
-              <h3 className="text-xl font-bold mb-2">Excellence</h3>
-              <p className="text-gray-700 leading-relaxed">Our commitment to high-quality care drives continuous improvement.</p>
+            <motion.div className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer" variants={cardVariants}>
+              <div className="flex items-center gap-3 mb-4">
+                <FaMedal className="text-[#FF7A1A] text-3xl" />
+                <h3 className="text-xl font-bold">Excellence</h3>
+              </div>
+              <p className="text-gray-700 leading-relaxed">
+                We pursue the highest standards in healthcare, 
+                striving for precision, safety, and continuous improvement in all we do.
+              </p>
             </motion.div>
 
-            <motion.div className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-center border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer" variants={cardVariants}>
-              <FaLightbulb className="text-yellow-400 text-4xl mb-4" />
-              <h3 className="text-xl font-bold mb-2">Innovation</h3>
-              <p className="text-gray-700 leading-relaxed">We embrace new ideas and technologies to enhance outcomes.</p>
+            <motion.div className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer" variants={cardVariants}>
+              <div className="flex items-center gap-3 mb-4">
+                <FaLightbulb className="text-yellow-400 text-3xl" />
+                <h3 className="text-xl font-bold">Innovation</h3>
+              </div>
+              <p className="text-gray-700 leading-relaxed">
+                We embrace creativity and new technologies, 
+                seeking fresh solutions that make pediatric care more effective, accessible, and hopeful.
+              </p>
             </motion.div>
           </motion.div>
         </div>

@@ -47,7 +47,7 @@ export default function About() {
             icon: Heart,
             title: "Our Mission",
             description:
-                "To provide compassionate, high-quality healthcare services that improve the health and wellbeing of our community while advancing medical knowledge and practices.",
+                "Our mission is to provide outstanding, family-centered pediatric specialty care through a collaborative, multidisciplinary approach. We are committed to delivering evidence-based treatments with warmth, dignity, and respect. By investing in advanced medical knowledge, nurturing partnerships with families, and fostering a child-friendly atmosphere, we strive to support not just the health of our patients, but their growth, resilience, and emotional well-being. Every child in our care is treated with the same compassion, attention, and dedication we would offer our own.",
             bg: "bg-blue-100",
             iconColor: "text-blue-600",
         },
@@ -55,7 +55,7 @@ export default function About() {
             icon: Award,
             title: "Our Vision",
             description:
-                "To be the leading healthcare provider recognized for excellence in patient care, medical innovation, and community health improvement.",
+                "Our vision is to become a leading center of excellence in pediatric specialty care, where every child regardless of background receives expert, compassionate and individualized care in a healing environment. We envision a future where children and families are empowered, healthcare is accessible and inclusive, and innovation and empathy work hand-in-hand to build brighter, healthier lives.",
             bg: "bg-orange-100",
             iconColor: "text-orange-600",
         },
@@ -77,10 +77,16 @@ export default function About() {
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                         About BiruhKids Pediatric Clinic
                     </h2>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Committed to providing exceptional healthcare services
-                        with a focus on patient-centered care, innovation, and
-                        clinical excellence.
+                    <p className="text-xl text-gray-600 max-w-3xl mx-auto text-justify leading-relaxed [hyphens:auto] [word-spacing:0.05em]">
+                        Biruh Kids was established in November 2024 as a premier pediatric
+                        specialty clinic in Addis Ababa, Ethiopia. Over the last eight
+                        months, we have been dedicated to providing comprehensive
+                        healthcare services for children, working tirelessly towards
+                        obtaining institutional status. At Biruh Kids, we currently offer a
+                        range of specialized services including Outpatient Department
+                        (OPD), emergency care, laboratory services, and ultrasound
+                        diagnostics to ensure that every child receives the highest
+                        standard of medical attention.
                     </p>
                 </div>
 
@@ -101,7 +107,7 @@ export default function About() {
                             <h3 className="text-2xl font-bold text-gray-900 mb-4">
                                 {feature.title}
                             </h3>
-                            <p className="text-gray-600 leading-relaxed">
+                            <p className="text-gray-600 leading-relaxed text-justify max-w-prose mx-auto [hyphens:auto] [word-spacing:0.05em]">
                                 {feature.description}
                             </p>
                         </div>

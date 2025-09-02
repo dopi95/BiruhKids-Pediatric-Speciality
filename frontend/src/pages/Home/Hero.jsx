@@ -15,32 +15,32 @@ const Hero = () => {
             id: 1,
             backgroundImage:
                 "https://images.pexels.com/photos/1266810/pexels-photo-1266810.jpeg?auto=compress&cs=tinysrgb&w=1920",
-            title: "Welcome to Innovation",
+            title: "Pediatric healthcare services ",
             tagline:
-                "Discover the future of technology with cutting-edge solutions",
+                "designed to meet the unique needs of children, ensuring their health, growth, and development are supported every step of the way.",
         },
         {
             id: 2,
             backgroundImage:
                 "https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=1920",
-            title: "Build Something Amazing",
+            title: "Outpatient care (OPD)",
             tagline:
-                "Transform your ideas into reality with our powerful platform",
+                "Our clinic provides comprehensive evaluations, diagnoses, and treatments for children of all ages.",
         },
         {
             id: 3,
             backgroundImage:
                 "https://images.pexels.com/photos/326501/pexels-photo-326501.jpeg?auto=compress&cs=tinysrgb&w=1920",
-            title: "Connect & Collaborate",
+            title: "Emergency care",
             tagline:
-                "Join thousands of creators building the next generation of apps",
+                "We offer urgent medical services for children in need of immediate attention. ",
         },
         {
             id: 4,
             backgroundImage:
                 "https://images.pexels.com/photos/1181676/pexels-photo-1181676.jpeg?auto=compress&cs=tinysrgb&w=1920",
-            title: "Scale Your Dreams",
-            tagline: "From startup to enterprise, we grow with your ambitions",
+            title: "Laboratory and Imaging Services",
+            tagline: "Our clinic is equipped with state-of-the-art laboratory machines and advanced imaging technology using the latest ultrasound (US) systems.",
         },
     ];
 
@@ -104,7 +104,7 @@ const Hero = () => {
 
     useEffect(() => {
         // Always autoplay regardless of hover state
-        autoPlayRef.current = setInterval(goToNext, 3000);
+        autoPlayRef.current = setInterval(goToNext, 7000);
 
         return () => clearInterval(autoPlayRef.current);
     }, [goToNext]);
@@ -160,7 +160,7 @@ const Hero = () => {
     }, [typedText, isDeleting]);
 
     return (
-        <div className="relative h-[90vh] overflow-hidden">
+        <div className="relative h-[92vh] overflow-hidden">
             <div
                 ref={carouselRef}
                 className="flex transition-transform duration-700 ease-in-out h-full"
