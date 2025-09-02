@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Faqs() {
     const [openIndex, setOpenIndex] = useState(null);
@@ -30,52 +31,62 @@ export default function Faqs() {
     return (
         <article className="py-20 bg-gray-50">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Heading */}
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                         Frequently Asked Questions
                     </h2>
                     <p className="text-xl text-gray-600">
-                        Find answers to common questions about our services and
-                        procedures.
+                        Find answers to common questions about our services and procedures.
                     </p>
                 </div>
 
+                {/* FAQs */}
                 <div className="space-y-4">
                     {faqs.map((faq, index) => (
                         <div
                             key={index}
-                            className="bg-white rounded-lg shadow-lg"
+                            className="bg-white rounded-xl shadow-lg overflow-hidden"
                         >
-                            {/* Question row */}
+                            {/* Question */}
                             <button
                                 onClick={() => toggleFaq(index)}
-                                className="w-full text-left p-6 flex justify-between items-center"
+                                className="w-full text-left p-6 flex justify-between items-center group"
                             >
                                 <div className="flex items-center">
                                     <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
-                                    <span className="text-lg font-semibold text-gray-900">
+                                    <span className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                                         {faq.question}
                                     </span>
                                 </div>
-                                {openIndex === index ? (
-                                    <ChevronUp className="h-5 w-5 text-gray-600 transition-transform duration-300" />
-                                ) : (
-                                    <ChevronDown className="h-5 w-5 text-gray-600 transition-transform duration-300" />
-                                )}
+
+                                {/* Animated Chevron */}
+                                <motion.div
+                                    animate={{ rotate: openIndex === index ? 180 : 0 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                                </motion.div>
                             </button>
 
                             {/* Animated Answer */}
-                            <div
-                                className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                                    openIndex === index ? "max-h-40" : "max-h-0"
-                                }`}
-                            >
-                                <div className="px-6 pb-6">
-                                    <p className="text-gray-600 leading-relaxed pl-7">
-                                        {faq.answer}
-                                    </p>
-                                </div>
-                            </div>
+                            <AnimatePresence>
+                                {openIndex === index && (
+                                    <motion.div
+                                        key="content"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                                    >
+                                        <div className="px-6 pb-6">
+                                            <p className="text-gray-600 leading-relaxed pl-7">
+                                                {faq.answer}
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     ))}
                 </div>
