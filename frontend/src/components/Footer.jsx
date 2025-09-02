@@ -1,15 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-    Heart,
-    Phone,
-    Mail,
-    MapPin,
-    Facebook,
-    Twitter,
-    Instagram,
-    Youtube,
-} from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram } from "lucide-react";
 import { FaTiktok, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
@@ -28,9 +19,7 @@ export default function Footer() {
                     {/* Logo & Description */}
                     <div className="col-span-1">
                         <div className="flex items-center space-x-2 mb-4">
-                            <span className="text-xl font-bold">
-                                BiruhKids
-                            </span>
+                            <span className="text-xl font-bold">BiruhKids</span>
                         </div>
                         <p className="text-gray-300 text-sm leading-relaxed mb-4">
                             Providing quality healthcare services with
@@ -38,32 +27,35 @@ export default function Footer() {
                             is our priority.
                         </p>
                         <div className="flex space-x-3">
-                             <a
+                            <a
                                 href="https://www.youtube.com/@ብሩህkids"
-                                className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                                target="_blank"
+                                className="text-red-600 transition-colors duration-200"
                             >
                                 <FaYoutube className="h-8 w-8" />
                             </a>
-                            
+
                             <a
                                 href="https://www.tiktok.com/@biruhkids?_t=ZM-8zHeQeJllLk&_r=1"
-                                className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                                target="_blank"
+                                className="text-black transition-colors duration-200"
                             >
                                 <FaTiktok className="h-7 w-7" />
                             </a>
                             <a
                                 href="#"
-                                className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                                target="_blank"
+                                className="text-blue-600 transition-colors duration-200"
                             >
                                 <Facebook className="h-7 w-7" />
                             </a>
                             <a
                                 href="#"
-                                className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                                target="_blank"
+                                className="text-pink-400 transition-colors duration-200"
                             >
                                 <Instagram className="h-7 w-7" />
                             </a>
-                           
                         </div>
                     </div>
 
