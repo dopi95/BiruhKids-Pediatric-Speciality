@@ -8,7 +8,7 @@ import GoogleMap from "../../components/GoogleMap";
 
 function HomePage() {
     return (
-        <>
+        <div className="w-full overflow-x-hidden">
             <Hero />
             <About />
             <Services />
@@ -16,7 +16,8 @@ function HomePage() {
             <Testimonials />
             <Faq />
             <GoogleMap />
-        </>
+        </div>
     );
 }
+
 export default HomePage;
