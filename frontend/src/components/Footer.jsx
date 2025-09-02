@@ -22,9 +22,7 @@ export default function Footer() {
                             <span className="text-xl font-bold">BiruhKids</span>
                         </div>
                         <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                            Providing quality healthcare services with
-                            compassion, excellence, and innovation. Your health
-                            is our priority.
+                            wide range of pediatric healthcare services designed to meet the unique needs of children.
                         </p>
                         <div className="flex space-x-3">
                             <a
@@ -117,20 +115,21 @@ export default function Footer() {
                             <div className="flex items-center space-x-3">
                                 <Phone className="h-4 w-4 text-blue-400" />
                                 <span className="text-gray-300 text-sm">
-                                    +251 11 123 4567
+                                    +251996505319 / +251939602927
                                 </span>
+                                
                             </div>
+                            
                             <div className="flex items-center space-x-3">
                                 <Mail className="h-4 w-4 text-blue-400" />
                                 <span className="text-gray-300 text-sm">
-                                    info@healthcareclinic.com
+                                    biruhkidsclinic@gmail.com
                                 </span>
                             </div>
                             <div className="flex items-start space-x-3">
                                 <MapPin className="h-4 w-4 text-blue-400 mt-1" />
                                 <span className="text-gray-300 text-sm">
-                                    Bole Road, Addis Ababa
-                                    <br />
+                                    Torhayloch 100 meters from augusta <br />bridge, Addis Ababa,
                                     Ethiopia
                                 </span>
                             </div>
@@ -167,7 +166,15 @@ export default function Footer() {
 
                 <div className="border-t border-gray-800 mt-8 pt-8 text-center">
                     <p className="text-gray-400 text-sm">
-                        © 2025 HealthCare Clinic. All rights reserved.
+                        © 2025 All rights reserved. Developed by <a 
+  href="https://t.me/ChainTech_6/" 
+  target="_blank" 
+  rel="noopener noreferrer" 
+  class="text-blue-600 font-semibold hover:underline hover:text-blue-800 transition"
+>
+  Chain Tech
+</a>
+
                     </p>
                 </div>
             </div>
