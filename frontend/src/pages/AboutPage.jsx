@@ -96,11 +96,12 @@ const AboutPage = () => {
               <h3 className="text-xl font-bold">Our Vision</h3>
             </div>
             <p className="text-gray-700 leading-relaxed">
-              To be recognized as a center of excellence in pediatric specialty care, 
-              where every child is valued, every family is supported, and every life is given the 
-              opportunity to grow in health and happiness. 
-              We envision a future where access, compassion, and innovation create brighter 
-              possibilities for children everywhere.
+              Our vision is to become a leading center of excellence 
+              in pediatric specialty care, where every child regardless
+               of background receives expert, compassionate, and individualized 
+               care in a healing environment. We envision a future where children 
+               and families are empowered, healthcare is accessible and inclusive, 
+              and innovation and empathy work hand-in-hand to build brighter, healthier lives.
             </p>
           </motion.div>
 
@@ -113,11 +114,15 @@ const AboutPage = () => {
               <h3 className="text-xl font-bold">Our Mission</h3>
             </div>
             <p className="text-gray-700 leading-relaxed">
-              Our mission is to deliver outstanding pediatric care that blends advanced 
-              medical expertise with genuine compassion. We are committed to working 
-              alongside families, providing evidence-based treatments in a child-friendly 
-              environment, and nurturing not only physical health but also resilience, 
-              confidence, and emotional well-being in every child we serve.
+              Our mission is to provide outstanding, family-centered pediatric 
+              specialty care through a collaborative, multidisciplinary approach.
+               We are committed to delivering evidence-based treatments with warmth,
+                dignity, and respect. By investing in advanced medical knowledge, 
+                nurturing partnerships with families, and fostering a child-friendly 
+                atmosphere, we strive to support not just the health of our patients, 
+                but their growth, resilience, and emotional well-being. Every 
+              child in our care is treated with the same compassion, attention, 
+              and dedication we would offer our own.
             </p>
           </motion.div>
         </motion.div>
