@@ -101,9 +101,9 @@ const UserManagement = () => {
         <div className="bg-gray-50">
             <div>
                 {/* Header */}
-                <div className="bg-white shadow-sm border-b mt-12 md:mt-0">
-                    <div className="px-4 sm:px-6 py-4 text-center sm:text-left">
-                        <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
+                <div className="bg-white shadow-sm border-b mt-14 md:mt-0">
+                    <div className="px-4 sm:px-6 py-4">
+                        <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                             User Management
                         </h1>
                         <p className="text-gray-600 text-sm sm:text-base">

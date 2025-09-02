@@ -154,20 +154,22 @@ export default function DoctorManagement() {
     );
 
     return (
-        <div className="flex">
+        <div className="bg-gray-50">
             {/* Main Content */}
-            <div className="flex-1 p-4 sm:p-6 bg-gray-50 ml-0 md:ml-30 mt-14 md:mt-0">
+            <div className="flex-1 bg-gray-50 ml-0 md:ml-30 mt-14 md:mt-0">
                 <div className="bg-white shadow-sm border-b">
-                    <div className="px-6 py-4 flex flex-col sm:flex-row gap-5 justify-between items-center">
+                    <div className="px-6 py-4 flex flex-col sm:flex-row gap-5 justify-between sm:items-center">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
+                            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                                 Doctor Management
                             </h1>
-                            <p>Adding and Deleting Doctor's</p>
+                            <p className="text-gray-600 text-sm sm:text-base">
+                                Adding and Deleting Doctor's
+                            </p>
                         </div>
                         <button
                             onClick={() => openModal()}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"
+                            className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex justify-center items-center"
                         >
                             <Plus className="h-4 w-4 mr-2" /> Add Doctor
                         </button>
@@ -226,7 +228,7 @@ export default function DoctorManagement() {
                                         key={doc.id}
                                         className="hover:bg-gray-50"
                                     >
-                                        <td className="px-4 sm:px-6 py-4">
+                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center">
                                                     <span className="text-blue-600 font-semibold text-sm sm:text-base">

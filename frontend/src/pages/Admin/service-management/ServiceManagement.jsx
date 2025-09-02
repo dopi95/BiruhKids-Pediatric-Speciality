@@ -132,19 +132,21 @@ export default function ServiceManagement() {
     ];
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="bg-gray-50">
             {/* Main Content */}
-            <div className="flex-1 p-4 sm:p-6">
-                <div className="bg-white shadow-sm border-b px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between items-center mt-14 md:mt-0">
+            <div className="flex-1">
+                <div className="bg-white shadow-sm border-b px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between sm:items-center mt-14 md:mt-0">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                             Service Management
                         </h1>
-                        <p>Adding and Deleting Services</p>
+                        <p className="text-gray-600 text-sm sm:text-base">
+                            Adding and Deleting Services
+                        </p>
                     </div>
                     <button
                         onClick={() => openModal()}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"
+                        className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex justify-center items-center"
                     >
                         <Plus className="h-4 w-4 mr-2" /> Add Service
                     </button>

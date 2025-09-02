@@ -57,12 +57,12 @@ const AppointmentManagement = () => {
     return (
         <div className="bg-gray-50">
             {/* Main Content */}
-            <div className="flex-1 p-4 sm:p-6">
-                <div className="bg-white shadow-sm rounded-lg p-6 mb-6 mt-14 md:mt-0">
-                    <h1 className="text-2xl font-bold text-gray-900">
+            <div className="flex-1">
+                <div className="bg-white shadow-sm rounded-lg py-6 px-4 md:px-6 mb-6 mt-14 md:mt-0">
+                    <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                         Appointment Management
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 text-sm sm:text-base">
                         Manage and review patient appointments
                     </p>
                 </div>

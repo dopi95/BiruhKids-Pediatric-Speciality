@@ -89,28 +89,24 @@ const SubscriberManagement = () => {
     return (
         <div className="flex-1">
             {/* Header */}
-            <div className="bg-white border-b shadow-sm">
-                <div className="px-6 py-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
-                                Subscriber Management
-                            </h1>
-                            <p className="text-gray-600">
-                                Manage newsletter subscribers and email
-                                campaigns
-                            </p>
-                        </div>
-                        <div className="flex space-x-3">
-                            <button
-                                onClick={handleSendNewsletter}
-                                className="flex items-center px-4 py-2 text-white transition-colors duration-200 bg-blue-600 rounded-lg hover:bg-blue-700"
-                            >
-                                <Send className="w-4 h-4 mr-2" />
-                                Send Newsletter
-                            </button>
-                        </div>
+            <div className="bg-white border-b shadow-sm mt-14 sm:mt-0">
+                <div className="px-6 py-4 flex flex-col gap-4 sm:flex-row items-center justify-between">
+                    <div>
+                        <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+                            Subscriber Management
+                        </h1>
+                        <p className="text-gray-600 text:sm sm:text-base">
+                            Manage newsletter subscribers and email campaigns
+                        </p>
                     </div>
+
+                    <button
+                        onClick={handleSendNewsletter}
+                        className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex justify-center items-center"
+                    >
+                        <Send className="w-4 h-4 mr-2" />
+                        Send Newsletter
+                    </button>
                 </div>
             </div>
 

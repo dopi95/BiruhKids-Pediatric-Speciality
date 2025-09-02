@@ -94,27 +94,12 @@ const AdminDashboard = () => {
             <div className="bg-white shadow-sm border-b">
                 <div className="px-6 py-4 flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 mt-14 md:mt-0">
+                        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mt-14 md:mt-0">
                             Admin Dashboard
                         </h1>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 text-sm sm:text-base">
                             Welcome back! Here's what's happening at the clinic.
                         </p>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <div className="text-right">
-                            <p className="text-sm font-medium text-gray-900">
-                                Dr. Admin
-                            </p>
-                            <p className="text-xs text-gray-600">
-                                Super Administrator
-                            </p>
-                        </div>
-                        <img
-                            src="https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
-                            alt="Admin"
-                            className="h-10 w-10 rounded-full"
-                        />
                     </div>
                 </div>
             </div>
