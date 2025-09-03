@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Play, Plus, Trash2, Edit, Youtube, Music2, X } from "lucide-react";
-import AdminSidebar from "../../components/AdminSidebar";
 import StatsCard from "../../components/StatsCard";
 
 const AdminVideos = () => {
@@ -81,24 +80,22 @@ const AdminVideos = () => {
         },
     ];
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <AdminSidebar />
-
+        <div className="bg-gray-50">
             <div className="flex-1">
                 {/* Header */}
                 <div className="bg-white shadow-sm border-b">
                     <div className="px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between mt-14 md:mt-0">
                         <div className="mb-4 md:mb-0">
-                            <h1 className="text-2xl font-bold text-gray-900">
+                            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                                 Video Management
                             </h1>
-                            <p className="text-gray-600">
+                            <p className="text-gray-600 text-sm sm:text-base">
                                 Manage educational videos and health content
                             </p>
                         </div>
                         <a
                             href="/admin/videos/form"
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center"
+                            className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center"
                         >
                             <Plus className="h-4 w-4 mr-2" />
                             Add Video

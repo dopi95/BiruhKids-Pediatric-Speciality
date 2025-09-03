@@ -3,7 +3,6 @@ import { Plus, UserCog, Trash2 } from "lucide-react";
 import StatsCard from "../../../components/StatsCard";
 import AdminTable from "./AdminTable";
 import AddAdminModal from "./AddAdminModal";
-import AdminSidebar from "../../../components/AdminSidebar";
 
 export default function AdminManagement() {
     const [showAddForm, setShowAddForm] = useState(false);
@@ -120,24 +119,21 @@ export default function AdminManagement() {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            {/* Sidebar */}
-            <AdminSidebar />
-
+        <div className="bg-gray-50">
             {/* Main Content */}
-            <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-x-auto">
-                <div className="flex justify-between items-center mb-6 flex-wrap gap-3 mt-14 md:mt-0">
+            <div className="flex-1 flex flex-col overflow-x-auto">
+                <div className="bg-white shadow-sm border-b px-4 sm:px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between sm:items-center my-14 md:mt-0">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                        <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                             Admin Management
                         </h1>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 text-sm sm:text-base">
                             Manage administrator accounts and permissions
                         </p>
                     </div>
                     <button
                         onClick={() => setShowAddForm(true)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
+                        className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex justify-center items-center"
                     >
                         <Plus className="h-4 w-4 mr-2" /> Add Admin
                     </button>

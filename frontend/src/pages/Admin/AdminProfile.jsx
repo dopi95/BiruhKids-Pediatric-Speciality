@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ProfileHeader } from "../../components/profile/ProfileHeader";
 import { PersonalInfoForm } from "../../components/profile/PersonalInfoForm";
 import { EmergencyContactForm } from "../../components/profile/EmergencyContactForm";
 import { AccountActions } from "../../components/profile/AccountActions";
-import AdminSidebar from "../../components/AdminSidebar";
 
 export default function AdminProfile() {
     const [isEditing, setIsEditing] = useState(false);
@@ -54,35 +53,31 @@ export default function AdminProfile() {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <AdminSidebar />
-
-            <div className="flex-1">
-                <ProfileHeader
-                    isEditing={isEditing}
-                    onEdit={() => setIsEditing(true)}
-                    onCancel={handleCancel}
-                    onSave={handleSubmit}
-                    role="admin"
-                />
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <form onSubmit={handleSubmit}>
-                        <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-                            <PersonalInfoForm
-                                formData={formData}
-                                isEditing={isEditing}
-                                handleChange={handleChange}
-                                role={role}
-                            />
-                            <EmergencyContactForm
-                                formData={formData}
-                                isEditing={isEditing}
-                                handleChange={handleChange}
-                            />
-                        </div>
-                        <AccountActions showDelete={false} role="admin" />
-                    </form>
-                </div>
+        <div className="flex-1 mt-20 sm:mt-0">
+            <ProfileHeader
+                isEditing={isEditing}
+                onEdit={() => setIsEditing(true)}
+                onCancel={handleCancel}
+                onSave={handleSubmit}
+                role="admin"
+            />
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <form onSubmit={handleSubmit}>
+                    <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+                        <PersonalInfoForm
+                            formData={formData}
+                            isEditing={isEditing}
+                            handleChange={handleChange}
+                            role={role}
+                        />
+                        <EmergencyContactForm
+                            formData={formData}
+                            isEditing={isEditing}
+                            handleChange={handleChange}
+                        />
+                    </div>
+                    <AccountActions showDelete={false} role="admin" />
+                </form>
             </div>
         </div>
     );
