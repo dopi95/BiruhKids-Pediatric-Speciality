@@ -231,25 +231,6 @@ const ResultForm = () => {
                         )}
                     </div>
 
-                    {/* Notify by Email */}
-                    <div className="flex items-center">
-                        <input
-                            type="checkbox"
-                            id="notifyByEmail"
-                            name="notifyByEmail"
-                            checked={formData.notifyByEmail}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        <label
-                            htmlFor="notifyByEmail"
-                            className="text-sm font-medium"
-                        >
-                            Notify patient by email
-                        </label>
-                    </div>
-
-                    {/* ✅ Doctor Name (moved here above Additional Notes) */}
                     <div>
                         <label className="block text-sm font-medium mb-1">
                             Doctor Name

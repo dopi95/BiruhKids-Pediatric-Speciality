@@ -295,7 +295,10 @@ const AppointmentPage = () => {
               <CheckCircle className="w-16 h-16 text-green-600 mb-4 animate-pulse" />
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">Appointment Booked!</h2>
               <p className="mb-8 text-lg sm:text-xl">
-                Thank you for booking your appointment.
+                             Thank you for booking your appointment. Please note that your requested time
+                             is subject to availability. We will notify you by email shortly to confirm
+                             whether your appointment has been secured. Kindly check your inbox for
+                             updates.
               </p>
               <button
                 onClick={resetForm}
