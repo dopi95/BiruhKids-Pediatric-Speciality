@@ -293,13 +293,11 @@ const AppointmentPage = () => {
           ) : (
             <div className="text-center py-10 flex flex-col items-center relative">
               <CheckCircle className="w-16 h-16 text-green-600 mb-4 animate-pulse" />
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Appointment Booked!</h2>
-              <p className="mb-8 text-lg sm:text-xl">
-                             Thank you for booking your appointment. Please note that your requested time
-                             is subject to availability. We will notify you by email shortly to confirm
-                             whether your appointment has been secured. Kindly check your inbox for
-                             updates.
-              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Appointment Noted!</h2>
+               <p className="mb-8 text-lg sm:text-xl">
+               Thank you for booking. We’ll notify you by email if your requested time is available. Please check your inbox for updates.
+               </p>
+
               <button
                 onClick={resetForm}
                 className="bg-[#007799] text-white px-8 py-3 rounded-xl text-lg shadow hover:shadow-lg transition"

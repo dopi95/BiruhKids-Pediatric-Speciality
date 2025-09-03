@@ -34,7 +34,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center items-center px-4">
+    <div className="min-h-screen bg-gray-50 flex justify-center items-center px-4 pb-48">
       <div className="w-full mt-20 max-w-md bg-white shadow-md rounded-xl p-8">
         {/* Avatar */}
         <div className="flex justify-center mb-6">
