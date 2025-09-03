@@ -108,7 +108,7 @@ const AdminSidebar = () => {
                             <li key={item.path}>
                                 <Link
                                     to={item.path}
-                                    className={`flex items-center space-x-2 px-3 py-2 rounded-md sm:text-lg transition-colors duration-200 ${
+                                    className={`flex items-center space-x-2 px-3 py-2 rounded-md sm:text-sm transition-colors duration-200 ${
                                         isActive(item.path)
                                             ? "bg-blue-600 text-white"
                                             : "text-gray-300 hover:bg-gray-800 hover:text-white"
@@ -127,7 +127,7 @@ const AdminSidebar = () => {
                 <div className="flex-shrink-0 p-3 border-t border-gray-800 space-y-1 md:mb-2">
                     <Link
                         to="/"
-                        className="flex items-center space-x-2 px-3 py-2 text-lg text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors duration-200"
+                        className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors duration-200"
                         onClick={() => setIsOpen(false)}
                     >
                         <Globe className="h-4 w-4" />
@@ -135,7 +135,7 @@ const AdminSidebar = () => {
                     </Link>
                     <Link
                         to="/login"
-                        className="flex items-center space-x-2 px-3 py-2 text-lg text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors duration-200"
+                        className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors duration-200"
                         onClick={() => setIsOpen(false)}
                     >
                         <LogOut className="h-4 w-4" />
