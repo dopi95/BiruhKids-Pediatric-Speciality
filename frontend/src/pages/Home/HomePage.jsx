@@ -5,6 +5,7 @@ import Doctors from "./Doctors";
 import Testimonials from "./Testimonials";
 import Faq from "./Faqs";
 import GoogleMap from "../../components/GoogleMap";
+import OnlineConsultation from "../../components/OnlineConsultation";
 
 function HomePage() {
     return (
@@ -16,6 +17,8 @@ function HomePage() {
             <Testimonials />
             <Faq />
             <GoogleMap />
+            <OnlineConsultation />
+
         </div>
     );
 }

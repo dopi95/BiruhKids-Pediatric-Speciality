@@ -29,9 +29,11 @@ import AdminVideosForm from "./pages/Admin/AdminVideosForm";
 import TestimonialManagement from "./pages/Admin/TestimonialManagement";
 import SubscriberManagement from "./pages/Admin/SubscriberManagement";
 import AdminLayout from "./layouts/AdminLayout";
+import ScrollToTop from "./components/ScrollToTop";
 export default function App() {
     return (
         <Router>
+               <ScrollToTop /> 
             <div className="flex flex-col min-h-screen">
                 <Routes>
                     {/* Public routes */}

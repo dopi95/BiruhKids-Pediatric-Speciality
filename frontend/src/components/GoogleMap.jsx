@@ -5,7 +5,7 @@ export default function GoogleMap() {
             <div className="w-full h-96 relative">
                 {/* Clickable overlay */}
                 <a
-                    href="https://www.google.com/maps/place/Biruh+Kids+Pediatrics+Speciality+Clinic/@9.0048517,38.717315,17z"
+                    href="https://maps.app.goo.gl/JTYwvp7FoZiGTFid8?g_st=atm"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 z-10"
