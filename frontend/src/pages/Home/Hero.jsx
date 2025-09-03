@@ -104,7 +104,7 @@ const Hero = () => {
 
     useEffect(() => {
         // Always autoplay regardless of hover state
-        autoPlayRef.current = setInterval(goToNext, 7000);
+        autoPlayRef.current = setInterval(goToNext, 9000);
 
         return () => clearInterval(autoPlayRef.current);
     }, [goToNext]);
@@ -133,7 +133,7 @@ const Hero = () => {
     };
 
     // --- TYPEWRITER EFFECT ---
-    const fullText = "BiruhKids Pediatric Specialty";
+    const fullText = "BiruhKids Pediatric Specialty Clinic";
     const [typedText, setTypedText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
 

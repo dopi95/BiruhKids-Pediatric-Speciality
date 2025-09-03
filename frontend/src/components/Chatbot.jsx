@@ -84,7 +84,7 @@ const Chatbot = () => {
 
       {/* Chat Popup */}
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 w-[95%] max-w-sm h-[70vh] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden border border-gray-200 sm:w-96 sm:h-[520px]">
+        <div className="fixed bottom-6 inset-x-2 mx-auto z-50 w-[95%] max-w-sm h-[70vh] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden border border-gray-200 sm:inset-x-auto sm:right-6 sm:mx-0 sm:w-96 sm:h-[520px]">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white flex justify-between items-center p-4">
             <div>
