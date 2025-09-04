@@ -4,9 +4,8 @@ import Logo from "../assets/logo.png";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-function Header() {
+function Header({ lang, setLang }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [lang, setLang] = useState("En"); // current language, default English
 
     function toggleLang() {
         setLang((prevLang) => (prevLang === "En" ? "Am" : "En"));
@@ -16,7 +15,7 @@ function Header() {
         setIsOpen(false);
     }
 
-    // 🔹 ADD: Translation dictionary
+    // 🔹 Translation dictionary
     const translations = {
         En: {
             home: "Home",

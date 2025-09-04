@@ -18,7 +18,109 @@ import VisionMissionSection from "../components/VisionMissionSection";
 const clinicImage = "https://imgur.com/Jvnc3F4.jpg";
 const ceoImage = "https://imgur.com/Jvnc3F4.jpg";
 
-const AboutPage = () => {
+// ✅ Translations
+const translations = {
+  en: {
+    aboutTitle: "About Us",
+    aboutDesc:
+      "Dedicated to providing exceptional healthcare services with compassion, innovation, and unwavering commitment to our patients' wellbeing.",
+    storyTitle: "Our Story",
+    storyP1:
+      "Biruh Kids was established in November 2024 as a premier pediatric specialty clinic in Addis Ababa, Ethiopia. Over the last eight months, we have been dedicated to providing comprehensive healthcare services for children, working tirelessly towards obtaining institutional status. At Biruh Kids, we currently offer a range of specialized services including Outpatient Department (OPD), emergency care, laboratory services, and ultrasound diagnostics to ensure that every child receives the highest standard of medical attention.",
+    storyP2:
+      "Our state-of-the-art facilities are equipped with advanced technology to support the diagnosis and treatment of various pediatric conditions. Whether it’s routine consultations or emergency interventions, our team of skilled doctors and specialists is committed to delivering exceptional care in a comfortable and compassionate environment, ensuring that every child’s health and well-being are our top priorities.",
+    storyP3:
+      "Among our staff are some of the most experienced pediatricians, radiologists, pediatric nurses, and laboratory technicians in Ethiopia. Biruh Kids stands out for its design, which is specifically tailored to meet the unique healthcare needs of children, ensuring that we provide comprehensive care for virtually every pediatric condition. We are proud to have built our reputation by offering the highest quality services and utilizing state-of-the-art medical equipment, all while maintaining affordable pricing.",
+    ceoTitle: "Message from Our CEO",
+    ceoMsg:
+      "At HealthCare Clinic, we believe that exceptional healthcare is not just about treating illness, but about caring for the whole person.",
+    valuesTitle: "Our Core Values",
+    valuesDesc:
+      "These principles define who we are and guide every decision we make in our mission to serve children and families with integrity and care.",
+    compassion: "Compassion",
+    compassionDesc:
+      "We place empathy at the heart of care, listening deeply, responding kindly, and honoring every child’s unique needs and experiences.",
+    excellence: "Excellence",
+    excellenceDesc:
+      "We pursue the highest standards in healthcare, striving for precision, safety, and continuous improvement in all we do.",
+    innovation: "Innovation",
+    innovationDesc:
+      "We embrace creativity and new technologies, seeking fresh solutions that make pediatric care more effective, accessible, and hopeful.",
+    differentTitle: "What Makes Us Different?",
+    differentDesc:
+      "At Biruh Kids, we go beyond standard pediatric care to create a safe, innovative, and child-centered environment. Here’s how we stand out.",
+    facilities: "Modern Facilities",
+    facilitiesDesc:
+      "State-of-the-art pediatric clinic with child-friendly design, ensuring comfort for children and families while delivering world-class care.",
+    specialized: "Specialized Pediatric Care",
+    specializedDesc:
+      "Comprehensive pediatric services from growth assessments to chronic care delivered by experienced pediatricians, nurses, and radiologists.",
+    diagnostics: "Advanced Diagnostics",
+    diagnosticsDesc:
+      "Cutting-edge laboratory and imaging services with the latest ultrasound technology, ensuring fast and accurate results tailored to children.",
+    emergency: "Emergency Pediatric Care",
+    emergencyDesc:
+      "Dedicated pediatric emergency unit with trained specialists ensuring immediate response and effective treatment in critical situations.",
+    outreach: "Community Outreach",
+    outreachDesc:
+      "Actively educating families for 4+ years through social media, spreading pediatric health knowledge and empowering parents.",
+    team: "Dedicated Team",
+    teamDesc:
+      "Compassionate pediatricians, nurses, radiologists, and support staff ensuring seamless, family-friendly care from arrival to departure.",
+  },
+  am: {
+    aboutTitle: "ስለ እኛ",
+    aboutDesc:
+      "በርሀ ኪድስ ልጆች ለጤናቸው ከፍተኛ ጥራት ያለው እንክብካቤ በርካታ በፍላጎት እና በማህበራዊ አገልግሎት ለመስጠት ተቃውሞ የማይቀር ትኩረት ያቀርባል።",
+    storyTitle: "ታሪካችን",
+    storyP1:
+      "በርሀ ኪድስ በኖቬምበር 2024 በአዲስ አበባ እንደ ልዩ ልጅ ጤና ክሊኒክ ተቋቋመ። ባለፉት 8 ወራት ልጆች ለማንኛውም የጤና አገልግሎት በጥራት እና በተወላጅ መንገድ እንዲያገኙ በጥረት ተቋቋመናል።",
+    storyP2:
+      "አዳዲስ ቴክኖሎጂዎችን የያዘ ዘመናዊ መሳሪያ ተዘጋጅቶ ልጆች በሚፈለጉበት ሁኔታ እንክብካቤ እንዲያገኙ ታስቦ ተነድፎበታል።",
+    storyP3:
+      "በቡድናችን ውስጥ በኢትዮጵያ ከሚገኙት በጣም የተሞክሮ ያላቸው ህፃናት ሐኪሞች፣ ራዲዮሎጂስቶች፣ ህፃናት ነርሶችና ላቦራቶሪ ቴክኒሻኖች ይገኛሉ።",
+    ceoTitle: "የአስተዳዳሪነት መልዕክት",
+    ceoMsg:
+      "በህክምና ክሊኒክ እኛ ጤና ማስተናገድ ማንኛውንም በሽታ ብቻ ሳይሆን በሰውነት ሙሉ ያለ ትኩረት ነው በምንመኘው።",
+    valuesTitle: "ዋና እሴቶቻችን",
+    valuesDesc:
+      "እነዚህ መርሆዎች እኛን የምንሆነውን ይገልጻሉ እና ልጆችንና ቤተሰቦችን በክብር እና በእውነት ለማገልገል የምንወስድበትን ውሳኔ ያመራሉ።",
+    compassion: "ርኅራኄ",
+    compassionDesc:
+      "በቅርብ መስማት እና በትክክል መልስ ልጆች በልዩ እንክብካቤ እንዲያገኙ እና ልዩነታቸውን እንዲጠብቁ እንሠራለን።",
+    excellence: "ብልጽግና",
+    excellenceDesc:
+      "በጤና አገልግሎት ከፍተኛ ስኬት ለማድረግ በማሻሻያና በደህንነት እንጥራለን።",
+    innovation: "አዳዲስነት",
+    innovationDesc:
+      "አዳዲስ ቴክኖሎጂዎችን በመቀበል ልጆች ለጤናቸው በተስፋ እንክብካቤ እንሰጣለን።",
+    differentTitle: "ምን እንደምንለየው?",
+    differentDesc:
+      "በብሩህ ኪድስ የህፃናት እንክብካቤ ብቻ አይደለም፤ አስተዋፅኦ ያለው የልጅ ማእከል እንዲኖር እንሠራለን።",
+    facilities: "ዘመናዊ ተቋማት",
+    facilitiesDesc:
+      "ልጆችና ቤተሰቦች በተስፋ እንዲያገኙ በዓለም ደረጃ የተዘጋጀ የህፃናት ክሊኒክ።",
+    specialized: "ልዩ የህፃናት እንክብካቤ",
+    specializedDesc:
+      "የህፃናት አጠቃላይ እንክብካቤ በተሞክሮ ያላቸው ሐኪሞች እና ነርሶች የሚሰጥ።",
+    diagnostics: "ዘመናዊ ምርመራ",
+    diagnosticsDesc:
+      "የህፃናት በግልጽ ውጤት የሚሰጥ ላቦራቶሪ እና ኢምጅ አገልግሎት።",
+    emergency: "የአደጋ እንክብካቤ",
+    emergencyDesc:
+      "የህፃናት አደጋ ክፍል በተዘጋጀ ባለሙያዎች የተሞላ።",
+    outreach: "ማህበረሰብ አጋር",
+    outreachDesc:
+      "ለ4+ ዓመታት በማህበራዊ ሚዲያ ቤተሰቦችን በጤና ማስተላለፊያ ማሳያ።",
+    team: "ተዋዳድ ቡድን",
+    teamDesc:
+      "ልጆችን በቅርብ እንክብካቤ የሚያገኙ በልዩ ተዘጋጅቶ የተሞላ ቡድን።",
+  },
+};
+
+const AboutPage = ({ lang }) => {
+  const t = translations[lang] || translations.en;
+
   // Variants
   const cardVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.9 },
@@ -35,11 +137,10 @@ const AboutPage = () => {
       {/* Intro Section */}
       <section className="bg-[#007799] text-white text-center px-4 py-12 sm:py-16 lg:py-24">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-          About Us
+          {t.aboutTitle}
         </h1>
         <p className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed text-center lg:text-left">
-          Dedicated to providing exceptional healthcare services with compassion,
-          innovation, and unwavering commitment to our patients' wellbeing.
+          {t.aboutDesc}
         </p>
       </section>
 
@@ -47,45 +148,13 @@ const AboutPage = () => {
       <SectionWrapper>
         <div className="py-16 px-4 sm:px-6 lg:px-12 flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12">
           <SectionImage src={clinicImage} alt="Clinic Building" />
-
           <SectionText>
             <h2 className="text-3xl font-bold mb-4 text-center lg:text-left">
-              Our Story
+              {t.storyTitle}
             </h2>
-
-            <p className="text-gray-700 text-justify leading-relaxed [hyphens:auto] [word-spacing:0.05em]">
-              Biruh Kids was established in November 2024 as a premier pediatric
-              specialty clinic in Addis Ababa, Ethiopia. Over the last eight
-              months, we have been dedicated to providing comprehensive
-              healthcare services for children, working tirelessly towards
-              obtaining institutional status. At Biruh Kids, we currently offer
-              a range of specialized services including Outpatient Department
-              (OPD), emergency care, laboratory services, and ultrasound
-              diagnostics to ensure that every child receives the highest
-              standard of medical attention.
-            </p>
-
-            <p className="text-gray-700 text-justify leading-relaxed mt-2 [hyphens:auto] [word-spacing:0.05em]">
-              Our state-of-the-art facilities are equipped with advanced
-              technology to support the diagnosis and treatment of various
-              pediatric conditions. Whether it’s routine consultations or
-              emergency interventions, our team of skilled doctors and
-              specialists is committed to delivering exceptional care in a
-              comfortable and compassionate environment, ensuring that every
-              child’s health and well-being are our top priorities.
-            </p>
-
-            <p className="text-gray-700 text-justify leading-relaxed mt-2 [hyphens:auto] [word-spacing:0.05em]">
-              Among our staff are some of the most experienced pediatricians,
-              radiologists, pediatric nurses, and laboratory technicians in
-              Ethiopia. Biruh Kids stands out for its design, which is
-              specifically tailored to meet the unique healthcare needs of
-              children, ensuring that we provide comprehensive care for
-              virtually every pediatric condition. We are proud to have built
-              our reputation by offering the highest quality services and
-              utilizing state-of-the-art medical equipment, all while
-              maintaining affordable pricing.
-            </p>
+            <p className="text-gray-700 text-justify leading-relaxed">{t.storyP1}</p>
+            <p className="text-gray-700 text-justify leading-relaxed mt-2">{t.storyP2}</p>
+            <p className="text-gray-700 text-justify leading-relaxed mt-2">{t.storyP3}</p>
           </SectionText>
         </div>
       </SectionWrapper>
@@ -95,51 +164,26 @@ const AboutPage = () => {
         <div className="py-16 px-4 sm:px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
           <SectionText>
             <h2 className="text-3xl font-bold mb-6 text-center lg:text-left">
-              Message from Our CEO
+              {t.ceoTitle}
             </h2>
-            <p className="text-gray-700 text-justify leading-relaxed [hyphens:auto] [word-spacing:0.05em]">
-              At HealthCare Clinic, we believe that exceptional healthcare is
-              not just about treating illness, but about caring for the whole
-              person. At HealthCare Clinic, we believe that exceptional
-              healthcare is not just about treating illness, but about caring
-              for the whole person. At HealthCare Clinic, we believe that
-              exceptional healthcare is not just about treating illness, but
-              about caring for the whole person. At HealthCare Clinic, we
-              believe that exceptional healthcare is not just about treating
-              illness, but about caring for the whole person. At HealthCare
-              Clinic, we believe that exceptional healthcare is not just about
-              treating illness, but about caring for the whole person.
-            </p>
+            <p className="text-gray-700 text-justify leading-relaxed">{t.ceoMsg}</p>
           </SectionText>
-
-          <SectionImage
-            src={ceoImage}
-            alt="CEO"
-            showName="Dr. Fasil Menbere"
-            showRole="CEO & Founder"
-          />
+          <SectionImage src={ceoImage} alt="CEO" showName="Dr. Fasil Menbere" showRole="CEO & Founder" />
         </div>
       </SectionWrapper>
 
-      {/* Vision & Mission Section (Reused Component) */}
+      {/* Vision & Mission Section */}
       <SectionWrapper>
-        <VisionMissionSection />
+        <VisionMissionSection lang={lang} />
       </SectionWrapper>
 
-      {/* Core Values Section */}
+      {/* Core Values */}
       <SectionWrapper>
         <div className="py-16 px-4 sm:px-6 lg:px-12">
           <div className="max-w-6xl mx-auto text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Our Core Values
-            </h2>
-            <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">
-              These principles define who we are and guide every decision we
-              make in our mission to serve children and families with integrity
-              and care.
-            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t.valuesTitle}</h2>
+            <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">{t.valuesDesc}</p>
           </div>
-
           <motion.div
             className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-left"
             initial="hidden"
@@ -147,67 +191,38 @@ const AboutPage = () => {
             viewport={{ once: true }}
             variants={containerVariants}
           >
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaHandsHelping className="text-[#007799] text-3xl" />
-                <h3 className="text-xl font-bold">Compassion</h3>
+                <h3 className="text-xl font-bold">{t.compassion}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                We place empathy at the heart of care, listening deeply,
-                responding kindly, and honoring every child’s unique needs and
-                experiences.
-              </p>
+              <p>{t.compassionDesc}</p>
             </motion.div>
-
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaMedal className="text-[#FF7A1A] text-3xl" />
-                <h3 className="text-xl font-bold">Excellence</h3>
+                <h3 className="text-xl font-bold">{t.excellence}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                We pursue the highest standards in healthcare, striving for
-                precision, safety, and continuous improvement in all we do.
-              </p>
+              <p>{t.excellenceDesc}</p>
             </motion.div>
-
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaLightbulb className="text-yellow-400 text-3xl" />
-                <h3 className="text-xl font-bold">Innovation</h3>
+                <h3 className="text-xl font-bold">{t.innovation}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                We embrace creativity and new technologies, seeking fresh
-                solutions that make pediatric care more effective, accessible,
-                and hopeful.
-              </p>
+              <p>{t.innovationDesc}</p>
             </motion.div>
           </motion.div>
         </div>
       </SectionWrapper>
 
-      {/* What Makes Us Different Section */}
+      {/* What Makes Us Different */}
       <SectionWrapper>
         <div className="py-16 px-4 sm:px-6 lg:px-12">
           <div className="max-w-6xl mx-auto text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              What Makes Us Different?
-            </h2>
-            <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">
-              At Biruh Kids, we go beyond standard pediatric care to create a
-              safe, innovative, and child-centered environment. Here’s how we
-              stand out.
-            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t.differentTitle}</h2>
+            <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">{t.differentDesc}</p>
           </div>
-
           <motion.div
             className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-left"
             initial="hidden"
@@ -215,93 +230,47 @@ const AboutPage = () => {
             viewport={{ once: true }}
             variants={containerVariants}
           >
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaHospital className="text-[#007799] text-3xl" />
-                <h3 className="text-xl font-bold">Modern Facilities</h3>
+                <h3 className="text-xl font-bold">{t.facilities}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                State-of-the-art pediatric clinic with child-friendly design,
-                ensuring comfort for children and families while delivering
-                world-class care.
-              </p>
+              <p>{t.facilitiesDesc}</p>
             </motion.div>
-
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaStethoscope className="text-[#FF7A1A] text-3xl" />
-                <h3 className="text-xl font-bold">Specialized Pediatric Care</h3>
+                <h3 className="text-xl font-bold">{t.specialized}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                Comprehensive pediatric services from growth assessments to
-                chronic care delivered by experienced pediatricians, nurses, and
-                radiologists.
-              </p>
+              <p>{t.specializedDesc}</p>
             </motion.div>
-
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaMicroscope className="text-yellow-500 text-3xl" />
-                <h3 className="text-xl font-bold">Advanced Diagnostics</h3>
+                <h3 className="text-xl font-bold">{t.diagnostics}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                Cutting-edge laboratory and imaging services with the latest
-                ultrasound technology, ensuring fast and accurate results
-                tailored to children.
-              </p>
+              <p>{t.diagnosticsDesc}</p>
             </motion.div>
-
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaAmbulance className="text-red-500 text-3xl" />
-                <h3 className="text-xl font-bold">Emergency Pediatric Care</h3>
+                <h3 className="text-xl font-bold">{t.emergency}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                Dedicated pediatric emergency unit with trained specialists
-                ensuring immediate response and effective treatment in critical
-                situations.
-              </p>
+              <p>{t.emergencyDesc}</p>
             </motion.div>
-
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaUsers className="text-green-600 text-3xl" />
-                <h3 className="text-xl font-bold">Community Outreach</h3>
+                <h3 className="text-xl font-bold">{t.outreach}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                Actively educating families for 4+ years through social media,
-                spreading pediatric health knowledge and empowering parents.
-              </p>
+              <p>{t.outreachDesc}</p>
             </motion.div>
-
-            <motion.div
-              className="bg-white rounded-xl shadow-xl p-6 flex flex-col items-start border border-gray-200 hover:scale-105 transition duration-300 cursor-pointer"
-              variants={cardVariants}
-            >
+            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
               <div className="flex items-center gap-3 mb-4">
                 <FaUserMd className="text-purple-600 text-3xl" />
-                <h3 className="text-xl font-bold">Dedicated Team</h3>
+                <h3 className="text-xl font-bold">{t.team}</h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                Compassionate pediatricians, nurses, radiologists, and support
-                staff ensuring seamless, family-friendly care from arrival to
-                departure.
-              </p>
+              <p>{t.teamDesc}</p>
             </motion.div>
           </motion.div>
         </div>
@@ -310,7 +279,7 @@ const AboutPage = () => {
   );
 };
 
-// Reusable section wrapper with scroll animation
+// Reusable section wrapper
 const SectionWrapper = ({ children }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
   return (

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import TestimonialForm from "./TestimonialForm";
 
-export default function Testimonials() {
+export default function Testimonials({ lang }) {
     const [isOpen, setIsOpen] = useState(false);
     const [current, setCurrent] = useState(0);
     const containerRef = useRef(null);
@@ -51,6 +51,24 @@ export default function Testimonials() {
         },
     ];
 
+    // Translations
+    const translations = {
+        En: {
+            heading: "What Our Patients Say",
+            subheading:
+                "Read testimonials from our satisfied patients who have experienced our exceptional healthcare services.",
+            shareButton: "Share Your Experience",
+        },
+        Am: {
+            heading: "የታካሚዎቻችን ምስክርነት",
+            subheading:
+                "የተሟላ የጤና አገልግሎት የተቀበሉ ታካሚዎቻችን ምስክርነት ይንብቡ።",
+            shareButton: "ልምድዎን ያካፍሉ",
+        },
+    };
+
+    const t = translations[lang] || translations.En;
+
     // Create a duplicated array for seamless looping
     const duplicatedTestimonials = [...testimonials, ...testimonials];
 
@@ -76,7 +94,6 @@ export default function Testimonials() {
         setIsTransitioning(true);
         setCurrent((prev) => {
             if (prev >= testimonials.length - 1) {
-                // After transitioning to the duplicate, quickly reset without animation
                 setTimeout(() => {
                     setIsTransitioning(false);
                     setCurrent(0);
@@ -91,7 +108,6 @@ export default function Testimonials() {
         setIsTransitioning(true);
         setCurrent((prev) => {
             if (prev <= 0) {
-                // After transitioning to the duplicate, quickly reset without animation
                 setTimeout(() => {
                     setIsTransitioning(false);
                     setCurrent(testimonials.length - 1);
@@ -102,7 +118,6 @@ export default function Testimonials() {
         });
     };
 
-    // Handle transition end to reset position seamlessly
     const handleTransitionEnd = () => {
         if (current >= testimonials.length) {
             setIsTransitioning(false);
@@ -113,73 +128,20 @@ export default function Testimonials() {
         }
     };
 
-    // Swipe handling for mobile
-    const handleTouchStart = (e) => {
-        isDraggingRef.current = true;
-        startXRef.current = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e) => {
-        if (!isDraggingRef.current) return;
-
-        const currentX = e.touches[0].clientX;
-        const diffX = startXRef.current - currentX;
-
-        // Add a slight drag effect while swiping
-        if (containerRef.current) {
-            containerRef.current.style.transform = `translateX(calc(-${
-                (100 / visibleCards) * current
-            }% - ${diffX}px))`;
-        }
-    };
-
-    const handleTouchEnd = (e) => {
-        if (!isDraggingRef.current) return;
-
-        const endX = e.changedTouches[0].clientX;
-        const diffX = startXRef.current - endX;
-
-        // Reset transform
-        if (containerRef.current) {
-            containerRef.current.style.transform = `translateX(-${
-                (100 / visibleCards) * current
-            }%)`;
-        }
-
-        // Determine if it's a swipe (more than 50px)
-        if (Math.abs(diffX) > 50) {
-            if (diffX > 0) {
-                // Swipe left - go to next slide
-                nextSlide();
-            } else {
-                // Swipe right - go to previous slide
-                prevSlide();
-            }
-        }
-
-        isDraggingRef.current = false;
-    };
-
-    // Auto-play
-    useEffect(() => {
-        const interval = setInterval(nextSlide, 5000);
-        return () => clearInterval(interval);
-    }, [current, visibleCards]);
-
     return (
         <article className="py-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Heading */}
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                        What Our Patients Say
+                        {t.heading}
                     </h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Read testimonials from our satisfied patients who have
-                        experienced our exceptional healthcare services.
+                        {t.subheading}
                     </p>
                 </div>
 
-                {/* Slider container */}
+                {/* Slider */}
                 <div className="w-full relative">
                     <div className="overflow-hidden mx-0 md:mx-12">
                         <div
@@ -194,11 +156,6 @@ export default function Testimonials() {
                                     : "none",
                             }}
                             onTransitionEnd={handleTransitionEnd}
-                            onTouchStart={
-                                isMobile ? handleTouchStart : undefined
-                            }
-                            onTouchMove={isMobile ? handleTouchMove : undefined}
-                            onTouchEnd={isMobile ? handleTouchEnd : undefined}
                         >
                             {duplicatedTestimonials.map(
                                 (testimonial, index) => (
@@ -245,40 +202,19 @@ export default function Testimonials() {
                         </div>
                     </div>
 
-                    {/* Prev/Next buttons - hidden on mobile */}
-
-                    <>
-                        <button
-                            onClick={prevSlide}
-                            className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
-                        >
-                            <ChevronLeft className="h-6 w-6 text-gray-700" />
-                        </button>
-                        <button
-                            onClick={nextSlide}
-                            className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
-                        >
-                            <ChevronRight className="h-6 w-6 text-gray-700" />
-                        </button>
-                    </>
-                </div>
-
-                {/* Indicators */}
-                <div className="flex justify-center mt-8">
-                    {testimonials.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => {
-                                setIsTransitioning(true);
-                                setCurrent(index);
-                            }}
-                            className={`h-3 w-3 rounded-full mx-1 ${
-                                current % testimonials.length === index
-                                    ? "bg-blue-600"
-                                    : "bg-gray-300"
-                            }`}
-                        />
-                    ))}
+                    {/* Prev/Next */}
+                    <button
+                        onClick={prevSlide}
+                        className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
+                    >
+                        <ChevronLeft className="h-6 w-6 text-gray-700" />
+                    </button>
+                    <button
+                        onClick={nextSlide}
+                        className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 z-10"
+                    >
+                        <ChevronRight className="h-6 w-6 text-gray-700" />
+                    </button>
                 </div>
 
                 {/* Share button */}
@@ -287,7 +223,7 @@ export default function Testimonials() {
                         onClick={() => setIsOpen(true)}
                         className="bg-orange-500 text-white px-8 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-200 inline-flex items-center"
                     >
-                        Share Your Experience
+                        {t.shareButton}
                         <ArrowRight className="h-4 w-4 ml-2" />
                     </button>
                 </div>
@@ -304,9 +240,9 @@ export default function Testimonials() {
                             <X className="h-6 w-6" />
                         </button>
                         <h3 className="text-xl font-bold mb-4 text-gray-900">
-                            Share Your Experience
+                            {t.shareButton}
                         </h3>
-                        <TestimonialForm onClose={() => setIsOpen(false)} />
+                        <TestimonialForm lang={lang} onClose={() => setIsOpen(false)} />
                     </div>
                 </div>
             )}

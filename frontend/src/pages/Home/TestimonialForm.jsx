@@ -17,7 +17,7 @@ export default function TestimonialForm({ onClose }) {
         title: "",
         testimony: "",
         allowPublic: false,
-        image: null, // new field
+        image: null,
     });
     const [preview, setPreview] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -69,17 +69,17 @@ export default function TestimonialForm({ onClose }) {
         <div className="overflow-y-auto max-h-[90vh] px-2">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <Heart className="h-6 w-6 text-orange-500 mr-2" />
-                Share Your Story
+                ታሪክዎን ያካፍሉ
             </h2>
 
             {isSubmitted ? (
                 <div className="text-center py-8">
                     <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
-                        Thank You!
+                        አመሰግናለሁ!
                     </h3>
                     <p className="text-gray-600">
-                        Your testimony has been submitted successfully.
+                        ምስክርነትዎ በትክክል ተላክቷል።
                     </p>
                 </div>
             ) : (
@@ -91,7 +91,7 @@ export default function TestimonialForm({ onClose }) {
                                 htmlFor="name"
                                 className="block text-sm font-medium text-gray-700 mb-1"
                             >
-                                Full Name *
+                                ሙሉ ስም *
                             </label>
                             <input
                                 type="text"
@@ -108,7 +108,7 @@ export default function TestimonialForm({ onClose }) {
                                 htmlFor="email"
                                 className="block text-sm font-medium text-gray-700 mb-1"
                             >
-                                Email Address *
+                                ኢሜል አድራሻ *
                             </label>
                             <input
                                 type="email"
@@ -129,7 +129,7 @@ export default function TestimonialForm({ onClose }) {
                                 htmlFor="phone"
                                 className="block text-sm font-medium text-gray-700 mb-1"
                             >
-                                Phone Number
+                                ስልክ ቁጥር
                             </label>
                             <input
                                 type="tel"
@@ -145,7 +145,7 @@ export default function TestimonialForm({ onClose }) {
                                 htmlFor="treatment"
                                 className="block text-sm font-medium text-gray-700 mb-1"
                             >
-                                Treatment/Service *
+                                ሕክምና/አገልግሎት *
                             </label>
                             <select
                                 id="treatment"
@@ -155,19 +155,15 @@ export default function TestimonialForm({ onClose }) {
                                 required
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                             >
-                                <option value="">Select treatment</option>
-                                <option value="cardiology">Cardiology</option>
-                                <option value="emergency">
-                                    Emergency Care
-                                </option>
-                                <option value="general">
-                                    General Medicine
-                                </option>
-                                <option value="neurology">Neurology</option>
-                                <option value="orthopedics">Orthopedics</option>
-                                <option value="pediatrics">Pediatrics</option>
-                                <option value="surgery">Surgery</option>
-                                <option value="other">Other</option>
+                                <option value="">ሕክምና ይምረጡ</option>
+                                <option value="cardiology">የልብ ሕክምና</option>
+                                <option value="emergency">የአደጋ እንክብካቤ</option>
+                                <option value="general">አጠቃላይ ሕክምና</option>
+                                <option value="neurology">ነርቭ ሕክምና</option>
+                                <option value="orthopedics">የአጥንት ሕክምና</option>
+                                <option value="pediatrics">የሕፃናት ሕክምና</option>
+                                <option value="surgery">ቀዶ ጥገና</option>
+                                <option value="other">ሌላ</option>
                             </select>
                         </div>
                     </div>
@@ -175,7 +171,7 @@ export default function TestimonialForm({ onClose }) {
                     {/* rating */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Overall Rating *
+                            አጠቃላይ እንክብካቤ እሴት *
                         </label>
                         <div className="flex items-center space-x-1">
                             {[1, 2, 3, 4, 5].map((star) => (
@@ -204,7 +200,7 @@ export default function TestimonialForm({ onClose }) {
                             htmlFor="title"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            Testimony Title *
+                            የምስክርነት አርእስት *
                         </label>
                         <input
                             type="text"
@@ -223,7 +219,7 @@ export default function TestimonialForm({ onClose }) {
                             htmlFor="testimony"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            Your Experience *
+                            ልምድዎ *
                         </label>
                         <textarea
                             id="testimony"
@@ -243,16 +239,27 @@ export default function TestimonialForm({ onClose }) {
                             className="block text-sm font-medium text-gray-700 mb-1 flex items-center"
                         >
                             <ImageIcon className="h-4 w-4 mr-1 text-blue-500" />
-                            Upload an Image (optional)
+                            ምስል ያስገቡ (አማራጭ)
                         </label>
+
+                        {/* hidden file input */}
                         <input
                             type="file"
                             id="image"
                             name="image"
                             accept="image/*"
                             onChange={handleChange}
-                            className="w-full text-sm text-gray-700"
+                            className="hidden"
                         />
+
+                        {/* custom button */}
+                        <label
+                            htmlFor="image"
+                            className="cursor-pointer inline-block bg-gray-100 px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-200"
+                        >
+                            ፋይል ይምረጡ
+                        </label>
+
                         {preview && (
                             <div className="mt-2">
                                 <img
@@ -278,7 +285,7 @@ export default function TestimonialForm({ onClose }) {
                             htmlFor="allowPublic"
                             className="ml-2 text-sm text-gray-700"
                         >
-                            I allow this testimony to be published publicly
+                            ይህን ምስክርነት በህዝብ ፊት እንዲታተም እፈቅዳለሁ
                         </label>
                     </div>
 
@@ -288,7 +295,7 @@ export default function TestimonialForm({ onClose }) {
                         className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center font-semibold"
                     >
                         <Send className="h-5 w-5 mr-2" />
-                        Submit Testimony
+                        ምስክርነት ያስገቡ
                     </button>
                 </form>
             )}

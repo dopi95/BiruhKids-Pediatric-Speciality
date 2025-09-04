@@ -16,7 +16,9 @@ const fadeUp = {
   }),
 };
 
-export default function Services() {
+export default function Services({ lang }) {
+  const isAmh = lang === "Am";
+
   const services = [
     {
       icon: Heart,
@@ -50,11 +52,12 @@ export default function Services() {
           variants={fadeUp}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Our Services
+            {isAmh ? "አገልግሎታችን" : "Our Services"}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Comprehensive healthcare services designed to meet all your medical
-            needs with state-of-the-art technology and expert care.
+            {isAmh
+              ? "በዘመናዊ ቴክኖሎጂ እና በባለሙያ እንክብካቤ የተዘጋጀ የጤና አገልግሎት ለሁሉም የጤና ፍላጎቶችዎ ማሟላት።"
+              : "Comprehensive healthcare services designed to meet all your medical needs with state-of-the-art technology and expert care."}
           </p>
         </motion.div>
 
@@ -83,7 +86,8 @@ export default function Services() {
                 to="/services"
                 className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold"
               >
-                Learn More <ArrowRight className="h-4 w-4 ml-1" />
+                {isAmh ? "ተጨማሪ ይወቁ" : "Learn More"}{" "}
+                <ArrowRight className="h-4 w-4 ml-1" />
               </Link>
             </motion.div>
           ))}
@@ -102,7 +106,8 @@ export default function Services() {
             to="/services"
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 inline-flex items-center"
           >
-            View All Services <ArrowRight className="h-4 w-4 ml-2" />
+            {isAmh ? "ሁሉንም አገልግሎቶች ይመልከቱ" : "View All Services"}{" "}
+            <ArrowRight className="h-4 w-4 ml-2" />
           </Link>
         </motion.div>
       </div>

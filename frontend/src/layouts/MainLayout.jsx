@@ -1,13 +1,28 @@
+import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Chatbot from "../components/Chatbot";
+import React from "react";
 
 export default function MainLayout({ children }) {
+    const [lang, setLang] = useState("En");
+
+    // Correct: use React.cloneElement to inject props into children
+    const enhancedChildren = Array.isArray(children)
+        ? children.map((child) =>
+              React.isValidElement(child)
+                  ? React.cloneElement(child, { lang, setLang })
+                  : child
+          )
+        : React.isValidElement(children)
+        ? React.cloneElement(children, { lang, setLang })
+        : children;
+
     return (
         <div>
-            <Header />
-            <main>{children}</main>
-            <Footer />
+            <Header lang={lang} setLang={setLang} />
+            <main>{enhancedChildren}</main>
+            <Footer lang={lang === "En" ? "en" : "am"} />
             <Chatbot />
         </div>
     );
