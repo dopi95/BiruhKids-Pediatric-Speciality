@@ -1,7 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { FaYoutube, FaTiktok } from "react-icons/fa"; // FontAwesome icons
+import { FaYoutube, FaTiktok } from "react-icons/fa";
 
-const VideosPage = () => {
+const VideosPage = ({ lang = "En" }) => {
+  const translations = {
+    En: {
+      pageTitle: "Health Videos",
+      pageSubtitle:
+        "Educational health content, expert advice, and inspiring patient stories to help you on your wellness journey.",
+      youtube: "YouTube",
+      tiktok: "TikTok",
+      stayUpdated: "Stay Updated with Our Latest Content",
+      stayUpdatedDesc:
+        "Subscribe to our channels to get the latest health tips, medical updates, and wellness content delivered directly to you.",
+      youtubeChannel: "YouTube Channel",
+      tiktokChannel: "TikTok Channel",
+    },
+    Am: {
+      pageTitle: "የጤና ቪዲዮዎች",
+      pageSubtitle:
+        "የትምህርት የጤና ይዘት፣ የባለሙያ ምክር እና አስደናቂ የታካሚ ታሪኮች በጤና ጉዞዎ ላይ ለመርዳት።",
+      youtube: "ዩቱብ",
+      tiktok: "ቲክቶክ",
+      stayUpdated: "ከአዳዲስ ይዘታችን ጋር ይቀመጡ",
+      stayUpdatedDesc:
+        "የጤና ምክሮች፣ የሕክምና ዝማኔዎች እና የጤና ይዘቶችን በቀጥታ ለማግኘት ወደ ቻናሎቻችን ይመዝገቡ።",
+      youtubeChannel: "ዩቱብ ቻናል",
+      tiktokChannel: "ቲክቶክ ቻናል",
+    },
+  };
+
+  const t = translations[lang] || translations.En;
+
   const [platform, setPlatform] = useState("youtube");
 
   const youtubeVideos = Array(3).fill({
@@ -36,14 +65,15 @@ const VideosPage = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Intro Section */}
       <div className="bg-[#007799] text-white text-center py-16 px-4">
-        <h1 className="text-4xl sm:text-5xl font-bold mb-4">Health Videos</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+          {t.pageTitle}
+        </h1>
         <p className="text-lg sm:text-xl max-w-3xl mx-auto">
-          Educational health content, expert advice, and inspiring patient stories
-          to help you on your wellness journey.
+          {t.pageSubtitle}
         </p>
       </div>
 
-      {/* Platform Toggle (FontAwesome icons) */}
+      {/* Platform Toggle */}
       <div className="flex justify-start mt-8 px-4">
         <div className="flex border rounded-full overflow-hidden shadow bg-white">
           <button
@@ -54,8 +84,12 @@ const VideosPage = () => {
                 : "text-red-600 hover:bg-gray-200"
             }`}
           >
-            <FaYoutube className={`w-5 h-5 ${platform === "youtube" ? "text-white" : "text-red-600"}`} />
-            YouTube
+            <FaYoutube
+              className={`w-5 h-5 ${
+                platform === "youtube" ? "text-white" : "text-red-600"
+              }`}
+            />
+            {t.youtube}
           </button>
           <button
             onClick={() => setPlatform("tiktok")}
@@ -65,8 +99,12 @@ const VideosPage = () => {
                 : "text-black hover:bg-gray-200"
             }`}
           >
-            <FaTiktok className={`w-5 h-5 ${platform === "tiktok" ? "text-white" : "text-black"}`} />
-            TikTok
+            <FaTiktok
+              className={`w-5 h-5 ${
+                platform === "tiktok" ? "text-white" : "text-black"
+              }`}
+            />
+            {t.tiktok}
           </button>
         </div>
       </div>
@@ -123,13 +161,11 @@ const VideosPage = () => {
         ))}
       </div>
 
-      {/* Stay Updated Section (FontAwesome icons) */}
+      {/* Stay Updated Section */}
       <div className="bg-[#FF7A1A] text-white text-center py-16 px-4 mt-12">
-        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-          Stay Updated with Our Latest Content
-        </h2>
+        <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t.stayUpdated}</h2>
         <p className="text-lg sm:text-xl max-w-3xl mx-auto mb-8">
-          Subscribe to our channels to get the latest health tips, medical updates, and wellness content delivered directly to you.
+          {t.stayUpdatedDesc}
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <a
@@ -139,7 +175,7 @@ const VideosPage = () => {
             className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition flex items-center gap-2 justify-center"
           >
             <FaYoutube className="w-5 h-5 text-white" />
-            YouTube Channel
+            {t.youtubeChannel}
           </a>
           <a
             href="https://www.tiktok.com/@biruhkids?_t=ZM-8zHeQeJllLk&_r=1"
@@ -148,7 +184,7 @@ const VideosPage = () => {
             className="px-6 py-3 bg-black text-white font-semibold rounded-lg shadow hover:bg-gray-800 transition flex items-center gap-2 justify-center"
           >
             <FaTiktok className="w-5 h-5 text-white" />
-            TikTok Channel
+            {t.tiktokChannel}
           </a>
         </div>
       </div>
