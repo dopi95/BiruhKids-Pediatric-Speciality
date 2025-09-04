@@ -67,7 +67,7 @@ function Header({ lang, setLang }) {
                     <img
                         src={Logo}
                         alt="Logo"
-                        className=" w-22 h-12 animate-logo-text-flip"
+                        className=" w-22 h-8 animate-logo-text-flip"
                         style={{ transformOrigin: "center" }}
                     />
                 </Link>
