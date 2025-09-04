@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 
-const UserDashboard = () => {
+const UserDashboard = ({ lang = "En" }) => {
   const [showAllResults, setShowAllResults] = useState(false);
   const [openNoteId, setOpenNoteId] = useState(null);
 
@@ -59,6 +59,28 @@ const UserDashboard = () => {
     ? recentResults
     : recentResults.slice(0, 3);
 
+  // ✅ Translations
+  const t = {
+    En: {
+      totalResults: "Total Results",
+      recentResults: "Recent Test Results",
+      viewAll: "View All",
+      showLess: "Show Less",
+      quickActions: "Quick Actions",
+      viewResults: "View Results",
+      updateProfile: "Update Profile",
+    },
+    Am: {
+      totalResults: "ጠቅላላ ውጤቶች",
+      recentResults: "የቅርብ የሙከራ ውጤቶች",
+      viewAll: "ሁሉንም አሳይ",
+      showLess: "በትንሽ አሳይ",
+      quickActions: "ፈጣን እርምጃዎች",
+      viewResults: "ውጤቶችን አሳይ",
+      updateProfile: "መገለጫ አሻሽል",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -101,7 +123,7 @@ const UserDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 mb-1">
-                  Total Results
+                  {t[lang].totalResults}
                 </p>
                 <p className="text-3xl font-bold text-gray-900">
                   {recentResults.length}
@@ -120,13 +142,13 @@ const UserDashboard = () => {
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-900">
-                  Recent Test Results
+                  {t[lang].recentResults}
                 </h2>
                 <button
                   onClick={() => setShowAllResults(!showAllResults)}
                   className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                 >
-                  {showAllResults ? "Show Less" : "View All"}
+                  {showAllResults ? t[lang].showLess : t[lang].viewAll}
                 </button>
               </div>
             </div>
@@ -192,7 +214,7 @@ const UserDashboard = () => {
         {/* Quick Actions */}
         <div className="mt-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Quick Actions
+            {t[lang].quickActions}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <button
@@ -200,7 +222,9 @@ const UserDashboard = () => {
               className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 text-center"
             >
               <FileText className="h-8 w-8 text-green-600 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">View Results</p>
+              <p className="text-sm font-medium text-gray-900">
+                {t[lang].viewResults}
+              </p>
             </button>
             <Link
               to="/profile"
@@ -208,7 +232,7 @@ const UserDashboard = () => {
             >
               <User className="h-8 w-8 text-orange-600 mx-auto mb-2" />
               <p className="text-sm font-medium text-gray-900">
-                Update Profile
+                {t[lang].updateProfile}
               </p>
             </Link>
           </div>
