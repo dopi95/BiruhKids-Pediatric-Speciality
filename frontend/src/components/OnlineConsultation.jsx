@@ -54,7 +54,7 @@ export default function OnlineConsultation() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            href="https://wa.me/251996505319"
+            href="#"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full shadow-lg transition-all w-full sm:w-auto justify-center"
@@ -68,7 +68,7 @@ export default function OnlineConsultation() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            href="https://t.me/biruhkidsclinic"
+            href="#"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg transition-all w-full sm:w-auto justify-center"

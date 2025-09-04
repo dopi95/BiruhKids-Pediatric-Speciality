@@ -5,7 +5,18 @@ export default {
     "./src/**/*.{js,jsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        "logo-text-flip": {
+          "0%": { transform: "rotateY(0deg)" },
+          "85%": { transform: "rotateY(360deg)" }, // smooth forward flip
+          "100%": { transform: "rotateY(360deg)" }, // pause at original
+        },
+      },
+      animation: {
+        "logo-text-flip": "logo-text-flip 9s ease-in-out infinite",
+      },
+    },
   },
   plugins: [],
 }
