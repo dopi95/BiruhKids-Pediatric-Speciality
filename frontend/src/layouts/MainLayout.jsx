@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -7,7 +8,6 @@ import React from "react";
 export default function MainLayout({ children }) {
     const [lang, setLang] = useState("En");
 
-    // Correct: use React.cloneElement to inject props into children
     const enhancedChildren = Array.isArray(children)
         ? children.map((child) =>
               React.isValidElement(child)
@@ -27,3 +27,4 @@ export default function MainLayout({ children }) {
         </div>
     );
 }
+

@@ -68,7 +68,7 @@ function Header({ lang, setLang }) {
                         src={Logo}
                         alt="Logo"
                         className=" w-22 h-12 animate-logo-text-flip"
-                        style={{ transformOrigin: "center" }} // keeps it centered inside header
+                        style={{ transformOrigin: "center" }}
                     />
                 </Link>
 
@@ -125,7 +125,7 @@ function Header({ lang, setLang }) {
                     </section>
                 </div>
 
-                {/* Mobile Right Side (Lang + Hamburger) */}
+                {/* Mobile Right Side */}
                 <div className="md:hidden flex items-center gap-3">
                     <section className="flex items-center">
                         <Globe className="w-5 h-5 cursor-pointer" onClick={toggleLang} />

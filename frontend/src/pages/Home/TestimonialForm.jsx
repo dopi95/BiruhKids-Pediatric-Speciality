@@ -236,7 +236,7 @@ export default function TestimonialForm({ onClose }) {
                     <div>
                         <label
                             htmlFor="image"
-                            className="block text-sm font-medium text-gray-700 mb-1 flex items-center"
+                            className="block text-sm font-medium text-gray-700 mb-1  items-center"
                         >
                             <ImageIcon className="h-4 w-4 mr-1 text-blue-500" />
                             ምስል ያስገቡ (አማራጭ)

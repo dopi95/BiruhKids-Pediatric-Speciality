@@ -20,7 +20,7 @@ const ceoImage = "https://imgur.com/Jvnc3F4.jpg";
 
 // ✅ Translations
 const translations = {
-  en: {
+  En: {
     aboutTitle: "About Us",
     aboutDesc:
       "Dedicated to providing exceptional healthcare services with compassion, innovation, and unwavering commitment to our patients' wellbeing.",
@@ -68,7 +68,7 @@ const translations = {
     teamDesc:
       "Compassionate pediatricians, nurses, radiologists, and support staff ensuring seamless, family-friendly care from arrival to departure.",
   },
-  am: {
+  Am: {
     aboutTitle: "ስለ እኛ",
     aboutDesc:
       "በርሀ ኪድስ ልጆች ለጤናቸው ከፍተኛ ጥራት ያለው እንክብካቤ በርካታ በፍላጎት እና በማህበራዊ አገልግሎት ለመስጠት ተቃውሞ የማይቀር ትኩረት ያቀርባል።",
