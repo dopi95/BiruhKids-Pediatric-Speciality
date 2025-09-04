@@ -3,7 +3,55 @@ import { Link } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import Alert from "../components/Alert";
 
-export default function SignIn() {
+const translations = {
+  En: {
+    title: "Sign in to your account",
+    subtitle: "Access your healthcare dashboard and manage your appointments",
+    emailLabel: "Email Address:",
+    emailPlaceholder: "Enter your email address",
+    passwordLabel: "Password:",
+    passwordPlaceholder: "Enter your password",
+    rememberMe: "Remember me",
+    forgotPassword: "Forgot your password?",
+    signIn: "Sign In",
+    noAccount: "Don’t have an account?",
+    signUp: "Sign Up",
+    alerts: {
+      success: "Signed in successfully!",
+      error: "Please fix the errors and try again.",
+    },
+    errors: {
+      emailRequired: "Email is required",
+      emailInvalid: "Please enter a valid email",
+      passwordRequired: "Password is required",
+    },
+  },
+  Am: {
+    title: "ወደ መለያዎ ይግቡ",
+    subtitle: "የጤና ዳሽቦርድዎን ይጠቀሙ እና ቀጠሮዎችዎን ያቀናብሩ",
+    emailLabel: "ኢሜይል አድራሻ:",
+    emailPlaceholder: "ኢሜይል አድራሻዎን ያስገቡ",
+    passwordLabel: "የይለፍ ቃል:",
+    passwordPlaceholder: "የይለፍ ቃልዎን ያስገቡ",
+    rememberMe: "አስታውሰኝ",
+    forgotPassword: "የይለፍ ቃልዎን ረሱን?",
+    signIn: "ይግቡ",
+    noAccount: "መለያ የሎትም?",
+    signUp: "ይመዝገቡ",
+    alerts: {
+      success: "በተሳካ ሁኔታ ገብተዋል!",
+      error: "እባክዎ ስህተቶቹን ያስተካክሉ እና እንደገና ይሞክሩ።",
+    },
+    errors: {
+      emailRequired: "ኢሜይል አስፈላጊ ነው",
+      emailInvalid: "እባክዎ ትክክለኛ ኢሜይል ያስገቡ",
+      passwordRequired: "የይለፍ ቃል አስፈላጊ ነው",
+    },
+  },
+};
+
+export default function SignIn({ lang = "En" }) {
+  const t = translations[lang];
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -14,9 +62,9 @@ export default function SignIn() {
 
   const validate = () => {
     const next = {};
-    if (!email.trim()) next.email = "Email is required";
-    else if (!emailRegex.test(email)) next.email = "Please enter a valid email";
-    if (!password) next.password = "Password is required";
+    if (!email.trim()) next.email = t.errors.emailRequired;
+    else if (!emailRegex.test(email)) next.email = t.errors.emailInvalid;
+    if (!password) next.password = t.errors.passwordRequired;
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -24,13 +72,10 @@ export default function SignIn() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) {
-      setAlert({
-        type: "error",
-        message: "Please fix the errors and try again.",
-      });
+      setAlert({ type: "error", message: t.alerts.error });
       return;
     }
-    setAlert({ type: "success", message: "Signed in successfully!" });
+    setAlert({ type: "success", message: t.alerts.success });
   };
 
   return (
@@ -44,10 +89,10 @@ export default function SignIn() {
         </div>
 
         <h1 className="text-2xl sm:text-3xl font-extrabold text-center mb-2">
-          Sign in to your account
+          {t.title}
         </h1>
         <p className="text-center text-gray-500 mb-6 text-sm sm:text-base">
-          Access your healthcare dashboard and manage your appointments
+          {t.subtitle}
         </p>
 
         {alert && <Alert type={alert.type} message={alert.message} />}
@@ -56,14 +101,14 @@ export default function SignIn() {
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-2">
-              Email Address:
+              {t.emailLabel}
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
               <input
                 id="email"
                 type="email"
-                placeholder="Enter your email address"
+                placeholder={t.emailPlaceholder}
                 className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
                   errors.email ? "border-red-300" : "border-gray-300"
                 }`}
@@ -81,18 +126,15 @@ export default function SignIn() {
 
           {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium mb-2"
-            >
-              Password:
+            <label htmlFor="password" className="block text-sm font-medium mb-2">
+              {t.passwordLabel}
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
               <input
                 id="password"
                 type={showPw ? "text" : "password"}
-                placeholder="Enter your password"
+                placeholder={t.passwordPlaceholder}
                 className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
                   errors.password ? "border-red-300" : "border-gray-300"
                 }`}
@@ -118,13 +160,10 @@ export default function SignIn() {
           {/* Remember + Forgot */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm">
             <label className="flex items-center gap-2">
-              <input type="checkbox" className="w-4 h-4" /> Remember me
+              <input type="checkbox" className="w-4 h-4" /> {t.rememberMe}
             </label>
-            <Link
-              to="/forgot-password"
-              className="text-blue-600 hover:underline"
-            >
-              Forgot your password?
+            <Link to="/forgot-password" className="text-blue-600 hover:underline">
+              {t.forgotPassword}
             </Link>
           </div>
 
@@ -132,14 +171,14 @@ export default function SignIn() {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
           >
-            Sign In
+            {t.signIn}
           </button>
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          Don’t have an account?{" "}
+          {t.noAccount}{" "}
           <Link to="/register" className="text-blue-600 hover:underline">
-            Sign Up
+            {t.signUp}
           </Link>
         </p>
       </div>

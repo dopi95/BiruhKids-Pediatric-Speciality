@@ -33,7 +33,7 @@ const translations = {
       "Among our staff are some of the most experienced pediatricians, radiologists, pediatric nurses, and laboratory technicians in Ethiopia. Biruh Kids stands out for its design, which is specifically tailored to meet the unique healthcare needs of children, ensuring that we provide comprehensive care for virtually every pediatric condition. We are proud to have built our reputation by offering the highest quality services and utilizing state-of-the-art medical equipment, all while maintaining affordable pricing.",
     ceoTitle: "Message from Our CEO",
     ceoMsg:
-      "At HealthCare Clinic, we believe that exceptional healthcare is not just about treating illness, but about caring for the whole person.",
+      "At HealthCare Clinic, we believe that exceptional healthcare is not just about treating illness, but about caring for the whole person. At HealthCare Clinic, we believe that exceptional healthcare is not just about treating illness, but about caring for the whole person. At HealthCare Clinic, we believe that exceptional healthcare is not just about treating illness, but about caring for the whole person.",
     valuesTitle: "Our Core Values",
     valuesDesc:
       "These principles define who we are and guide every decision we make in our mission to serve children and families with integrity and care.",
@@ -67,6 +67,8 @@ const translations = {
     team: "Dedicated Team",
     teamDesc:
       "Compassionate pediatricians, nurses, radiologists, and support staff ensuring seamless, family-friendly care from arrival to departure.",
+      name:"Dr.Fasil Menbere",
+      role: "CEO & Cofounder"
   },
   Am: {
     aboutTitle: "ስለ እኛ",
@@ -81,7 +83,7 @@ const translations = {
       "በቡድናችን ውስጥ በኢትዮጵያ ከሚገኙት በጣም የተሞክሮ ያላቸው ህፃናት ሐኪሞች፣ ራዲዮሎጂስቶች፣ ህፃናት ነርሶችና ላቦራቶሪ ቴክኒሻኖች ይገኛሉ።",
     ceoTitle: "የአስተዳዳሪነት መልዕክት",
     ceoMsg:
-      "በህክምና ክሊኒክ እኛ ጤና ማስተናገድ ማንኛውንም በሽታ ብቻ ሳይሆን በሰውነት ሙሉ ያለ ትኩረት ነው በምንመኘው።",
+      "በህክምና ክሊኒክ እኛ ጤና ማስተናገድ ማንኛውንም በሽታ ብቻ ሳይሆን በሰውነት ሙሉ ያለ ትኩረት ነው በምንመኘው። በህክምና ክሊኒክ እኛ ጤና ማስተናገድ ማንኛውንም በሽታ ብቻ ሳይሆን በሰውነት ሙሉ ያለ ትኩረት ነው በምንመኘው። በህክምና ክሊኒክ እኛ ጤና ማስተናገድ ማንኛውንም በሽታ ብቻ ሳይሆን በሰውነት ሙሉ ያለ ትኩረት ነው በምንመኘው።",
     valuesTitle: "ዋና እሴቶቻችን",
     valuesDesc:
       "እነዚህ መርሆዎች እኛን የምንሆነውን ይገልጻሉ እና ልጆችንና ቤተሰቦችን በክብር እና በእውነት ለማገልገል የምንወስድበትን ውሳኔ ያመራሉ።",
@@ -115,6 +117,8 @@ const translations = {
     team: "ተዋዳድ ቡድን",
     teamDesc:
       "ልጆችን በቅርብ እንክብካቤ የሚያገኙ በልዩ ተዘጋጅቶ የተሞላ ቡድን።",
+      name:"ዶ/ር ፋሲል መንበረ",
+      role: "መስራች"
   },
 };
 
@@ -168,7 +172,7 @@ const AboutPage = ({ lang }) => {
             </h2>
             <p className="text-gray-700 text-justify leading-relaxed">{t.ceoMsg}</p>
           </SectionText>
-          <SectionImage src={ceoImage} alt="CEO" showName="Dr. Fasil Menbere" showRole="CEO & Founder" />
+          <SectionImage src={ceoImage} alt="CEO" showName={t.name} showRole={t.role} />
         </div>
       </SectionWrapper>
 

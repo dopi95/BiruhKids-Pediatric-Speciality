@@ -3,7 +3,79 @@ import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, User, Smartphone } from "lucide-react";
 import Alert from "../components/Alert";
 
-export default function SignUp() {
+const translations = {
+  En: {
+    title: "Create your account",
+    subtitle: "Sign up to manage your appointments",
+    fullNameLabel: "Full Name:",
+    fullNamePlaceholder: "Enter your full name",
+    emailLabel: "Email Address:",
+    emailPlaceholder: "Enter your email address",
+    phoneLabel: "Phone Number:",
+    phonePlaceholder: "Enter your phone number",
+    passwordLabel: "Password:",
+    passwordPlaceholder: "Create a password",
+    confirmPasswordLabel: "Confirm Password:",
+    confirmPasswordPlaceholder: "Re-enter your password",
+    notifyTitle: "Allow notifications",
+    notifyDesc: "(notify me by email when any updates)",
+    signUp: "Sign Up",
+    haveAccount: "Already have an account?",
+    signIn: "Sign In",
+    alerts: {
+      success: "Account created! Redirecting...",
+      error: "Please fix the errors and try again.",
+    },
+    errors: {
+      nameRequired: "Name is required",
+      emailRequired: "Email is required",
+      emailInvalid: "Please enter a valid email like example@gmail.com",
+      phoneRequired: "Phone number is required",
+      phoneInvalid: "Enter a valid 10-digit phone number starting with 09 or 07",
+      passwordRequired: "Password is required",
+      passwordWeak: "Min 8 chars with upper, lower, number & symbol",
+      confirmRequired: "Please confirm your password",
+      confirmMismatch: "Passwords do not match",
+    },
+  },
+  Am: {
+    title: "መለያዎን ይፍጠሩ",
+    subtitle: "ቀጠሮዎትን ለመቆጣጠር ይመዝገቡ",
+    fullNameLabel: "ሙሉ ስም:",
+    fullNamePlaceholder: "ሙሉ ስምዎን ያስገቡ",
+    emailLabel: "ኢሜይል አድራሻ:",
+    emailPlaceholder: "ኢሜይል አድራሻዎን ያስገቡ",
+    phoneLabel: "ስልክ ቁጥር:",
+    phonePlaceholder: "ስልክ ቁጥርዎን ያስገቡ",
+    passwordLabel: "የይለፍ ቃል:",
+    passwordPlaceholder: "የይለፍ ቃል ይፍጠሩ",
+    confirmPasswordLabel: "የይለፍ ቃል ያረጋግጡ:",
+    confirmPasswordPlaceholder: "የይለፍ ቃልዎን እንደገና ያስገቡ",
+    notifyTitle: "ማሳወቂያ ይፍቀዱ",
+    notifyDesc: "(ማንኛውም አዳዲስ ማስታወቂያ በኢሜይል ይደርስብኝ)",
+    signUp: "ይመዝገቡ",
+    haveAccount: "መለያ አለዎ?",
+    signIn: "ይግቡ",
+    alerts: {
+      success: "መለያ ተፈጥሯል! በቅርቡ ተመለስ...",
+      error: "እባክዎ ስህተቶቹን ያስተካክሉ እና እንደገና ይሞክሩ።",
+    },
+    errors: {
+      nameRequired: "ስም አስፈላጊ ነው",
+      emailRequired: "ኢሜይል አስፈላጊ ነው",
+      emailInvalid: "እባክዎ ትክክለኛ ኢሜይል ያስገቡ ለምሳሌ example@gmail.com",
+      phoneRequired: "ስልክ ቁጥር አስፈላጊ ነው",
+      phoneInvalid: "በ 09 ወይም 07 የሚጀምር ትክክለኛ 10 አሃዝ ስልክ ቁጥር ያስገቡ",
+      passwordRequired: "የይለፍ ቃል አስፈላጊ ነው",
+      passwordWeak: "ቢያንስ 8 ቁምፊ ከአማካይ፣ ከታችኛው፣ ቁጥር እና ምልክት ጋር",
+      confirmRequired: "የይለፍ ቃልዎን እባክዎ ያረጋግጡ",
+      confirmMismatch: "የይለፍ ቃሎች አይዛመዱም",
+    },
+  },
+};
+
+export default function SignUp({ lang = "En" }) {
+  const t = translations[lang];
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -23,18 +95,15 @@ export default function SignUp() {
 
   const validate = () => {
     const next = {};
-    if (!fullName.trim()) next.fullName = "Name is required";
-    if (!email.trim()) next.email = "Email is required";
-    else if (!emailRegex.test(email))
-      next.email = "Please enter a valid email like example@gmail.com";
-    if (!phone.trim()) next.phone = "Phone number is required";
-    else if (!phoneRegex.test(phone))
-      next.phone = "Enter a valid 10-digit phone number starting with 09 or 07";
-    if (!password) next.password = "Password is required";
-    else if (!pwRegex.test(password))
-      next.password = "Min 8 chars with upper, lower, number & symbol";
-    if (!confirm) next.confirm = "Please confirm your password";
-    else if (confirm !== password) next.confirm = "Passwords do not match";
+    if (!fullName.trim()) next.fullName = t.errors.nameRequired;
+    if (!email.trim()) next.email = t.errors.emailRequired;
+    else if (!emailRegex.test(email)) next.email = t.errors.emailInvalid;
+    if (!phone.trim()) next.phone = t.errors.phoneRequired;
+    else if (!phoneRegex.test(phone)) next.phone = t.errors.phoneInvalid;
+    if (!password) next.password = t.errors.passwordRequired;
+    else if (!pwRegex.test(password)) next.password = t.errors.passwordWeak;
+    if (!confirm) next.confirm = t.errors.confirmRequired;
+    else if (confirm !== password) next.confirm = t.errors.confirmMismatch;
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -42,14 +111,11 @@ export default function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) {
-      setAlert({
-        type: "error",
-        message: "Please fix the errors and try again.",
-      });
+      setAlert({ type: "error", message: t.alerts.error });
       return;
     }
     console.log("Notify by email:", notify);
-    setAlert({ type: "success", message: "Account created! Redirecting..." });
+    setAlert({ type: "success", message: t.alerts.success });
     setTimeout(() => navigate("/signin"), 1200);
   };
 
@@ -64,10 +130,10 @@ export default function SignUp() {
         </div>
 
         <h1 className="text-xl sm:text-3xl font-extrabold text-center mb-2">
-          Create your account
+          {t.title}
         </h1>
         <p className="text-center text-gray-500 mb-6 text-sm sm:text-base">
-          Sign up to manage your appointments
+          {t.subtitle}
         </p>
 
         {alert && <Alert type={alert.type} message={alert.message} />}
@@ -75,16 +141,13 @@ export default function SignUp() {
         <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
           {/* Name */}
           <div>
-            <label
-              htmlFor="fullName"
-              className="block text-sm font-medium mb-2"
-            >
-              Full Name:
+            <label htmlFor="fullName" className="block text-sm font-medium mb-2">
+              {t.fullNameLabel}
             </label>
             <input
               id="fullName"
               type="text"
-              placeholder="Enter your full name"
+              placeholder={t.fullNamePlaceholder}
               className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
                 errors.fullName ? "border-red-300" : "border-gray-300"
               }`}
@@ -92,23 +155,21 @@ export default function SignUp() {
               onChange={(e) => setFullName(e.target.value)}
             />
             {errors.fullName && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">
-                {errors.fullName}
-              </p>
+              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.fullName}</p>
             )}
           </div>
 
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-2">
-              Email Address:
+              {t.emailLabel}
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
                 id="email"
                 type="email"
-                placeholder="Enter your email address"
+                placeholder={t.emailPlaceholder}
                 className={`w-full pl-10 pr-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
                   errors.email ? "border-red-300" : "border-gray-300"
                 }`}
@@ -117,23 +178,21 @@ export default function SignUp() {
               />
             </div>
             {errors.email && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">
-                {errors.email}
-              </p>
+              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.email}</p>
             )}
           </div>
 
           {/* Phone */}
           <div>
             <label htmlFor="phone" className="block text-sm font-medium mb-2">
-              Phone Number:
+              {t.phoneLabel}
             </label>
             <div className="relative">
               <Smartphone className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
                 id="phone"
                 type="tel"
-                placeholder="Enter your phone number"
+                placeholder={t.phonePlaceholder}
                 className={`w-full pl-10 pr-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
                   errors.phone ? "border-red-300" : "border-gray-300"
                 }`}
@@ -142,26 +201,21 @@ export default function SignUp() {
               />
             </div>
             {errors.phone && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">
-                {errors.phone}
-              </p>
+              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.phone}</p>
             )}
           </div>
 
           {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium mb-2"
-            >
-              Password:
+            <label htmlFor="password" className="block text-sm font-medium mb-2">
+              {t.passwordLabel}
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
                 id="password"
                 type={showPw ? "text" : "password"}
-                placeholder="Create a password"
+                placeholder={t.passwordPlaceholder}
                 className={`w-full pl-10 pr-10 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
                   errors.password ? "border-red-300" : "border-gray-300"
                 }`}
@@ -177,23 +231,21 @@ export default function SignUp() {
               </button>
             </div>
             {errors.password && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">
-                {errors.password}
-              </p>
+              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.password}</p>
             )}
           </div>
 
           {/* Confirm Password */}
           <div>
             <label htmlFor="confirm" className="block text-sm font-medium mb-2">
-              Confirm Password:
+              {t.confirmPasswordLabel}
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 text-gray-400" size={18} />
               <input
                 id="confirm"
                 type={showPw2 ? "text" : "password"}
-                placeholder="Re-enter your password"
+                placeholder={t.confirmPasswordPlaceholder}
                 className={`w-full pl-10 pr-10 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
                   errors.confirm ? "border-red-300" : "border-gray-300"
                 }`}
@@ -209,51 +261,48 @@ export default function SignUp() {
               </button>
             </div>
             {errors.confirm && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">
-                {errors.confirm}
-              </p>
+              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.confirm}</p>
             )}
           </div>
 
-          {/* 🔹 Notify toggle switch */}
-<div className="flex items-center justify-between">
-  <div className="flex flex-col">
-    <span className="text-sm sm:text-base text-gray-600 font-medium">
-      Allow notifications
-    </span>
-    <span className="text-xs sm:text-sm text-gray-400">
-      (notify me by email when any updates)
-    </span>
-  </div>
+          {/* Notify toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-sm sm:text-base text-gray-600 font-medium">
+                {t.notifyTitle}
+              </span>
+              <span className="text-xs sm:text-sm text-gray-400">
+                {t.notifyDesc}
+              </span>
+            </div>
 
-  <button
-    type="button"
-    onClick={() => setNotify((v) => !v)}
-    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${
-      notify ? "bg-blue-600" : "bg-gray-300"
-    }`}
-  >
-    <span
-      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
-        notify ? "translate-x-6" : "translate-x-1"
-      }`}
-    />
-  </button>
-</div>
-
+            <button
+              type="button"
+              onClick={() => setNotify((v) => !v)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${
+                notify ? "bg-blue-600" : "bg-gray-300"
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
+                  notify ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
 
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-sm sm:text-base"
           >
-            Sign Up
+            {t.signUp}
           </button>
         </form>
 
         <p className="text-center text-xs sm:text-sm text-gray-500 mt-6">
-          Already have an account?{" "}
+          {t.haveAccount}{" "}
           <Link to="/login" className="text-blue-600 hover:underline">
-            Sign In
+            {t.signIn}
           </Link>
         </p>
       </div>
