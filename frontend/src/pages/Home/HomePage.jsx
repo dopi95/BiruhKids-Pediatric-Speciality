@@ -7,18 +7,17 @@ import Faq from "./Faqs";
 import GoogleMap from "../../components/GoogleMap";
 import OnlineConsultation from "../../components/OnlineConsultation";
 
-function HomePage() {
+function HomePage({ lang }) {
     return (
         <div className="w-full overflow-x-hidden">
-            <Hero />
-            <About />
-            <Services />
-            <Doctors />
-            <Testimonials />
-            <Faq />
-            <GoogleMap />
-            <OnlineConsultation />
-
+            <Hero lang={lang} />
+            <About lang={lang} />
+            <Services lang={lang} />
+            <Doctors lang={lang} />
+            <Testimonials  lang={lang} />
+             <Faq lang={lang === "En" ? "en" : "am"} /> 
+             <GoogleMap lang={lang === "En" ? "en" : "am"} />
+            <OnlineConsultation lang={lang === "En" ? "en" : "am"} />
         </div>
     );
 }

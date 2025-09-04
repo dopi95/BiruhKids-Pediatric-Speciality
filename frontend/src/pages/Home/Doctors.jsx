@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function DoctorsSlider() {
+export default function DoctorsSlider({ lang }) {
   const [current, setCurrent] = useState(0);
   const containerRef = useRef(null);
   const startXRef = useRef(0);
@@ -27,20 +27,6 @@ export default function DoctorsSlider() {
     },
     {
       name: "Dr. Emily Davis",
-      specialty: "General Medicine",
-      experience: "10 years",
-      image:
-        "https://images.pexels.com/photos/5452274/pexels-photo-5452274.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop",
-    },
-    {
-      name: "Dr. Amy Smith",
-      specialty: "General Medicine",
-      experience: "10 years",
-      image:
-        "https://images.pexels.com/photos/5452274/pexels-photo-5452274.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop",
-    },
-    {
-      name: "Dr. Susan Lee",
       specialty: "General Medicine",
       experience: "10 years",
       image:
@@ -173,6 +159,22 @@ export default function DoctorsSlider() {
     }),
   };
 
+  // Texts
+  const texts = {
+    en: {
+      title: "Meet Our Doctors",
+      subtitle:
+        "Our team of experienced healthcare professionals is dedicated to providing you with the best possible care.",
+    },
+    am: {
+      title: "ዶክተሮቻችንን ያግኙ",
+      subtitle:
+        "የተሞክሮ ያላቸው የጤና ባለሙያዎቻችን ለእርስዎ በቻለበት ሁሉ ምርጥ እንክብካቤ ለመስጠት ተደነግገዋል።",
+    },
+  };
+
+  const currentLang = lang === "En" ? "en" : "am";
+
   return (
     <article className="w-full py-20 bg-gray-50">
       <div className="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -187,14 +189,13 @@ export default function DoctorsSlider() {
             className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
             variants={headingVariants}
           >
-            Meet Our Doctors
+            {texts[currentLang].title}
           </motion.h2>
           <motion.p
             className="text-xl text-gray-600 max-w-3xl mx-auto"
             variants={subheadingVariants}
           >
-            Our team of experienced healthcare professionals is dedicated to
-            providing you with the best possible care.
+            {texts[currentLang].subtitle}
           </motion.p>
         </motion.div>
 

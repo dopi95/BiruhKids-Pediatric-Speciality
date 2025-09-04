@@ -24,33 +24,35 @@ const fadeUp = {
   }),
 };
 
-export default function About() {
+export default function About({ lang }) {
+  const isAmh = lang === "Am";
+
   const stats = [
     {
       icon: Users,
       value: "10,000+",
-      label: "Happy Patients",
+      label: isAmh ? "ደስተኛ ታካሚዎች" : "Happy Patients",
       color: "text-blue-600",
       bg: "bg-blue-100",
     },
     {
       icon: Award,
       value: "15+",
-      label: "Years Experience",
+      label: isAmh ? "የሥራ ልምድ ዓመታት" : "Years Experience",
       color: "text-orange-600",
       bg: "bg-orange-100",
     },
     {
       icon: Stethoscope,
       value: "50+",
-      label: "Expert Doctors",
+      label: isAmh ? "ባለሙያ ሐኪሞች" : "Expert Doctors",
       color: "text-green-600",
       bg: "bg-green-100",
     },
     {
       icon: Clock,
       value: "24/7",
-      label: "Emergency Care",
+      label: isAmh ? "አደጋ ጊዜ እንክብካቤ" : "Emergency Care",
       color: "text-purple-600",
       bg: "bg-purple-100",
     },
@@ -68,29 +70,58 @@ export default function About() {
           variants={fadeUp}
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-            About BiruhKids Pediatric Speciality Clinic
+            {isAmh
+              ? "ስለ ብሩህኪድስ የህጻናት ልዩ ክሊኒክ"
+              : "About BiruhKids Pediatric Speciality Clinic"}
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify [hyphens:auto] [word-spacing:0.05em] mb-4">
-            Biruh Kids was established in{" "}
-            <span className="font-semibold">November 2024</span> as a premier
-            pediatric specialty clinic in Addis Ababa, Ethiopia. Over the last
-            eight months, we have been dedicated to providing comprehensive
-            healthcare services for children, working tirelessly towards
-            obtaining institutional status.
+
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify mb-4">
+            {isAmh ? (
+              <>
+                ብሩህ ኪድስ በ <span className="font-semibold">ኖቬምበር 2024</span>{" "}
+                በአዲስ አበባ እንደ ዋና የህጻናት ልዩ ክሊኒክ ተቋቋመ። ባለፉት ስምንት ወራት
+                ውስጥ ለህጻናት አጠቃላይ የጤና አገልግሎት ማቅረብ እና የተቋም ሁኔታ
+                ለማግኘት ጥረት አድርጎናል።
+              </>
+            ) : (
+              <>
+                Biruh Kids was established in{" "}
+                <span className="font-semibold">November 2024</span> as a
+                premier pediatric specialty clinic in Addis Ababa, Ethiopia.
+                Over the last eight months, we have been dedicated to providing
+                comprehensive healthcare services for children, working
+                tirelessly towards obtaining institutional status.
+              </>
+            )}
           </p>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify [hyphens:auto] [word-spacing:0.05em]">
-            At Biruh Kids, we currently offer a range of specialized services
-            including{" "}
-            <span className="font-medium text-gray-800">
-              Outpatient Department (OPD), emergency care, laboratory services,
-              and ultrasound diagnostics
-            </span>{" "}
-            to ensure that every child receives the highest standard of medical
-            attention in a safe and compassionate environment.
+
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify">
+            {isAmh ? (
+              <>
+                በብሩህ ኪድስ በአሁኑ ጊዜ{" "}
+                <span className="font-medium text-gray-800">
+                  የውጭ ታካሚ ክፍል (OPD)፣ አደጋ ጊዜ እንክብካቤ፣ የላቦራቶሪ አገልግሎቶች
+                  እና የአልትራሳውንድ ምርመራ
+                </span>{" "}
+                እየቀረቡ ናቸው። ህጻናት በደህና እና በርኅራኄ ሁኔታ የጤና እንክብካቤ
+                እንዲያገኙ እንረዳቸዋለን።
+              </>
+            ) : (
+              <>
+                At Biruh Kids, we currently offer a range of specialized
+                services including{" "}
+                <span className="font-medium text-gray-800">
+                  Outpatient Department (OPD), emergency care, laboratory
+                  services, and ultrasound diagnostics
+                </span>{" "}
+                to ensure that every child receives the highest standard of
+                medical attention in a safe and compassionate environment.
+              </>
+            )}
           </p>
         </motion.div>
 
-        {/* Vision & Mission Section (Reused Component) */}
+        {/* Vision & Mission Section */}
         <motion.div
           className="mb-20"
           initial="hidden"
@@ -98,7 +129,7 @@ export default function About() {
           viewport={{ once: true }}
           variants={fadeUp}
         >
-          <VisionMissionSection />
+             <VisionMissionSection lang={lang} />
         </motion.div>
 
         {/* Stats */}

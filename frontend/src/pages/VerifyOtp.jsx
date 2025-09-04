@@ -1,9 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function VerifyOTP() {
+function VerifyOTP({ lang = "En" }) {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const navigate = useNavigate();
+
+  const t = {
+    En: {
+      title: "Verify OTP",
+      desc: "Enter the 6-digit OTP sent to your email",
+      button: "Verify OTP",
+      alert: "Please enter a valid 6-digit OTP.",
+    },
+    Am: {
+      title: "ኦቲፒ ያረጋግጡ",
+      desc: "ወደ ኢሜይልዎ የተላከውን 6-አሃዝ ኦቲፒ ያስገቡ",
+      button: "ኦቲፒ ያረጋግጡ",
+      alert: "እባክዎ ትክክለኛ 6-አሃዝ ኦቲፒ ያስገቡ።",
+    },
+  };
 
   const handleChange = (value, index) => {
     if (/^[0-9]?$/.test(value)) {
@@ -22,17 +37,17 @@ function VerifyOTP() {
     if (otp.join("").length === 6) {
       navigate("/reset-password");
     } else {
-      alert("Please enter a valid 6-digit OTP.");
+      alert(t[lang].alert);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 w-full max-w-md text-center">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Verify OTP</h2>
-        <p className="text-gray-600 mb-6">
-          Enter the 6-digit OTP sent to your email
-        </p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          {t[lang].title}
+        </h2>
+        <p className="text-gray-600 mb-6">{t[lang].desc}</p>
 
         <div className="flex justify-center gap-2 mb-6">
           {otp.map((digit, index) => (
@@ -52,7 +67,7 @@ function VerifyOTP() {
           onClick={handleSubmit}
           className="w-full bg-[#007799] text-white py-3 rounded-xl font-semibold hover:bg-[#006680] transition"
         >
-          Verify OTP
+          {t[lang].button}
         </button>
       </div>
     </div>

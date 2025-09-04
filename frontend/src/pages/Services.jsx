@@ -13,11 +13,10 @@ import {
     Microscope,
     Pill,
     Zap,
-    ArrowRight,
     Award,
 } from "lucide-react";
 
-const Services = () => {
+const Services = ({ lang = "En" }) => {
     const [visible, setVisible] = useState([]);
     const serviceRefs = useRef([]);
 
@@ -175,6 +174,56 @@ const Services = () => {
         },
     ];
 
+    // 🔹 Only the translations you asked for
+    const translations = {
+        En: {
+            heroTitle: "Our Services",
+            heroDesc:
+                "Comprehensive healthcare services designed to meet all your medical needs.",
+            why: [
+                {
+                    title: "Expert Doctors",
+                    desc: "Board-certified physicians with specialized training.",
+                },
+                {
+                    title: "Advanced Technology",
+                    desc: "State-of-the-art medical equipment and innovative treatment methods.",
+                },
+                {
+                    title: "Compassionate Care",
+                    desc: "Patient-centered approach with personalized attention.",
+                },
+                {
+                    title: "Quality Assurance",
+                    desc: "Rigorous quality standards and continuous improvement.",
+                },
+            ],
+        },
+        Am: {
+            heroTitle: "አገልግሎቶቻችን",
+            heroDesc:
+                "ሁሉንም የጤና ፍላጎቶችዎን ለመሟላት የተዘጋጀ አጠቃላይ የጤና አገልግሎት።",
+            why: [
+                {
+                    title: "ባለሙያ ዶክተሮች",
+                    desc: "የሙያ ልዩ ስልጠና ያገኙ የተረጋገጡ ዶክተሮች።",
+                },
+                {
+                    title: "ዘመናዊ ቴክኖሎጂ",
+                    desc: "ዘመናዊ የሕክምና መሳሪያዎች እና አዳዲስ የሕክምና ዘዴዎች።",
+                },
+                {
+                    title: "ርኅራኄ እንክብካቤ",
+                    desc: "በታካሚው ላይ የተመሰረተ አቀራረብ እና የግል ትኩረት።",
+                },
+                {
+                    title: "ጥራት ማረጋገጫ",
+                    desc: "ጥራት ደረጃዎች በጥንቃቄ የሚጠበቁ እና የቀጣይ ማሻሻያ።",
+                },
+            ],
+        },
+    };
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -206,16 +255,15 @@ const Services = () => {
                 <div className="absolute inset-0 bg-black opacity-20"></div>
                 <div className="relative max-w-7xl mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                        Our Services
+                        {translations[lang].heroTitle}
                     </h1>
                     <p className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto">
-                        Comprehensive healthcare services designed to meet all
-                        your medical needs.
+                        {translations[lang].heroDesc}
                     </p>
                 </div>
             </section>
 
-            {/* Services Grid */}
+            {/* Services Grid (unchanged – cards show like before) */}
             <section className="py-20 max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {services.map((service, idx) => (
                     <ServiceCard
@@ -234,32 +282,28 @@ const Services = () => {
                 ))}
             </section>
 
-            {/* Why Choose Us */}
+            {/* Why Choose Us (translated) */}
             <section className="py-20 bg-gray-50 max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
                 {[
                     {
                         icon: Award,
-                        title: "Expert Doctors",
-                        desc: "Board-certified physicians with specialized training.",
                         bg: "bg-blue-600",
+                        ...translations[lang].why[0],
                     },
                     {
                         icon: Zap,
-                        title: "Advanced Technology",
-                        desc: "State-of-the-art medical equipment and innovative treatment methods.",
                         bg: "bg-orange-500",
+                        ...translations[lang].why[1],
                     },
                     {
                         icon: Heart,
-                        title: "Compassionate Care",
-                        desc: "Patient-centered approach with personalized attention.",
                         bg: "bg-green-500",
+                        ...translations[lang].why[2],
                     },
                     {
                         icon: Shield,
-                        title: "Quality Assurance",
-                        desc: "Rigorous quality standards and continuous improvement.",
                         bg: "bg-purple-500",
+                        ...translations[lang].why[3],
                     },
                 ].map((item, idx) => (
                     <div key={idx}>
