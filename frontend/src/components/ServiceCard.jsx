@@ -3,7 +3,6 @@ import React, { forwardRef } from "react";
 const ServiceCard = forwardRef(
     (
         {
-            icon: Icon,
             title,
             description,
             features = [],
@@ -20,13 +19,6 @@ const ServiceCard = forwardRef(
                 className={`group bg-white rounded-xl shadow-xl overflow-hidden transform transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 ${className}`}
             >
                 <div className="p-8">
-                    {/* Icon */}
-                    {Icon && (
-                        <div className="bg-gradient-to-r from-blue-100 to-orange-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110">
-                            <Icon className="h-8 w-8 text-blue-600 transition-transform duration-300 group-hover:translate-y-1" />
-                        </div>
-                    )}
-
                     {/* Title */}
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
                         {title}

@@ -1,48 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ServiceModal from "./ServiceModal";
 import ServiceCard from "../../../components/ServiceCard";
 import { Plus, AlertTriangle, Settings, Search } from "lucide-react";
 import StatsCard from "../../../components/StatsCard";
+import serviceService from "../../../services/serviceService";
 
 export default function ServiceManagement() {
-    const [Services, setServices] = useState([
-        {
-            id: 1,
-            title_en: "Cardiology",
-            description_en:
-                "Comprehensive heart care including diagnosis, treatment, and prevention of cardiovascular diseases.",
-            features_en: [
-                "ECG & Stress Testing",
-                "Echocardiography",
-                "Cardiac Catheterization",
-                "Heart Disease Prevention",
-            ],
-            title_am: "",
-            description_am: "",
-            features_am: [],
-        },
-        {
-            id: 2,
-            title_en: "Emergency Care",
-            description_en:
-                "24/7 emergency services with rapid response team and state-of-the-art emergency equipment.",
-            features_en: [
-                "24/7 Availability",
-                "Trauma Care",
-                "Critical Care",
-                "Emergency Surgery",
-            ],
-            title_am: "",
-            description_am: "",
-            features_am: [],
-        },
-    ]);
-
+    const [services, setServices] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [serviceToDelete, setServiceToDelete] = useState(null);
     const [editingService, setEditingService] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const [formData, setFormData] = useState({
         step: 1,
@@ -53,6 +23,21 @@ export default function ServiceManagement() {
         description_am: "",
         features_am: [],
     });
+
+    useEffect(() => {
+        fetchServices();
+    }, []);
+
+    const fetchServices = async () => {
+        try {
+            const response = await serviceService.getServices();
+            setServices(response.data);
+        } catch (error) {
+            console.error("Error fetching services:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const openModal = (service = null) => {
         if (service) {
@@ -72,39 +57,32 @@ export default function ServiceManagement() {
         setIsModalOpen(true);
     };
 
-    const handleSubmit = (e, modalForm) => {
+    const handleSubmit = async (e, modalForm) => {
         e.preventDefault();
-        const newService = {
-            id: editingService ? editingService.id : Date.now(),
-            title_en: modalForm.title_en,
-            description_en: modalForm.description_en,
-            features_en: modalForm.features_en,
-            title_am: modalForm.title_am,
-            description_am: modalForm.description_am,
-            features_am: modalForm.features_am,
-        };
-
-        if (editingService) {
-            setServices(
-                Services.map((s) =>
-                    s.id === editingService.id ? newService : s
-                )
-            );
-        } else {
-            setServices([newService, ...Services]);
+        
+        try {
+            if (editingService) {
+                await serviceService.updateService(editingService._id, modalForm);
+            } else {
+                await serviceService.createService(modalForm);
+            }
+            
+            // Refresh the services list
+            fetchServices();
+            setIsModalOpen(false);
+            setEditingService(null);
+            setFormData({
+                step: 1,
+                title_en: "",
+                description_en: "",
+                features_en: [],
+                title_am: "",
+                description_am: "",
+                features_am: [],
+            });
+        } catch (error) {
+            console.error("Error saving service:", error);
         }
-
-        setIsModalOpen(false);
-        setEditingService(null);
-        setFormData({
-            step: 1,
-            title_en: "",
-            description_en: "",
-            features_en: [],
-            title_am: "",
-            description_am: "",
-            features_am: [],
-        });
     };
 
     const confirmDelete = (service) => {
@@ -112,27 +90,37 @@ export default function ServiceManagement() {
         setIsDeleteModalOpen(true);
     };
 
-    const handleDelete = () => {
-        setServices(Services.filter((s) => s.id !== serviceToDelete.id));
-        setServiceToDelete(null);
-        setIsDeleteModalOpen(false);
+    const handleDelete = async () => {
+        try {
+            await serviceService.deleteService(serviceToDelete._id);
+            // Refresh the services list
+            fetchServices();
+            setServiceToDelete(null);
+            setIsDeleteModalOpen(false);
+        } catch (error) {
+            console.error("Error deleting service:", error);
+        }
     };
 
-    const filteredServices = Services.filter((s) =>
+    const filteredServices = services.filter((s) =>
         s.title_en.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const stats = [
         {
             label: "Total Services",
-            value: Services.length,
+            value: services.length,
             change: "0%",
             color: "blue",
         },
     ];
 
+    if (loading) {
+        return <div className="p-8">Loading services...</div>;
+    }
+
     return (
-        <div className="bg-gray-50">
+        <div className="bg-gray-50 mx-5">
             {/* Main Content */}
             <div className="flex-1">
                 <div className="bg-white shadow-sm border-b px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between sm:items-center mt-14 md:mt-0">
@@ -153,12 +141,12 @@ export default function ServiceManagement() {
                 </div>
 
                 {/* Stats */}
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-8">
                     {stats.map((stat, i) => (
                         <StatsCard key={i} {...stat} icon={Settings} />
                     ))}
                 </div>
+                
                 {/* Search Bar */}
                 <div className="bg-white p-3 sm:p-4 lg:p-6 border-b border-gray-200 flex justify-between items-center">
                     <h2 className="text-base sm:text-lg font-semibold text-gray-900">
@@ -180,16 +168,14 @@ export default function ServiceManagement() {
                 </div>
 
                 {/* Services List */}
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 my-8">
                     {filteredServices.map((service) => (
                         <ServiceCard
-                            key={service.id}
-                            icon={service.icon}
+                            key={service._id}
                             title={service.title_en}
                             description={service.description_en}
                             features={service.features_en}
-                            showActions={true} // enable edit/delete buttons
+                            showActions={true}
                             onEdit={() => openModal(service)}
                             onDelete={() => confirmDelete(service)}
                         />
@@ -208,6 +194,7 @@ export default function ServiceManagement() {
                 setStep={(step) => setFormData({ ...formData, step })}
                 editingService={editingService}
             />
+            
             {/* Delete Modal */}
             {isDeleteModalOpen && serviceToDelete && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50 p-4">

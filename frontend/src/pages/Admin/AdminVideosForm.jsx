@@ -1,6 +1,8 @@
+// components/AdminVideosForm.js
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Play } from "lucide-react";
+import { createVideo } from "../../services/videoApi";
 
 const AdminVideosForm = () => {
     const navigate = useNavigate();
@@ -12,8 +14,8 @@ const AdminVideosForm = () => {
         titleAm: "",
         descriptionAm: "",
     });
-
-    const [step, setStep] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -24,272 +26,154 @@ const AdminVideosForm = () => {
         navigate("/admin/videos");
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submitted Data:", formData);
-        navigate("/admin/videos");
-    };
-
-    const handleNext = () => {
-        // Validate English form before moving to Amharic step
-        if (
-            !formData.title.trim() ||
-            !formData.url.trim() ||
-            !formData.description.trim()
-        ) {
-            alert(
-                "Please fill in Title, Video URL, and Description before continuing."
-            );
-            return;
+        setLoading(true);
+        setError("");
+        
+        try {
+            await createVideo(formData);
+            navigate("/admin/videos");
+        } catch (err) {
+            setError(err.response?.data?.message || "Failed to create video");
+        } finally {
+            setLoading(false);
         }
-        setStep(2);
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <div className="flex-1">
-                {/* Header */}
-                <div className="bg-white shadow-sm border-b">
-                    <div className="px-6 py-4 flex items-center space-x-4 mt-14 md:mt-0">
-                        <button
-                            onClick={() => navigate("/admin/videos")}
-                            className="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+        <div className="bg-gray-50 min-h-screen">
+            <div className="max-w-4xl mx-auto py-8 px-4">
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center mb-6">
+                        <button 
+                            onClick={handleCancel}
+                            className="flex items-center text-gray-600 hover:text-gray-900 mr-4"
                         >
-                            <ArrowLeft className="h-6 w-6" />
+                            <ArrowLeft className="h-5 w-5 mr-1" />
+                            Back
                         </button>
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
-                                Add New Video
-                            </h1>
-                            <p className="text-gray-600">
-                                Fill video details based on platform
-                            </p>
+                        <h1 className="text-2xl font-bold text-gray-900">Add New Video</h1>
+                    </div>
+
+                    {error && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                            {error}
                         </div>
-                    </div>
-                </div>
+                    )}
 
-                <div className="p-6">
-                    <div className="max-w-3xl mx-auto">
-                        <form
-                            onSubmit={handleSubmit}
-                            className="bg-white rounded-lg shadow-sm p-6 space-y-6"
-                        >
-                            {/* Platform Selection */}
+                    <form onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-3">
-                                    Platform *
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Platform
                                 </label>
-                                <div className="flex bg-gray-100 rounded-lg p-1 w-fit">
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                platform: "youtube",
-                                            }))
-                                        }
-                                        className={`px-4 py-2 rounded-md font-semibold ${
-                                            formData.platform === "youtube"
-                                                ? "bg-red-600 text-white"
-                                                : "text-gray-600 hover:text-red-600"
-                                        }`}
-                                    >
-                                        YouTube
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                platform: "tiktok",
-                                            }))
-                                        }
-                                        className={`px-4 py-2 rounded-md font-semibold ${
-                                            formData.platform === "tiktok"
-                                                ? "bg-black text-white"
-                                                : "text-gray-600 hover:text-black"
-                                        }`}
-                                    >
-                                        TikTok
-                                    </button>
-                                </div>
+                                <select
+                                    name="platform"
+                                    value={formData.platform}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    <option value="youtube">YouTube</option>
+                                    <option value="tiktok">TikTok</option>
+                                </select>
                             </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Video URL
+                                </label>
+                                <input
+                                    type="url"
+                                    name="url"
+                                    value={formData.url}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                />
+                            </div>
+                        </div>
 
-                            {/* YouTube Form */}
-                            {formData.platform === "youtube" && (
-                                <>
-                                    {step === 1 && (
-                                        <>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Title *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="title"
-                                                    value={formData.title}
-                                                    onChange={handleChange}
-                                                    className="w-full px-4 py-3 border rounded-lg"
-                                                    required
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Video URL *
-                                                </label>
-                                                <input
-                                                    type="url"
-                                                    name="url"
-                                                    value={formData.url}
-                                                    onChange={handleChange}
-                                                    placeholder="https://youtube.com/watch?v=..."
-                                                    className="w-full px-4 py-3 border rounded-lg"
-                                                    required
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Description *
-                                                </label>
-                                                <textarea
-                                                    name="description"
-                                                    value={formData.description}
-                                                    onChange={handleChange}
-                                                    className="w-full px-4 py-3 border rounded-lg"
-                                                    required
-                                                />
-                                            </div>
+                        {formData.platform === "youtube" && (
+                            <>
+                                <div className="mb-6">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Title
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        value={formData.title}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                        required
+                                    />
+                                </div>
 
-                                            <div className="flex justify-end space-x-4 pt-6 border-t">
-                                                <button
-                                                    type="button"
-                                                    onClick={handleCancel}
-                                                    className="px-6 py-3 border rounded-lg"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={handleNext}
-                                                    className="px-6 py-3 bg-blue-600 text-white rounded-lg flex items-center"
-                                                >
-                                                    <Play className="h-4 w-4 mr-2" />{" "}
-                                                    Next (Amharic)
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
+                                <div className="mb-6">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Description
+                                    </label>
+                                    <textarea
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleChange}
+                                        rows={3}
+                                        className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                        required
+                                    />
+                                </div>
 
-                                    {step === 2 && (
-                                        <>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Title (Amharic) *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="titleAm"
-                                                    value={formData.titleAm}
-                                                    onChange={handleChange}
-                                                    className="w-full px-4 py-3 border rounded-lg"
-                                                    required
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Video URL *
-                                                </label>
-                                                <input
-                                                    type="url"
-                                                    name="url"
-                                                    value={formData.url}
-                                                    readOnly
-                                                    className="w-full px-4 py-3 border rounded-lg bg-gray-100"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Description (Amharic) *
-                                                </label>
-                                                <textarea
-                                                    name="descriptionAm"
-                                                    value={
-                                                        formData.descriptionAm
-                                                    }
-                                                    onChange={handleChange}
-                                                    className="w-full px-4 py-3 border rounded-lg"
-                                                    required
-                                                />
-                                            </div>
+                                <div className="mb-6">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Title (Amharic)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="titleAm"
+                                        value={formData.titleAm}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                    />
+                                </div>
 
-                                            <div className="flex justify-between pt-6 border-t">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setStep(1)}
-                                                    className="px-6 py-3 border rounded-lg"
-                                                >
-                                                    Back
-                                                </button>
-                                                <div className="flex space-x-4">
-                                                    <button
-                                                        type="button"
-                                                        onClick={handleCancel}
-                                                        className="px-6 py-3 border rounded-lg"
-                                                    >
-                                                        Cancel
-                                                    </button>
-                                                    <button
-                                                        type="submit"
-                                                        className="px-6 py-3 bg-green-600 text-white rounded-lg flex items-center"
-                                                    >
-                                                        <Play className="h-4 w-4 mr-2" />{" "}
-                                                        Submit
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
-                                </>
-                            )}
+                                <div className="mb-6">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Description (Amharic)
+                                    </label>
+                                    <textarea
+                                        name="descriptionAm"
+                                        value={formData.descriptionAm}
+                                        onChange={handleChange}
+                                        rows={3}
+                                        className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                    />
+                                </div>
+                            </>
+                        )}
 
-                            {/* TikTok Form */}
-                            {formData.platform === "tiktok" && (
-                                <>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Video URL *
-                                        </label>
-                                        <input
-                                            type="url"
-                                            name="url"
-                                            value={formData.url}
-                                            onChange={handleChange}
-                                            placeholder="https://tiktok.com/@username/video/..."
-                                            className="w-full px-4 py-3 border rounded-lg"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="flex justify-end space-x-4 pt-6 border-t">
-                                        <button
-                                            type="button"
-                                            onClick={handleCancel}
-                                            className="px-6 py-3 border rounded-lg"
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="px-6 py-3 bg-green-600 text-white rounded-lg flex items-center"
-                                        >
-                                            <Play className="h-4 w-4 mr-2" />{" "}
-                                            Submit
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-                        </form>
-                    </div>
+                        <div className="flex justify-end space-x-3">
+                            <button
+                                type="button"
+                                onClick={handleCancel}
+                                className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="px-6 py-3 bg-green-600 text-white rounded-lg flex items-center disabled:opacity-50"
+                            >
+                                {loading ? (
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                ) : (
+                                    <Play className="h-4 w-4 mr-2" />
+                                )}
+                                Submit
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

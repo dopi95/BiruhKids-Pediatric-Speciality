@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaYoutube, FaTiktok } from "react-icons/fa";
+import { getVideosByPlatform } from "../services/videoApi";
 
 const VideosPage = ({ lang = "En" }) => {
   const translations = {
@@ -14,6 +15,7 @@ const VideosPage = ({ lang = "En" }) => {
         "Subscribe to our channels to get the latest health tips, medical updates, and wellness content delivered directly to you.",
       youtubeChannel: "YouTube Channel",
       tiktokChannel: "TikTok Channel",
+      noVideos: "No videos available at the moment. Please check back later.",
     },
     Am: {
       pageTitle: "የጤና ቪዲዮዎች",
@@ -26,30 +28,44 @@ const VideosPage = ({ lang = "En" }) => {
         "የጤና ምክሮች፣ የሕክምና ዝማኔዎች እና የጤና ይዘቶችን በቀጥታ ለማግኘት ወደ ቻናሎቻችን ይመዝገቡ።",
       youtubeChannel: "ዩቱብ ቻናል",
       tiktokChannel: "ቲክቶክ ቻናል",
+      noVideos: "በአሁኑ ጊዜ ምንም ቪዲዮዎች የሉም። እባክዎ ቆጠራ ይመለሱ።",
     },
   };
 
   const t = translations[lang] || translations.En;
 
   const [platform, setPlatform] = useState("youtube");
-
-  const youtubeVideos = Array(3).fill({
-    id: Math.random(),
-    title: "Health Tips Video",
-    description: "Educational health content for your wellness journey.",
-    url: "https://www.youtube.com/embed/lz5jpt_k7nA?autoplay=0&mute=0",
-  });
-
-  const tiktokVideos = Array(3).fill({
-    id: Math.random(),
-    url: "https://www.tiktok.com/@biruhkids/video/7402191353947393286",
-    idOnly: "7402191353947393286",
-  });
-
-  const videos = platform === "youtube" ? youtubeVideos : tiktokVideos;
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (platform === "tiktok") {
+    fetchVideos();
+  }, [platform]);
+
+  const fetchVideos = async () => {
+    try {
+      setLoading(true);
+      const response = await getVideosByPlatform(platform);
+      
+      if (response.data && response.data.success) {
+        setVideos(response.data.data);
+        setError("");
+      } else {
+        setError(t.noVideos);
+        setVideos([]);
+      }
+    } catch (err) {
+      setError(t.noVideos);
+      setVideos([]);
+      console.error("Error fetching videos:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (platform === "tiktok" && videos.length > 0) {
       const existingScript = document.getElementById("tiktok-embed-script");
       if (existingScript) existingScript.remove();
 
@@ -59,7 +75,15 @@ const VideosPage = ({ lang = "En" }) => {
       script.async = true;
       document.body.appendChild(script);
     }
-  }, [platform]);
+  }, [platform, videos]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -110,56 +134,73 @@ const VideosPage = ({ lang = "En" }) => {
       </div>
 
       {/* Videos Grid */}
-      <div
-        className={`grid gap-6 px-4 sm:px-8 mt-10 flex-grow ${
-          platform === "youtube"
-            ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-        }`}
-      >
-        {videos.map((video, index) => (
-          <div
-            key={index}
-            className={`bg-white rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl ${
-              platform === "tiktok" ? "flex justify-center" : ""
-            }`}
-          >
+      {videos.length > 0 ? (
+        <div
+          className={`grid gap-6 px-4 sm:px-8 mt-10 flex-grow ${
+            platform === "youtube"
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+          }`}
+        >
+          {videos.map((video) => (
             <div
-              className={`w-full ${
-                platform === "youtube" ? "h-56 sm:h-64" : "max-w-[320px] mx-auto"
+              key={video._id}
+              className={`bg-white rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl ${
+                platform === "tiktok" ? "flex justify-center" : ""
               }`}
             >
-              {platform === "youtube" ? (
-                <iframe
-                  className="w-full h-full"
-                  src={video.url}
-                  title={video.title}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              ) : (
-                <div
-                  className="w-full"
-                  dangerouslySetInnerHTML={{
-                    __html: `
-                      <blockquote class="tiktok-embed" cite="${video.url}" data-video-id="${video.idOnly}" style="max-width: 320px; min-width: 250px; margin: auto;">
-                        <section></section>
-                      </blockquote>
-                    `,
-                  }}
-                />
+              <div
+                className={`w-full ${
+                  platform === "youtube" ? "h-56 sm:h-64" : "max-w-[320px] mx-auto"
+                }`}
+              >
+                {platform === "youtube" ? (
+                  <iframe
+                    className="w-full h-full"
+                    src={video.url}
+                    title={lang === "Am" ? video.titleAm : video.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <div
+                    className="w-full"
+                    dangerouslySetInnerHTML={{
+                      __html: `
+                        <blockquote class="tiktok-embed" cite="${video.url}" data-video-id="${video.videoId}" style="max-width: 320px; min-width: 250px; margin: auto;">
+                          <section></section>
+                        </blockquote>
+                      `,
+                    }}
+                  />
+                )}
+              </div>
+              {platform === "youtube" && (
+                <div className="p-4">
+                  <h2 className="text-xl font-semibold mb-2">
+                    {lang === "Am" ? video.titleAm : video.title}
+                  </h2>
+                  <p className="text-gray-700 text-sm">
+                    {lang === "Am" ? video.descriptionAm : video.description}
+                  </p>
+                </div>
               )}
             </div>
-            {platform === "youtube" && (
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{video.title}</h2>
-                <p className="text-gray-700 text-sm">{video.description}</p>
-              </div>
-            )}
+          ))}
+        </div>
+      ) : (
+        <div className="flex-grow flex items-center justify-center px-4 py-16">
+          <div className="text-center">
+            <div className="bg-gray-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FaYoutube className="h-12 w-12 text-gray-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              {t.noVideos}
+            </h3>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
       {/* Stay Updated Section */}
       <div className="bg-[#FF7A1A] text-white text-center py-16 px-4 mt-12">

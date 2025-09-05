@@ -1,69 +1,98 @@
-import { useState } from "react";
-import { Mail, Send, Search, Filter, Calendar } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Mail, Send, Search, Filter, Calendar, Trash2, RefreshCw } from "lucide-react";
 import StatsCard from "../../components/StatsCard";
+import { toast } from "react-toastify";
 
 const SubscriberManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedSubscribers, setSelectedSubscribers] = useState([]);
+    const [subscribers, setSubscribers] = useState([]);
+    const [stats, setStats] = useState([
+        { label: "Total Subscribers", value: "0", color: "blue" },
+        { label: "Active Subscribers", value: "0", color: "green" },
+        { label: "Unsubscribed", value: "0", color: "red" },
+    ]);
+    const [loading, setLoading] = useState(true);
+    const [filterStatus, setFilterStatus] = useState("all");
+    const [refreshing, setRefreshing] = useState(false);
 
-    const stats = [
-        {
-            label: "Total Subscribers",
-            value: "8,923",
-            color: "blue",
-        },
-        {
-            label: "Active Subscribers",
-            value: "8,645",
-            color: "green",
-        },
-        { label: "Unsubscribed", value: "278", color: "red" },
-    ];
+    useEffect(() => {
+        fetchSubscribers();
+        fetchStats();
+    }, []);
 
-    const subscribers = [
-        {
-            id: 1,
-            email: "john.smith@email.com",
-            subscribedAt: "2025-01-08",
-            status: "Active",
-        },
-        {
-            id: 2,
-            email: "sarah.j@email.com",
-            subscribedAt: "2025-01-07",
-            status: "Active",
-        },
-        {
-            id: 3,
-            email: "michael.brown@email.com",
-            subscribedAt: "2025-01-06",
-            status: "Active",
-        },
-        {
-            id: 4,
-            email: "emily.davis@email.com",
-            subscribedAt: "2025-01-05",
-            status: "Unsubscribed",
-        },
-        {
-            id: 5,
-            email: "david.wilson@email.com",
-            subscribedAt: "2025-01-04",
-            status: "Active",
-        },
-    ];
+    const fetchSubscribers = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setSubscribers(data.data.subscribers);
+            } else {
+                toast.error("Failed to fetch subscribers");
+            }
+        } catch (error) {
+            console.error("Error fetching subscribers:", error);
+            toast.error("Network error. Please try again.");
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
+
+    const fetchStats = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers/stats`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setStats([
+                    { 
+                        label: "Total Subscribers", 
+                        value: data.data.total.toString(), 
+                        color: "blue" 
+                    },
+                    { 
+                        label: "Active Subscribers", 
+                        value: data.data.active.toString(), 
+                        color: "green" 
+                    },
+                    { 
+                        label: "Unsubscribed", 
+                        value: data.data.unsubscribed.toString(), 
+                        color: "red" 
+                    },
+                ]);
+            }
+        } catch (error) {
+            console.error("Error fetching stats:", error);
+        }
+    };
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        fetchSubscribers();
+        fetchStats();
+    };
 
     const filteredSubscribers = subscribers.filter((subscriber) => {
-        return subscriber.email
+        const matchesSearch = subscriber.email
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
+        
+        const matchesStatus = filterStatus === "all" || 
+                             (filterStatus === "active" && subscriber.status === "active") ||
+                             (filterStatus === "unsubscribed" && subscriber.status === "unsubscribed");
+        
+        return matchesSearch && matchesStatus;
     });
 
     const handleSelectAll = () => {
         if (selectedSubscribers.length === filteredSubscribers.length) {
             setSelectedSubscribers([]);
         } else {
-            setSelectedSubscribers(filteredSubscribers.map((sub) => sub.id));
+            setSelectedSubscribers(filteredSubscribers.map((sub) => sub._id));
         }
     };
 
@@ -77,14 +106,115 @@ const SubscriberManagement = () => {
 
     const handleSendNewsletter = () => {
         if (selectedSubscribers.length === 0) {
-            alert("Please select at least one subscriber");
+            toast.warning("Please select at least one subscriber");
             return;
         }
         console.log("Send newsletter to:", selectedSubscribers);
-        alert(
-            `Newsletter will be sent to ${selectedSubscribers.length} subscribers`
-        );
+        toast.info(`Newsletter will be sent to ${selectedSubscribers.length} subscribers`);
     };
+
+    const handleDeleteSubscriber = async (subscriberId) => {
+        if (!window.confirm("Are you sure you want to delete this subscriber?")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_BASE_URL}/subscribers/${subscriberId}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+                toast.success("Subscriber deleted successfully");
+                // Update the UI immediately by removing the subscriber from the local state
+                setSubscribers(subscribers.filter(sub => sub._id !== subscriberId));
+                // Also remove from selected subscribers if it was selected
+                setSelectedSubscribers(selectedSubscribers.filter(id => id !== subscriberId));
+                // Refresh stats
+                fetchStats();
+            } else {
+                toast.error(data.message || "Failed to delete subscriber");
+            }
+        } catch (error) {
+            console.error("Error deleting subscriber:", error);
+            toast.error("Network error. Please try again.");
+        }
+    };
+
+    const handleDeleteSelected = async () => {
+        if (selectedSubscribers.length === 0) {
+            toast.warning("Please select at least one subscriber to delete");
+            return;
+        }
+
+        if (!window.confirm(`Are you sure you want to delete ${selectedSubscribers.length} subscribers?`)) {
+            return;
+        }
+
+        try {
+            // If your API supports bulk deletion, use this approach:
+            const response = await fetch(
+                `${import.meta.env.VITE_API_BASE_URL}/subscribers/bulk-delete`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ ids: selectedSubscribers }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+                toast.success(`${selectedSubscribers.length} subscribers deleted successfully`);
+                // Update the UI immediately
+                setSubscribers(subscribers.filter(sub => !selectedSubscribers.includes(sub._id)));
+                setSelectedSubscribers([]);
+                fetchStats();
+            } else {
+                // If bulk deletion isn't supported, delete one by one
+                toast.info("Bulk delete not supported, deleting individually...");
+                
+                let successCount = 0;
+                for (const id of selectedSubscribers) {
+                    try {
+                        const individualResponse = await fetch(
+                            `${import.meta.env.VITE_API_BASE_URL}/subscribers/${id}`,
+                            {
+                                method: "DELETE",
+                            }
+                        );
+                        
+                        const individualData = await individualResponse.json();
+                        if (individualData.success) {
+                            successCount++;
+                        }
+                    } catch (error) {
+                        console.error(`Error deleting subscriber ${id}:`, error);
+                    }
+                }
+                
+                toast.success(`${successCount} of ${selectedSubscribers.length} subscribers deleted successfully`);
+                
+                // Refresh the data
+                fetchSubscribers();
+                fetchStats();
+                setSelectedSubscribers([]);
+            }
+        } catch (error) {
+            console.error("Error deleting subscribers:", error);
+            toast.error("Network error. Please try again.");
+        }
+    };
+
+    if (loading) {
+        return <div className="flex-1 flex items-center justify-center">Loading...</div>;
+    }
 
     return (
         <div className="flex-1">
@@ -100,13 +230,15 @@ const SubscriberManagement = () => {
                         </p>
                     </div>
 
-                    <button
-                        onClick={handleSendNewsletter}
-                        className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex justify-center items-center"
-                    >
-                        <Send className="w-4 h-4 mr-2" />
-                        Send Newsletter
-                    </button>
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <button
+                            onClick={handleSendNewsletter}
+                            className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex justify-center items-center"
+                        >
+                            <Send className="w-4 h-4 mr-2" />
+                            Send Newsletter
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -203,7 +335,11 @@ const SubscriberManagement = () => {
                             </div>
                             <div className="flex items-center space-x-4">
                                 <Filter className="w-4 h-4 text-gray-600" />
-                                <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                <select 
+                                    value={filterStatus}
+                                    onChange={(e) => setFilterStatus(e.target.value)}
+                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                >
                                     <option value="all">All Subscribers</option>
                                     <option value="active">Active Only</option>
                                     <option value="unsubscribed">
@@ -256,58 +392,78 @@ const SubscriberManagement = () => {
                                     <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                         Subscribed
                                     </th>
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                        Actions
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {filteredSubscribers.map((subscriber) => (
-                                    <tr
-                                        key={subscriber.id}
-                                        className="hover:bg-gray-50"
-                                    >
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedSubscribers.includes(
-                                                    subscriber.id
-                                                )}
-                                                onChange={() =>
-                                                    handleSelectSubscriber(
-                                                        subscriber.id
-                                                    )
-                                                }
-                                                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                            />
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="flex items-center">
-                                                <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-100 rounded-full">
-                                                    <Mail className="w-4 h-4 text-blue-600" />
+                                {filteredSubscribers.length > 0 ? (
+                                    filteredSubscribers.map((subscriber) => (
+                                        <tr
+                                            key={subscriber._id}
+                                            className="hover:bg-gray-50"
+                                        >
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedSubscribers.includes(
+                                                        subscriber._id
+                                                    )}
+                                                    onChange={() =>
+                                                        handleSelectSubscriber(
+                                                            subscriber._id
+                                                        )
+                                                    }
+                                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="flex items-center">
+                                                    <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-100 rounded-full">
+                                                        <Mail className="w-4 h-4 text-blue-600" />
+                                                    </div>
+                                                    <div className="text-sm font-medium text-gray-900">
+                                                        {subscriber.email}
+                                                    </div>
                                                 </div>
-                                                <div className="text-sm font-medium text-gray-900">
-                                                    {subscriber.email}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span
+                                                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                                        subscriber.status ===
+                                                        "active"
+                                                            ? "bg-green-100 text-green-800"
+                                                            : "bg-red-100 text-red-800"
+                                                    }`}
+                                                >
+                                                    {subscriber.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                <div className="flex items-center">
+                                                    <Calendar className="w-4 h-4 mr-1" />
+                                                    {new Date(subscriber.subscribedAt).toLocaleDateString()}
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                    subscriber.status ===
-                                                    "Active"
-                                                        ? "bg-green-100 text-green-800"
-                                                        : "bg-red-100 text-red-800"
-                                                }`}
-                                            >
-                                                {subscriber.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            <div className="flex items-center">
-                                                <Calendar className="w-4 h-4 mr-1" />
-                                                {subscriber.subscribedAt}
-                                            </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <button
+                                                    onClick={() => handleDeleteSubscriber(subscriber._id)}
+                                                    className="p-1 text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                                                    title="Delete subscriber"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                                            No subscribers found
                                         </td>
                                     </tr>
-                                ))}
+                                )}
                             </tbody>
                         </table>
                     </div>

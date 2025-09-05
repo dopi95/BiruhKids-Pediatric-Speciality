@@ -22,6 +22,8 @@ export default function TestimonialForm({ onClose, lang = "En" }) {
     });
     const [preview, setPreview] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const t = {
         En: {
@@ -60,27 +62,61 @@ export default function TestimonialForm({ onClose, lang = "En" }) {
         },
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Testimony submitted:", formData);
-        setIsSubmitted(true);
-
-        setTimeout(() => {
-            setIsSubmitted(false);
-            setFormData({
-                name: "",
-                email: "",
-                phone: "",
-                treatment: "",
-                rating: 0,
-                title: "",
-                testimony: "",
-                allowPublic: false,
-                image: null,
+        setIsLoading(true);
+        setError("");
+        
+        try {
+            const formDataToSend = new FormData();
+            formDataToSend.append("name", formData.name);
+            formDataToSend.append("email", formData.email);
+            formDataToSend.append("phone", formData.phone);
+            formDataToSend.append("treatment", formData.treatment);
+            formDataToSend.append("rating", formData.rating.toString());
+            formDataToSend.append("title", formData.title);
+            formDataToSend.append("testimony", formData.testimony);
+            formDataToSend.append("allowPublic", formData.allowPublic.toString());
+            
+            if (formData.image) {
+                formDataToSend.append("image", formData.image);
+            }
+            
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/testimonials`, {
+                method: "POST",
+                body: formDataToSend,
             });
-            setPreview(null);
-            if (onClose) onClose();
-        }, 3000);
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to submit testimonial");
+            }
+            
+            setIsSubmitted(true);
+            
+            setTimeout(() => {
+                setIsSubmitted(false);
+                setFormData({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    treatment: "",
+                    rating: 0,
+                    title: "",
+                    testimony: "",
+                    allowPublic: false,
+                    image: null,
+                });
+                setPreview(null);
+                if (onClose) onClose();
+            }, 3000);
+        } catch (error) {
+            console.error("Error submitting testimonial:", error);
+            setError(error.message || "Failed to submit testimonial. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleChange = (e) => {
@@ -118,6 +154,12 @@ export default function TestimonialForm({ onClose, lang = "En" }) {
                     <Heart className="h-7 w-7 text-orange-500 mr-2" />
                     {t[lang].title}
                 </h2>
+
+                {error && (
+                    <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4">
+                        {error}
+                    </div>
+                )}
 
                 {isSubmitted ? (
                     <div className="text-center py-12">
@@ -345,10 +387,15 @@ export default function TestimonialForm({ onClose, lang = "En" }) {
                         {/* submit */}
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center font-semibold transition"
+                            disabled={isLoading}
+                            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <Send className="h-5 w-5 mr-2" />
-                            {t[lang].submit}
+                            {isLoading ? (
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                            ) : (
+                                <Send className="h-5 w-5 mr-2" />
+                            )}
+                            {isLoading ? "Submitting..." : t[lang].submit}
                         </button>
                     </form>
                 )}

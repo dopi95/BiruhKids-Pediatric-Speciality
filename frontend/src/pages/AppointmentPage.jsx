@@ -4,6 +4,21 @@ import { User, Calendar, CheckCircle } from "lucide-react";
 import { Listbox } from "@headlessui/react";
 import { Check, ChevronDown } from "lucide-react";
 
+// Appointment service
+const appointmentService = {
+  createAppointment: async (appointmentData) => {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const response = await fetch(`${API_BASE_URL}/appointments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(appointmentData),
+    });
+    return response.json();
+  },
+};
+
 const translations = {
   En: {
     title: "Book Appointment",
@@ -47,7 +62,7 @@ const translations = {
     },
     confirmedTitle: "Appointment Noted!",
     confirmedMessage:
-      "Thank you for booking. We’ll notify you by email if your requested time is available. Please check your inbox for updates.",
+      "Thank you for booking. We'll notify you by email if your requested time is available. Please check your inbox for updates.",
   },
   Am: {
     title: "ቀጠሮ ይያዙ",
@@ -112,6 +127,7 @@ const AppointmentPage = ({ lang = "En" }) => {
   });
   const [errors, setErrors] = useState({});
   const [confirmed, setConfirmed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const doctors = ["Dr. Smith", "Dr. Johnson", "Dr. Williams", "Dr. Brown"];
   const times = [
@@ -159,9 +175,27 @@ const AppointmentPage = ({ lang = "En" }) => {
     if (validateStep()) setStep((prev) => prev + 1);
   };
   const prevStep = () => setStep((prev) => prev - 1);
-  const confirmAppointment = () => {
-    if (validateStep()) setConfirmed(true);
+  
+  const confirmAppointment = async () => {
+    if (validateStep()) {
+      setIsSubmitting(true);
+      try {
+        const result = await appointmentService.createAppointment(formData);
+        
+        if (result.success) {
+          setConfirmed(true);
+        } else {
+          alert("Failed to book appointment. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error submitting appointment:", error);
+        alert("An error occurred. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
   };
+  
   const resetForm = () => {
     setFormData({
       firstName: "",
@@ -450,9 +484,10 @@ const AppointmentPage = ({ lang = "En" }) => {
                     </button>
                     <button
                       onClick={confirmAppointment}
-                      className="bg-green-600 text-white px-6 py-3 rounded-xl text-lg w-full sm:w-auto shadow hover:shadow-lg transition"
+                      disabled={isSubmitting}
+                      className="bg-green-600 text-white px-6 py-3 rounded-xl text-lg w-full sm:w-auto shadow hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {t.buttons.confirm}
+                      {isSubmitting ? "Submitting..." : t.buttons.confirm}
                     </button>
                   </div>
                 </div>
