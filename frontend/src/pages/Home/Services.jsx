@@ -33,7 +33,7 @@ export default function Services({ lang = "En" }) {
       // Get the latest 5 services (assuming services are returned with createdAt field)
       const latestServices = response.data
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 5);
+        .slice(0, 6);
       setServices(latestServices);
     } catch (error) {
       console.error("Error fetching services:", error);
