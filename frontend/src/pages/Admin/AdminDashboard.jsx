@@ -7,7 +7,6 @@ import {
     MessageSquare,
     Mail,
     UserCheck,
-    Calendar,
 } from "lucide-react";
 
 const AdminDashboard = () => {
@@ -15,7 +14,7 @@ const AdminDashboard = () => {
         {
             icon: Users,
             label: "Registered Users",
-            value: "2,547",
+            value: "0",
             color: "blue",
         },
         {
@@ -27,7 +26,7 @@ const AdminDashboard = () => {
         {
             icon: FileText,
             label: "Results Submitted",
-            value: "1,284",
+            value: "0",
             color: "orange",
         },
         {
@@ -41,12 +40,6 @@ const AdminDashboard = () => {
             label: "Active Subscribers",
             value: "0",
             color: "pink",
-        },
-        {
-            icon: Calendar,
-            label: "Appointments Today",
-            value: "0",
-            color: "indigo",
         },
         {
             icon: Play,
@@ -97,62 +90,16 @@ const AdminDashboard = () => {
         },
     ];
 
-    // Function to filter today's appointments
-    const filterTodaysAppointments = (appointments) => {
-        const today = new Date();
-        const todayString = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-        
-        return appointments.filter(appointment => {
-            if (!appointment.date) return false;
-            
-            // Extract just the date part from the appointment
-            let appointmentDate;
-            if (typeof appointment.date === 'string') {
-                appointmentDate = appointment.date.split('T')[0];
-            } else {
-                return false;
-            }
-            
-            return appointmentDate === todayString;
-        });
-    };
-
-    // Fetch data from APIs - UPDATED to match AppointmentManagement
+    // Fetch dashboard data
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                
-                // Try to fetch appointments using the same method as AppointmentManagement
-                let appointmentsData = [];
-                try {
-                    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-                    const response = await fetch(`${API_BASE_URL}/appointments`);
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        if (result.success) {
-                            appointmentsData = result.data || [];
-                            console.log("Fetched appointments:", appointmentsData);
-                        }
-                    } else {
-                        // If API fails, try to get from localStorage or use empty array
-                        console.warn("Appointments API not available");
-                    }
-                } catch (error) {
-                    console.warn("Appointments API error:", error);
-                }
-                
-                // Process appointments to count today's appointments
-                const todaysAppointments = filterTodaysAppointments(appointmentsData);
-                console.log("Today's appointments:", todaysAppointments);
-                console.log("Today's date:", new Date().toISOString().split('T')[0]);
-                
-                // Update stats with the new counts
+
+                // Clone stats
                 const newStats = [...stats];
-                newStats[5].value = todaysAppointments.length.toString(); // Today's appointments
-                
-                // Fetch other data
+
+                // Fetch other data in parallel
                 const [
                     doctorsResponse,
                     testimonialsResponse,
@@ -164,39 +111,39 @@ const AdminDashboard = () => {
                     fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers/stats`),
                     fetch(`${import.meta.env.VITE_API_BASE_URL}/videos`)
                 ]);
-                
+
                 // Doctors count
-                if (doctorsResponse.status === 'fulfilled' && doctorsResponse.value.ok) {
+                if (doctorsResponse.status === "fulfilled" && doctorsResponse.value.ok) {
                     const data = await doctorsResponse.value.json();
                     if (data.success) {
                         newStats[1].value = data.data.length.toString();
                     }
                 }
-                
+
                 // Testimonials count
-                if (testimonialsResponse.status === 'fulfilled' && testimonialsResponse.value.ok) {
+                if (testimonialsResponse.status === "fulfilled" && testimonialsResponse.value.ok) {
                     const data = await testimonialsResponse.value.json();
                     if (data.success) {
                         newStats[3].value = data.data.total.toString();
                     }
                 }
-                
-                // Active subscribers count
-                if (subscribersResponse.status === 'fulfilled' && subscribersResponse.value.ok) {
+
+                // Subscribers count
+                if (subscribersResponse.status === "fulfilled" && subscribersResponse.value.ok) {
                     const data = await subscribersResponse.value.json();
                     if (data.success) {
                         newStats[4].value = data.data.active.toString();
                     }
                 }
-                
+
                 // Videos count
-                if (videosResponse.status === 'fulfilled' && videosResponse.value.ok) {
+                if (videosResponse.status === "fulfilled" && videosResponse.value.ok) {
                     const data = await videosResponse.value.json();
                     if (data.success) {
-                        newStats[6].value = data.data.length.toString();
+                        newStats[5].value = data.data.length.toString();
                     }
                 }
-                
+
                 setStats(newStats);
                 setError(null);
             } catch (err) {
@@ -264,20 +211,28 @@ const AdminDashboard = () => {
                             <div className="flex items-center mb-3">
                                 <div
                                     className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${
-                                        action.color === 'green' ? 'bg-green-100' :
-                                        action.color === 'red' ? 'bg-red-100' :
-                                        action.color === 'yellow' ? 'bg-yellow-100' :
-                                        action.color === 'purple' ? 'bg-purple-100' :
-                                        'bg-pink-100'
+                                        action.color === "green"
+                                            ? "bg-green-100"
+                                            : action.color === "red"
+                                            ? "bg-red-100"
+                                            : action.color === "yellow"
+                                            ? "bg-yellow-100"
+                                            : action.color === "purple"
+                                            ? "bg-purple-100"
+                                            : "bg-pink-100"
                                     }`}
                                 >
                                     <action.icon
                                         className={`h-4 w-4 ${
-                                            action.color === 'green' ? 'text-green-600' :
-                                            action.color === 'red' ? 'text-red-600' :
-                                            action.color === 'yellow' ? 'text-yellow-600' :
-                                            action.color === 'purple' ? 'text-purple-600' :
-                                            'text-pink-600'
+                                            action.color === "green"
+                                                ? "text-green-600"
+                                                : action.color === "red"
+                                                ? "text-red-600"
+                                                : action.color === "yellow"
+                                                ? "text-yellow-600"
+                                                : action.color === "purple"
+                                                ? "text-purple-600"
+                                                : "text-pink-600"
                                         }`}
                                     />
                                 </div>

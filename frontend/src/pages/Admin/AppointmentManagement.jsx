@@ -15,7 +15,6 @@ const mockAppointments = [
     gender: "Male",
     doctor: "Dr. Smith",
     date: "2025-09-01",
-    time: "10:00 AM",
     status: "pending"
   },
   {
@@ -28,7 +27,6 @@ const mockAppointments = [
     gender: "Female",
     doctor: "Dr. Adams",
     date: "2025-09-02",
-    time: "02:00 PM",
     status: "pending"
   }
 ];
@@ -309,9 +307,6 @@ const AppointmentManagement = () => {
                 Date
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                Time
-              </th>
-              <th className="px-4 py-2 text-left font-semibold text-gray-700">
                 Status
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
@@ -322,7 +317,7 @@ const AppointmentManagement = () => {
           <tbody className="divide-y divide-gray-200">
             {appointments.length === 0 ? (
               <tr>
-                <td colSpan="11" className="px-4 py-8 text-center text-gray-500">
+                <td colSpan="10" className="px-4 py-8 text-center text-gray-500">
                   No appointments found.
                 </td>
               </tr>
@@ -348,7 +343,6 @@ const AppointmentManagement = () => {
                   <td className="px-4 py-2">
                     {new Date(appt.date).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-2">{appt.time}</td>
                   <td className="px-4 py-2">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       appt.status === "confirmed" 
