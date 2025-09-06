@@ -1,6 +1,8 @@
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Stethoscope, Shield, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import serviceService from "../../services/serviceService";
 
 // Animation Variants
 const fadeUp = {
@@ -16,29 +18,59 @@ const fadeUp = {
   }),
 };
 
-export default function Services({ lang }) {
+export default function Services({ lang = "En" }) {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
   const isAmh = lang === "Am";
 
-  const services = [
-    {
-      icon: Heart,
-      title: "Cardiology",
-      description:
-        "Comprehensive heart care with advanced diagnostic and treatment options.",
+  useEffect(() => {
+    fetchLatestServices();
+  }, []);
+
+  const fetchLatestServices = async () => {
+    try {
+      const response = await serviceService.getServices();
+      // Get the latest 5 services (assuming services are returned with createdAt field)
+      const latestServices = response.data
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 6);
+      setServices(latestServices);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Translations
+  const translations = {
+    En: {
+      ourServices: "Our Services",
+      description: "Comprehensive healthcare services designed to meet all your medical needs with state-of-the-art technology and expert care.",
+      learnMore: "Learn More",
+      viewAllServices: "View All Services",
+      loading: "Loading services..."
     },
-    {
-      icon: Shield,
-      title: "Emergency Care",
-      description:
-        "24/7 emergency services with rapid response and expert medical care.",
-    },
-    {
-      icon: Stethoscope,
-      title: "General Medicine",
-      description:
-        "Complete primary healthcare services for patients of all ages.",
-    },
-  ];
+    Am: {
+      ourServices: "አገልግሎታችን",
+      description: "በዘመናዊ ቴክኖሎጂ እና በባለሙያ እንክብካቤ የተዘጋጀ የጤና አገልግሎት ለሁሉም የጤና ፍላጎቶችዎ ማሟላት።",
+      learnMore: "ተጨማሪ ይወቁ",
+      viewAllServices: "ሁሉንም አገልግሎቶች ይመልከቱ",
+      loading: "አገልግሎቶች በመጫን ላይ..."
+    }
+  };
+
+  const t = translations[lang];
+
+  if (loading) {
+    return (
+      <article className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="text-xl">{t.loading}</div>
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article className="py-20">
@@ -52,12 +84,10 @@ export default function Services({ lang }) {
           variants={fadeUp}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {isAmh ? "አገልግሎታችን" : "Our Services"}
+            {t.ourServices}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {isAmh
-              ? "በዘመናዊ ቴክኖሎጂ እና በባለሙያ እንክብካቤ የተዘጋጀ የጤና አገልግሎት ለሁሉም የጤና ፍላጎቶችዎ ማሟላት።"
-              : "Comprehensive healthcare services designed to meet all your medical needs with state-of-the-art technology and expert care."}
+            {t.description}
           </p>
         </motion.div>
 
@@ -70,23 +100,24 @@ export default function Services({ lang }) {
         >
           {services.map((service, index) => (
             <motion.div
-              key={index}
+              key={service._id}
               className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
               variants={fadeUp}
               custom={index}
             >
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <service.icon className="h-8 w-8 text-blue-600" />
-              </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                {service.title}
+                {isAmh && service.title_am ? service.title_am : service.title_en}
               </h3>
-              <p className="text-gray-600 mb-6">{service.description}</p>
+              <p className="text-gray-600 mb-6">
+                {isAmh && service.description_am 
+                  ? service.description_am 
+                  : service.description_en}
+              </p>
               <Link
                 to="/services"
                 className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold"
               >
-                {isAmh ? "ተጨማሪ ይወቁ" : "Learn More"}{" "}
+                {t.learnMore}{" "}
                 <ArrowRight className="h-4 w-4 ml-1" />
               </Link>
             </motion.div>
@@ -106,7 +137,7 @@ export default function Services({ lang }) {
             to="/services"
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 inline-flex items-center"
           >
-            {isAmh ? "ሁሉንም አገልግሎቶች ይመልከቱ" : "View All Services"}{" "}
+            {t.viewAllServices}{" "}
             <ArrowRight className="h-4 w-4 ml-2" />
           </Link>
         </motion.div>

@@ -1,60 +1,116 @@
-import { useState } from "react";
-import { Play, Plus, Trash2, Edit, Youtube, Music2, X } from "lucide-react";
+// components/AdminVideos.js
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Play, Plus, Trash2, Edit, Youtube, Music2, X, RefreshCw } from "lucide-react";
 import StatsCard from "../../components/StatsCard";
+import { 
+  getAllVideos, 
+  deleteVideo,
+  updateVideo 
+} from "../../services/videoApi";
 
 const AdminVideos = () => {
+    const navigate = useNavigate();
     const [selectedPlatform, setSelectedPlatform] = useState("youtube");
     const [editVideo, setEditVideo] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+    const [youtubeVideos, setYoutubeVideos] = useState([]);
+    const [tiktokVideos, setTiktokVideos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [saveLoading, setSaveLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     const platforms = [
         { id: "youtube", name: "YouTube" },
         { id: "tiktok", name: "TikTok" },
     ];
 
-    const [youtubeVideos, setYoutubeVideos] = useState([
-        {
-            id: 1,
-            title: "Biruh Kids - YouTube Video",
-            description: "Educational video from Biruh Kids on YouTube.",
-            url: "https://www.youtube.com/embed/lz5jpt_k7nA?autoplay=0&mute=0",
-            titleAm: "ብሩህ ልጆች - የዩቱብ ቪዲዮ",
-            descriptionAm: "ከብሩህ ልጆች በዩቱብ ላይ የትምህርት ቪዲዮ።",
-        },
-    ]);
+    useEffect(() => {
+        fetchVideos();
+    }, []);
 
-    const [tiktokVideos, setTiktokVideos] = useState([
-        {
-            id: 1,
-            url: "https://www.tiktok.com/@biruhkids/video/7402191353947393286",
-        },
-    ]);
+    const fetchVideos = async () => {
+        try {
+            setLoading(true);
+            const response = await getAllVideos();
+            
+            if (response.data && response.data.success) {
+                const videos = response.data.data;
+                setYoutubeVideos(videos.filter(video => video.platform === "youtube"));
+                setTiktokVideos(videos.filter(video => video.platform === "tiktok"));
+                setError(null);
+            } else {
+                setError("Failed to fetch videos: Invalid response format");
+            }
+        } catch (err) {
+            setError("Failed to fetch videos. Please check your connection.");
+            console.error("Error fetching videos:", err);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
 
-    const currentVideos =
-        selectedPlatform === "youtube" ? youtubeVideos : tiktokVideos;
+    const handleRefresh = () => {
+        setRefreshing(true);
+        fetchVideos();
+    };
+
+    const currentVideos = selectedPlatform === "youtube" ? youtubeVideos : tiktokVideos;
 
     // Handle Save Changes
-    const handleSave = (updatedVideo) => {
-        if (selectedPlatform === "youtube") {
-            setYoutubeVideos((prev) =>
-                prev.map((v) => (v.id === updatedVideo.id ? updatedVideo : v))
-            );
-        } else {
-            setTiktokVideos((prev) =>
-                prev.map((v) => (v.id === updatedVideo.id ? updatedVideo : v))
-            );
+    const handleSave = async (updatedVideo) => {
+        try {
+            setSaveLoading(true);
+            const response = await updateVideo(updatedVideo._id, updatedVideo);
+            
+            if (response.data && response.data.success) {
+                // Update the specific video in the state
+                if (selectedPlatform === "youtube") {
+                    setYoutubeVideos((prev) =>
+                        prev.map((v) => (v._id === updatedVideo._id ? response.data.data : v))
+                    );
+                } else {
+                    setTiktokVideos((prev) =>
+                        prev.map((v) => (v._id === updatedVideo._id ? response.data.data : v))
+                    );
+                }
+                setEditVideo(null);
+            } else {
+                setError("Failed to update video");
+            }
+        } catch (err) {
+            setError("Failed to update video. Please try again.");
+            console.error("Error updating video:", err);
+        } finally {
+            setSaveLoading(false);
         }
-        setEditVideo(null);
     };
 
     // Handle Delete
-    const confirmDelete = (videoId) => {
-        if (selectedPlatform === "youtube") {
-            setYoutubeVideos((prev) => prev.filter((v) => v.id !== videoId));
-        } else {
-            setTiktokVideos((prev) => prev.filter((v) => v.id !== videoId));
+    const confirmDelete = async (videoId) => {
+        try {
+            setDeleteLoading(true);
+            const response = await deleteVideo(videoId);
+            
+            if (response.data && response.data.success) {
+                if (selectedPlatform === "youtube") {
+                    setYoutubeVideos((prev) => prev.filter((v) => v._id !== videoId));
+                } else {
+                    setTiktokVideos((prev) => prev.filter((v) => v._id !== videoId));
+                }
+                setShowDeleteConfirm(null);
+            } else {
+                setError("Failed to delete video");
+            }
+        } catch (err) {
+            setError("Failed to delete video. Please try again.");
+            console.error("Error deleting video:", err);
+        } finally {
+            setDeleteLoading(false);
         }
-        setShowDeleteConfirm(null);
     };
 
     // Stats
@@ -79,8 +135,17 @@ const AdminVideos = () => {
             icon: Music2,
         },
     ];
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
+    }
+
     return (
-        <div className="bg-gray-50">
+        <div className="bg-gray-50 min-h-screen">
             <div className="flex-1">
                 {/* Header */}
                 <div className="bg-white shadow-sm border-b">
@@ -93,17 +158,31 @@ const AdminVideos = () => {
                                 Manage educational videos and health content
                             </p>
                         </div>
-                        <a
-                            href="/admin/videos/form"
-                            className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center"
-                        >
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Video
-                        </a>
+                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                            <button
+                                onClick={() => navigate("/admin/videos/form")}
+                                className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center"
+                            >
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Video
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <div className="p-6">
+                    {error && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                            {error}
+                            <button 
+                                className="ml-4 text-red-800 font-bold"
+                                onClick={() => setError(null)}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    )}
+
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-8">
                         {stats.map((stat, i) => (
@@ -155,7 +234,7 @@ const AdminVideos = () => {
                                 >
                                     {currentVideos.map((video) => (
                                         <div
-                                            key={video.id}
+                                            key={video._id}
                                             className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200"
                                         >
                                             {selectedPlatform === "youtube" && (
@@ -180,7 +259,7 @@ const AdminVideos = () => {
                                                         <button
                                                             onClick={() =>
                                                                 setEditVideo(
-                                                                    video
+                                                                    {...video}
                                                                 )
                                                             }
                                                             className="p-1 text-green-600 hover:text-green-700"
@@ -190,7 +269,7 @@ const AdminVideos = () => {
                                                         <button
                                                             onClick={() =>
                                                                 setShowDeleteConfirm(
-                                                                    video.id
+                                                                    video._id
                                                                 )
                                                             }
                                                             className="p-1 text-red-600 hover:text-red-700"
@@ -206,7 +285,7 @@ const AdminVideos = () => {
                                                     <blockquote
                                                         className="tiktok-embed"
                                                         cite={video.url}
-                                                        data-video-id="7402191353947393286"
+                                                        data-video-id={video.videoId}
                                                         style={{
                                                             maxWidth: "605px",
                                                             minWidth: "325px",
@@ -223,7 +302,7 @@ const AdminVideos = () => {
                                                         <button
                                                             onClick={() =>
                                                                 setEditVideo(
-                                                                    video
+                                                                    {...video}
                                                                 )
                                                             }
                                                             className="p-1 text-green-600 hover:text-green-700"
@@ -233,7 +312,7 @@ const AdminVideos = () => {
                                                         <button
                                                             onClick={() =>
                                                                 setShowDeleteConfirm(
-                                                                    video.id
+                                                                    video._id
                                                                 )
                                                             }
                                                             className="p-1 text-red-600 hover:text-red-700"
@@ -257,13 +336,13 @@ const AdminVideos = () => {
                                     <p className="text-gray-600 mb-8">
                                         Start by adding your first video.
                                     </p>
-                                    <a
-                                        href="/admin/videos/form"
+                                    <button
+                                        onClick={() => navigate("/admin/videos/form")}
                                         className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 inline-flex items-center"
                                     >
                                         <Plus className="h-4 w-4 mr-2" />
                                         Add First Video
-                                    </a>
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -294,7 +373,7 @@ const AdminVideos = () => {
                                     type="text"
                                     className="w-full mb-3 px-4 py-2 border rounded-lg"
                                     placeholder="Title"
-                                    value={editVideo.title}
+                                    value={editVideo.title || ''}
                                     onChange={(e) =>
                                         setEditVideo({
                                             ...editVideo,
@@ -309,7 +388,7 @@ const AdminVideos = () => {
                                     type="url"
                                     className="w-full mb-3 px-4 py-2 border rounded-lg"
                                     placeholder="Video URL"
-                                    value={editVideo.url}
+                                    value={editVideo.url || ''}
                                     onChange={(e) =>
                                         setEditVideo({
                                             ...editVideo,
@@ -323,7 +402,7 @@ const AdminVideos = () => {
                                 <textarea
                                     className="w-full mb-3 px-4 py-2 border rounded-lg"
                                     placeholder="Description"
-                                    value={editVideo.description}
+                                    value={editVideo.description || ''}
                                     onChange={(e) =>
                                         setEditVideo({
                                             ...editVideo,
@@ -338,7 +417,7 @@ const AdminVideos = () => {
                                     type="text"
                                     className="w-full mb-3 px-4 py-2 border rounded-lg"
                                     placeholder="Title (Amharic)"
-                                    value={editVideo.titleAm}
+                                    value={editVideo.titleAm || ''}
                                     onChange={(e) =>
                                         setEditVideo({
                                             ...editVideo,
@@ -352,7 +431,7 @@ const AdminVideos = () => {
                                 <textarea
                                     className="w-full mb-3 px-4 py-2 border rounded-lg"
                                     placeholder="Description (Amharic)"
-                                    value={editVideo.descriptionAm}
+                                    value={editVideo.descriptionAm || ''}
                                     onChange={(e) =>
                                         setEditVideo({
                                             ...editVideo,
@@ -369,9 +448,17 @@ const AdminVideos = () => {
                                     </button>
                                     <button
                                         onClick={() => handleSave(editVideo)}
-                                        className="px-4 py-2 bg-green-600 text-white rounded-lg"
+                                        disabled={saveLoading}
+                                        className="px-4 py-2 bg-green-600 text-white rounded-lg disabled:opacity-50 flex items-center"
                                     >
-                                        Save Changes
+                                        {saveLoading ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                                                Saving...
+                                            </>
+                                        ) : (
+                                            "Save Changes"
+                                        )}
                                     </button>
                                 </div>
                             </>
@@ -387,7 +474,7 @@ const AdminVideos = () => {
                                     type="url"
                                     className="w-full mb-3 px-4 py-2 border rounded-lg"
                                     placeholder="Video URL"
-                                    value={editVideo.url}
+                                    value={editVideo.url || ''}
                                     onChange={(e) =>
                                         setEditVideo({
                                             ...editVideo,
@@ -404,9 +491,17 @@ const AdminVideos = () => {
                                     </button>
                                     <button
                                         onClick={() => handleSave(editVideo)}
-                                        className="px-4 py-2 bg-green-600 text-white rounded-lg"
+                                        disabled={saveLoading}
+                                        className="px-4 py-2 bg-green-600 text-white rounded-lg disabled:opacity-50 flex items-center"
                                     >
-                                        Save Changes
+                                        {saveLoading ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                                                Saving...
+                                            </>
+                                        ) : (
+                                            "Save Changes"
+                                        )}
                                     </button>
                                 </div>
                             </>
@@ -430,14 +525,23 @@ const AdminVideos = () => {
                             <button
                                 onClick={() => setShowDeleteConfirm(null)}
                                 className="px-4 py-2 border rounded-lg"
+                                disabled={deleteLoading}
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={() => confirmDelete(showDeleteConfirm)}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg"
+                                disabled={deleteLoading}
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg disabled:opacity-50 flex items-center"
                             >
-                                Delete
+                                {deleteLoading ? (
+                                    <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                                        Deleting...
+                                    </>
+                                ) : (
+                                    "Delete"
+                                )}
                             </button>
                         </div>
                     </div>
