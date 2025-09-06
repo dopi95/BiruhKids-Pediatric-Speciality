@@ -304,7 +304,7 @@ export default function Footer({ lang }) {
               rel="noopener noreferrer"
               className="text-blue-600 font-semibold hover:underline hover:text-blue-800 transition"
             >
-              Chain Tech
+              Chain Techt
             </a>
           </p>
         </div>
