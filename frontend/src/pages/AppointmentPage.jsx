@@ -57,8 +57,8 @@ const translations = {
       age: "Age",
       gender: "Gender",
       doctor: "Doctor",
-      date: "Date",
-      time: "Time",
+      date: "Preferred Date",
+      time: "Preferred Time",
     },
     confirmedTitle: "Appointment Noted!",
     confirmedMessage:
@@ -176,11 +176,25 @@ const AppointmentPage = ({ lang = "En" }) => {
   };
   const prevStep = () => setStep((prev) => prev - 1);
   
+  // Add this function to handle form submission
+  const prepareAppointmentData = () => {
+    const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    return {
+      ...formData,
+      appointmentDate: formData.date, // preferred date
+      appointmentTime: formData.time, // preferred time
+      createdAt: currentDate, // current date when appointment was made
+      // Keep the original date field for backward compatibility
+      date: formData.date
+    };
+  };
+
   const confirmAppointment = async () => {
     if (validateStep()) {
       setIsSubmitting(true);
       try {
-        const result = await appointmentService.createAppointment(formData);
+        const appointmentData = prepareAppointmentData();
+        const result = await appointmentService.createAppointment(appointmentData);
         
         if (result.success) {
           setConfirmed(true);

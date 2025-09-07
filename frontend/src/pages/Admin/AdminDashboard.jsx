@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import StatsCard from "../../components/StatsCard";
 import {
     Users,
     FileText,
@@ -7,6 +6,7 @@ import {
     MessageSquare,
     Mail,
     UserCheck,
+    CalendarDays,
 } from "lucide-react";
 
 const AdminDashboard = () => {
@@ -33,6 +33,7 @@ const AdminDashboard = () => {
             icon: MessageSquare,
             label: "Testimonials",
             value: "0",
+            subValue: "0 today",
             color: "purple",
         },
         {
@@ -46,6 +47,13 @@ const AdminDashboard = () => {
             label: "Total Videos",
             value: "0",
             color: "red",
+        },
+        {
+            icon: CalendarDays,
+            label: "Appointments",
+            value: "0",
+            subValue: "0 today",
+            color: "indigo",
         },
     ]);
 
@@ -88,7 +96,27 @@ const AdminDashboard = () => {
             icon: UserCheck,
             color: "pink",
         },
+        {
+            title: "Manage Appointments",
+            description: "View and manage appointments",
+            link: "/admin/appointments",
+            icon: CalendarDays,
+            color: "indigo",
+        },
     ];
+
+    // Helper function to check if a date is today
+    const isToday = (date) => {
+        if (!date) return false;
+        
+        const today = new Date();
+        const checkDate = new Date(date);
+        return (
+            checkDate.getDate() === today.getDate() &&
+            checkDate.getMonth() === today.getMonth() &&
+            checkDate.getFullYear() === today.getFullYear()
+        );
+    };
 
     // Fetch dashboard data
     useEffect(() => {
@@ -104,12 +132,14 @@ const AdminDashboard = () => {
                     doctorsResponse,
                     testimonialsResponse,
                     subscribersResponse,
-                    videosResponse
+                    videosResponse,
+                    appointmentsResponse
                 ] = await Promise.allSettled([
                     fetch(`${import.meta.env.VITE_API_BASE_URL}/doctors`),
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/testimonials/stats`),
+                    fetch(`${import.meta.env.VITE_API_BASE_URL}/testimonials`),
                     fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers/stats`),
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/videos`)
+                    fetch(`${import.meta.env.VITE_API_BASE_URL}/videos`),
+                    fetch(`${import.meta.env.VITE_API_BASE_URL}/appointments`)
                 ]);
 
                 // Doctors count
@@ -124,7 +154,14 @@ const AdminDashboard = () => {
                 if (testimonialsResponse.status === "fulfilled" && testimonialsResponse.value.ok) {
                     const data = await testimonialsResponse.value.json();
                     if (data.success) {
-                        newStats[3].value = data.data.total.toString();
+                        // Calculate today's testimonials
+                        const todaysTestimonials = data.data.filter(testimonial => 
+                            testimonial.createdAt && isToday(testimonial.createdAt)
+                        ).length;
+                        
+                        // Update testimonials count with both total and today's
+                        newStats[3].value = data.data.length.toString();
+                        newStats[3].subValue = `${todaysTestimonials} today`;
                     }
                 }
 
@@ -141,6 +178,21 @@ const AdminDashboard = () => {
                     const data = await videosResponse.value.json();
                     if (data.success) {
                         newStats[5].value = data.data.length.toString();
+                    }
+                }
+
+                // Appointments count
+                if (appointmentsResponse.status === "fulfilled" && appointmentsResponse.value.ok) {
+                    const data = await appointmentsResponse.value.json();
+                    if (data.success) {
+                        // Calculate today's appointments based on createdAt date
+                        const todaysAppointments = data.data.filter(appointment => 
+                            appointment.createdAt && isToday(appointment.createdAt)
+                        ).length;
+                        
+                        // Update appointments count with both total and today's
+                        newStats[6].value = data.data.length.toString();
+                        newStats[6].subValue = `${todaysAppointments} today`;
                     }
                 }
 
@@ -190,7 +242,32 @@ const AdminDashboard = () => {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-8 mx-6">
                 {stats.map((stat, i) => (
-                    <StatsCard key={i} {...stat} icon={stat.icon} />
+                    <div key={i} className="bg-white rounded-lg shadow-sm p-6">
+                        <div className="flex items-start">
+                            <div className={`p-3 rounded-full ${
+                                stat.color === "blue" ? "bg-blue-100 text-blue-600" :
+                                stat.color === "green" ? "bg-green-100 text-green-600" :
+                                stat.color === "orange" ? "bg-orange-100 text-orange-600" :
+                                stat.color === "purple" ? "bg-purple-100 text-purple-600" :
+                                stat.color === "pink" ? "bg-pink-100 text-pink-600" :
+                                stat.color === "red" ? "bg-red-100 text-red-600" :
+                                "bg-indigo-100 text-indigo-600"
+                            }`}>
+                                <stat.icon className="h-6 w-6" />
+                            </div>
+                            <div className="ml-4">
+                                <p className="text-sm font-medium text-gray-600">{stat.label}</p>
+                                {stat.subValue ? (
+                                    <div className="mt-1">
+                                        <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                                        <p className="text-sm text-gray-500">{stat.subValue}</p>
+                                    </div>
+                                ) : (
+                                    <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 ))}
             </div>
 
@@ -201,7 +278,7 @@ const AdminDashboard = () => {
                         Quick Actions
                     </h2>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     {quickActions.map((action, index) => (
                         <a
                             key={index}
@@ -219,7 +296,9 @@ const AdminDashboard = () => {
                                             ? "bg-yellow-100"
                                             : action.color === "purple"
                                             ? "bg-purple-100"
-                                            : "bg-pink-100"
+                                            : action.color === "pink"
+                                            ? "bg-pink-100"
+                                            : "bg-indigo-100"
                                     }`}
                                 >
                                     <action.icon
@@ -232,7 +311,9 @@ const AdminDashboard = () => {
                                                 ? "text-yellow-600"
                                                 : action.color === "purple"
                                                 ? "text-purple-600"
-                                                : "text-pink-600"
+                                                : action.color === "pink"
+                                                ? "text-pink-600"
+                                                : "text-indigo-600"
                                         }`}
                                     />
                                 </div>

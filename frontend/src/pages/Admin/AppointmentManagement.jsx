@@ -1,9 +1,9 @@
 // src/pages/AppointmentManagement.jsx
 import { useState, useEffect } from "react";
-import { CheckSquare, CalendarDays, RefreshCw, CheckCircle, XCircle } from "lucide-react";
+import { CheckSquare, CalendarDays, RefreshCw, CheckCircle, XCircle, Clock } from "lucide-react";
 import StatsCard from "../../components/StatsCard";
 
-// Mock data for development
+// Mock data for development - updated to include time and createdAt fields
 const mockAppointments = [
   {
     _id: "1",
@@ -15,6 +15,8 @@ const mockAppointments = [
     gender: "Male",
     doctor: "Dr. Smith",
     date: "2025-09-01",
+    time: "09:00 AM",
+    createdAt: "2025-08-25",
     status: "pending"
   },
   {
@@ -27,6 +29,8 @@ const mockAppointments = [
     gender: "Female",
     doctor: "Dr. Adams",
     date: "2025-09-02",
+    time: "10:30 AM",
+    createdAt: "2025-08-26",
     status: "pending"
   }
 ];
@@ -286,6 +290,8 @@ const AppointmentManagement = () => {
                 <span className="sr-only">Select</span>
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
+              </th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">
                 Name
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
@@ -304,7 +310,10 @@ const AppointmentManagement = () => {
                 Doctor
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                Date
+                Preferred Date
+              </th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                Preferred Time
               </th>
               <th className="px-4 py-2 text-left font-semibold text-gray-700">
                 Status
@@ -317,7 +326,7 @@ const AppointmentManagement = () => {
           <tbody className="divide-y divide-gray-200">
             {appointments.length === 0 ? (
               <tr>
-                <td colSpan="10" className="px-4 py-8 text-center text-gray-500">
+                <td colSpan="12" className="px-4 py-8 text-center text-gray-500">
                   No appointments found.
                 </td>
               </tr>
@@ -333,6 +342,9 @@ const AppointmentManagement = () => {
                     />
                   </td>
                   <td className="px-4 py-2">
+                    {appt.createdAt ? new Date(appt.createdAt).toLocaleDateString() : "N/A"}
+                  </td>
+                  <td className="px-4 py-2">
                     {appt.firstName} {appt.lastName}
                   </td>
                   <td className="px-4 py-2">{appt.email}</td>
@@ -341,7 +353,10 @@ const AppointmentManagement = () => {
                   <td className="px-4 py-2">{appt.gender}</td>
                   <td className="px-4 py-2">{appt.doctor}</td>
                   <td className="px-4 py-2">
-                    {new Date(appt.date).toLocaleDateString()}
+                    {appt.date ? new Date(appt.date).toLocaleDateString() : "N/A"}
+                  </td>
+                  <td className="px-4 py-2">
+                    {appt.time || "N/A"}
                   </td>
                   <td className="px-4 py-2">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
