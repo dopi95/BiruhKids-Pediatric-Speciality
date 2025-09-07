@@ -101,8 +101,9 @@ export default function Footer({ lang }) {
 
   const translations = {
     en: {
+      name:"BiruhKids",
       description:
-        "Wide range of pediatric healthcare services designed to meet the unique needs of children.",
+        '" Where childrens become bright and healthy! "',
       quickLinks: "Quick Links",
       home: "Home",
       about: "About Us",
@@ -122,8 +123,9 @@ export default function Footer({ lang }) {
         "© 2025 All rights reserved. Developed by ",
     },
     am: {
+      name:"ብሩህኪድስ",
       description:
-        "ልጆችን በተለየ መልኩ ለማገልገል የተዘጋጁ ሰፊ የህፃናት ጤና አገልግሎቶች።",
+        '" ልጆች ብሩህ እና ጤናማ የሚሆኑበት! "',
       quickLinks: "ፈጣን አገናኞች",
       home: "መነሻ",
       about: "ስለ እኛ",
@@ -153,7 +155,7 @@ export default function Footer({ lang }) {
           {/* Logo & Description */}
           <div className="col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <span className="text-xl font-bold">BiruhKids</span>
+              <span className="text-xl font-bold">{t.name}</span>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-4">
               {t.description}
@@ -175,7 +177,7 @@ export default function Footer({ lang }) {
                 <FaTiktok className="h-7 w-7" />
               </a>
               <a
-                href="#"
+                href="https://www.facebook.com/DrFasilPediatrician"
                 target="_blank"
                 className="text-blue-600 transition-colors duration-200"
               >
@@ -304,7 +306,7 @@ export default function Footer({ lang }) {
               rel="noopener noreferrer"
               className="text-blue-600 font-semibold hover:underline hover:text-blue-800 transition"
             >
-              Chain Techt
+              Chain Tech
             </a>
           </p>
         </div>

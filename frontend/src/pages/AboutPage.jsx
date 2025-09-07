@@ -39,13 +39,16 @@ const translations = {
       "These principles define who we are and guide every decision we make in our mission to serve children and families with integrity and care.",
     compassion: "Compassion",
     compassionDesc:
-      "We place empathy at the heart of care, listening deeply, responding kindly, and honoring every child’s unique needs and experiences.",
+      "We are caring for every child with empathy and kindness to adress every child's health care need and treatment.",
     excellence: "Excellence",
     excellenceDesc:
-      "We pursue the highest standards in healthcare, striving for precision, safety, and continuous improvement in all we do.",
+      " We provide the highest quality Pediatric care in our outpatient and inpatient services with highly skilled healthcare professionals.",
     innovation: "Innovation",
     innovationDesc:
-      "We embrace creativity and new technologies, seeking fresh solutions that make pediatric care more effective, accessible, and hopeful.",
+      "Our clinic is using up-to-date knowledge and skill on field of Pediatrics and childhealth.",
+      Teamwork :"TeamWork",
+      TeamworkDesc:
+      "We working together with parents in our social media flatforms to build knowledgable families for better care of children",
     differentTitle: "What Makes Us Different?",
     differentDesc:
       "At Biruh Kids, we go beyond standard pediatric care to create a safe, innovative, and child-centered environment. Here’s how we stand out.",
@@ -95,6 +98,9 @@ const translations = {
       "በጤና አገልግሎት ከፍተኛ ስኬት ለማድረግ በማሻሻያና በደህንነት እንጥራለን።",
     innovation: "አዳዲስነት",
     innovationDesc:
+      "አዳዲስ ቴክኖሎጂዎችን በመቀበል ልጆች ለጤናቸው በተስፋ እንክብካቤ እንሰጣለን።",
+       Teamwork :"አዳዲስነት",
+      TeamworkDesc:
       "አዳዲስ ቴክኖሎጂዎችን በመቀበል ልጆች ለጤናቸው በተስፋ እንክብካቤ እንሰጣለን።",
     differentTitle: "ምን እንደምንለየው?",
     differentDesc:
@@ -196,26 +202,37 @@ const AboutPage = ({ lang }) => {
             variants={containerVariants}
           >
             <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
-              <div className="flex items-center gap-3 mb-4">
-                <FaHandsHelping className="text-[#007799] text-3xl" />
-                <h3 className="text-xl font-bold">{t.compassion}</h3>
-              </div>
-              <p>{t.compassionDesc}</p>
-            </motion.div>
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
-              <div className="flex items-center gap-3 mb-4">
-                <FaMedal className="text-[#FF7A1A] text-3xl" />
-                <h3 className="text-xl font-bold">{t.excellence}</h3>
-              </div>
-              <p>{t.excellenceDesc}</p>
-            </motion.div>
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
-              <div className="flex items-center gap-3 mb-4">
-                <FaLightbulb className="text-yellow-400 text-3xl" />
-                <h3 className="text-xl font-bold">{t.innovation}</h3>
-              </div>
-              <p>{t.innovationDesc}</p>
-            </motion.div>
+  <div className="flex items-center gap-3 mb-4">
+    <FaHandsHelping className="text-[#007799] text-3xl" />
+    <h3 className="text-xl font-bold">{t.compassion}</h3>
+  </div>
+  <p>{t.compassionDesc}</p>
+</motion.div>
+
+<motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+  <div className="flex items-center gap-3 mb-4">
+    <FaMedal className="text-[#FF7A1A] text-3xl" />
+    <h3 className="text-xl font-bold">{t.excellence}</h3>
+  </div>
+  <p>{t.excellenceDesc}</p>
+</motion.div>
+
+<motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+  <div className="flex items-center gap-3 mb-4">
+    <FaLightbulb className="text-yellow-400 text-3xl" />
+    <h3 className="text-xl font-bold">{t.innovation}</h3>
+  </div>
+  <p>{t.innovationDesc}</p>
+</motion.div>
+
+<motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+  <div className="flex items-center gap-3 mb-4">
+    <FaUsers className="text-green-500 text-3xl" />
+    <h3 className="text-xl font-bold">{t.Teamwork}</h3>
+  </div>
+  <p>{t.TeamworkDesc}</p>
+</motion.div>
+
           </motion.div>
         </div>
       </SectionWrapper>

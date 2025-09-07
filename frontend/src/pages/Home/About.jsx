@@ -179,7 +179,7 @@ export default function About({ lang }) {
             },
             {
               icon: <Facebook className="h-7 w-7" />,
-              href: "#",
+              href: "https://www.facebook.com/DrFasilPediatrician",
               color: "text-blue-600",
             },
             {
