@@ -8,8 +8,8 @@ import doctorRoutes from "./src/routes/doctorRoutes.js";
 import appointmentRoutes from "./src/routes/appointmentRoutes.js";
 import subscriberRoutes from "./src/routes/subscriberRoutes.js";
 import videoRoutes from "./src/routes/videoRoutes.js";
-import testimonialRoutes from "./src/routes/testimonialRoutes.js";
 import serviceRoutes from "./src/routes/serviceRoutes.js";
+import testimonialRoutes from "./src/routes/testimonialRoutes.js";
 
 // ES module fix for __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -35,8 +35,8 @@ app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/subscribers", subscriberRoutes);
 app.use("/api/videos", videoRoutes);
-app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/testimonials", testimonialRoutes);
 
 
 // Health check endpoint
