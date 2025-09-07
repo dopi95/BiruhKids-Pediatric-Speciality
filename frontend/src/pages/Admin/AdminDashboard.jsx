@@ -63,42 +63,36 @@ const AdminDashboard = () => {
     const quickActions = [
         {
             title: "Upload Results",
-            description: "Send test results to patients",
             link: "/admin/results",
             icon: FileText,
             color: "green",
         },
         {
             title: "Add Video",
-            description: "Upload educational content",
             link: "/admin/videos/form",
             icon: Play,
             color: "red",
         },
         {
             title: "Review Testimonials",
-            description: "Moderate patient feedback",
             link: "/admin/testimonials",
             icon: MessageSquare,
             color: "yellow",
         },
         {
             title: "Send Newsletter",
-            description: "Email subscribers",
             link: "/admin/subscribers",
             icon: Mail,
             color: "purple",
         },
         {
             title: "Manage Admins",
-            description: "Add or remove admin access",
             link: "/admin/admins",
             icon: UserCheck,
             color: "pink",
         },
         {
             title: "Manage Appointments",
-            description: "View and manage appointments",
             link: "/admin/appointments",
             icon: CalendarDays,
             color: "indigo",
@@ -321,9 +315,6 @@ const AdminDashboard = () => {
                                     {action.title}
                                 </h3>
                             </div>
-                            <p className="text-sm text-gray-600">
-                                {action.description}
-                            </p>
                         </a>
                     ))}
                 </div>
