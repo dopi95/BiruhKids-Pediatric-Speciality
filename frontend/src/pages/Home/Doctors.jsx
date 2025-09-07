@@ -306,14 +306,14 @@ export default function DoctorsSlider({ lang }) {
                 >
                   <div className="bg-white rounded-lg shadow-lg h-full mx-2 md:mx-0 overflow-hidden group hover:shadow-xl hover:scale-[1.03] transition-all duration-300">
                     <div className="relative">
-                      <img
-                        src={doctor.photo ? `http://localhost:5000/${doctor.photo}` : "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop"}
-                        alt={doctor.name}
-                        className="w-full h-80 object-cover"
-                        onError={(e) => {
-                          e.target.src = "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop";
-                        }}
-                      />
+                     <img
+  src={doctor.photo ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${doctor.photo}` : "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop"}
+  alt={doctor.name}
+  className="w-full h-80 object-cover"
+  onError={(e) => {
+    e.target.src = "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop";
+  }}
+/>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                     <div className="p-6 text-center">

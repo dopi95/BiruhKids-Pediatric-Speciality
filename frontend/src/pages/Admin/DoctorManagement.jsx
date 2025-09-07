@@ -349,26 +349,26 @@ export default function DoctorManagement() {
                                                 <div className="flex items-center">
                                                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden relative">
                                                         {doc.photo ? (
-                                                            <>
-                                                                <img 
-                                                                    src={`http://localhost:5000/${doc.photo}`}
-                                                                    alt={doc.name}
-                                                                    className="w-10 h-10 object-cover"
-                                                                    onError={(e) => {
-                                                                        e.target.style.display = 'none';
-                                                                    }}
-                                                                />
-                                                                <div className="absolute inset-0 flex items-center justify-center bg-blue-100" style={{display: 'none'}}>
-                                                                    <span className="text-blue-600 font-semibold text-sm">
-                                                                        {doc.name.charAt(0)}
-                                                                    </span>
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <span className="text-blue-600 font-semibold text-sm">
-                                                                {doc.name.charAt(0)}
-                                                            </span>
-                                                        )}
+  <>
+    <img 
+      src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${doc.photo}`}
+      alt={doc.name}
+      className="w-10 h-10 object-cover"
+      onError={(e) => {
+        e.target.style.display = 'none';
+      }}
+    />
+    <div className="absolute inset-0 flex items-center justify-center bg-blue-100" style={{display: 'none'}}>
+      <span className="text-blue-600 font-semibold text-sm">
+        {doc.name.charAt(0)}
+      </span>
+    </div>
+  </>
+) : (
+  <span className="text-blue-600 font-semibold text-sm">
+    {doc.name.charAt(0)}
+  </span>
+)}
                                                     </div>
                                                     <div className="ml-3">
                                                         <div className="text-sm font-medium text-gray-900">
