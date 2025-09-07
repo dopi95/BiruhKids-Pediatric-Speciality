@@ -150,7 +150,7 @@ export default function ServiceManagement() {
                 {/* Search Bar */}
                 <div className="bg-white p-3 sm:p-4 lg:p-6 border-b border-gray-200 flex justify-between items-center">
                     <h2 className="text-base sm:text-lg font-semibold text-gray-900">
-                        <span className="text-2xl">👨‍⚕️ </span>
+                        <span className="text-2xl"></span>
                         All Services
                     </h2>
 
