@@ -125,7 +125,7 @@ const Services = ({ lang = "En" }) => {
     return (
         <div className="min-h-screen">
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-r bg-[#007799] text-white py-20">
+            <section className="relative bg-gradient-to-r bg-blue-500 text-white py-20">
                 <div className="absolute inset-0 bg-black opacity-20"></div>
                 <div className="relative max-w-7xl mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-6xl font-bold mb-6">

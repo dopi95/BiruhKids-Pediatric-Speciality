@@ -145,7 +145,7 @@ const AboutPage = ({ lang }) => {
   return (
     <div className="flex flex-col w-full overflow-hidden">
       {/* Intro Section */}
-      <section className="bg-[#007799] text-white text-center px-4 py-12 sm:py-16 lg:py-24">
+      <section className="bg-blue-500 text-white text-center px-4 py-12 sm:py-16 lg:py-24">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
           {t.aboutTitle}
         </h1>

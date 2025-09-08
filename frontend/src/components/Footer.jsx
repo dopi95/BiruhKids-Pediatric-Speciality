@@ -172,7 +172,7 @@ export default function Footer({ lang }) {
               <a
                 href="https://www.tiktok.com/@biruhkids?_t=ZM-8zHeQeJllLk&_r=1"
                 target="_blank"
-                className="text-black transition-colors duration-200"
+                className="text-white transition-colors duration-200"
               >
                 <FaTiktok className="h-7 w-7" />
               </a>

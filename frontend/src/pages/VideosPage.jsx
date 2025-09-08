@@ -88,7 +88,7 @@ const VideosPage = ({ lang = "En" }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Intro Section */}
-      <div className="bg-[#007799] text-white text-center py-16 px-4">
+      <div className="bg-blue-500 text-white text-center py-16 px-4">
         <h1 className="text-4xl sm:text-5xl font-bold mb-4">
           {t.pageTitle}
         </h1>

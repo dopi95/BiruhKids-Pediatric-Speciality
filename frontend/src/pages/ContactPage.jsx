@@ -164,7 +164,7 @@ Message: ${form.message}
   return (
     <div className="flex flex-col">
       {/* Intro Section */}
-      <section className="bg-[#007799] text-white text-center py-16 px-4">
+      <section className="bg-blue-500 text-white text-center py-16 px-4">
         <h1 className="text-4xl font-bold mb-4">{t.contactTitle}</h1>
         <p className="max-w-2xl mx-auto text-lg">{t.contactDesc}</p>
       </section>

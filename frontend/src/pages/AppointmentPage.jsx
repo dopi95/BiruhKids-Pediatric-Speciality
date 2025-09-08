@@ -276,7 +276,7 @@ const AppointmentPage = ({ lang = "En" }) => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Intro Section */}
-      <div className="bg-[#007799] text-white text-center py-12 w-full">
+      <div className="bg-blue-500 text-white text-center py-12 w-full">
         <h1 className="text-4xl sm:text-5xl font-bold mb-4">{t.title}</h1>
         <p className="text-lg sm:text-xl max-w-3xl mx-auto px-4">
           {t.subtitle}

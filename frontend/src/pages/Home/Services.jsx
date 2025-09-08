@@ -6,13 +6,14 @@ import serviceService from "../../services/serviceService";
 
 // Animation Variants
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 40, scale: 0.95 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
-      delay: i * 0.2,
-      duration: 0.7,
+      delay: i * 0.15,
+      duration: 0.6,
       ease: "easeOut",
     },
   }),
@@ -30,7 +31,6 @@ export default function Services({ lang = "En" }) {
   const fetchLatestServices = async () => {
     try {
       const response = await serviceService.getServices();
-      // Get the latest 6 services
       const latestServices = response.data
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 6);
@@ -42,38 +42,24 @@ export default function Services({ lang = "En" }) {
     }
   };
 
-  // Helper function to safely get features array
-  const getFeatures = (service) => {
-    const featuresText = isAmh && service.features_am ? service.features_am : service.features_en;
-    
-    if (!featuresText) return [];
-    
-    // Handle both array and string formats
-    if (Array.isArray(featuresText)) {
-      return featuresText;
-    }
-    
-    if (typeof featuresText === 'string') {
-      return featuresText.split(',').map(item => item.trim()).filter(item => item.length > 0);
-    }
-    
-    return [];
-  };
-
   // Translations
   const translations = {
     En: {
       ourServices: "Our Services",
-      description: "Comprehensive healthcare services designed to meet all your medical needs with state-of-the-art technology and expert care.",
+      description:
+        "Comprehensive healthcare services designed to meet all your medical needs with state-of-the-art technology and expert care.",
       viewAllServices: "View All Services",
-      loading: "Loading services..."
+      learnMore: "Learn More",
+      loading: "Loading services...",
     },
     Am: {
       ourServices: "አገልግሎታችን",
-      description: "በዘመናዊ ቴክኖሎጂ እና በባለሙያ እንክብካቤ የተዘጋጀ የጤና አገልግሎት ለሁሉም የጤና ፍላጎቶችዎ ማሟላት።",
+      description:
+        "በዘመናዊ ቴክኖሎጂ እና በባለሙያ እንክብካቤ የተዘጋጀ የጤና አገልግሎት ለሁሉም የጤና ፍላጎቶችዎ ማሟላት።",
       viewAllServices: "ሁሉንም አገልግሎቶች ይመልከቱ",
-      loading: "አገልግሎቶች በመጫን ላይ..."
-    }
+      learnMore: "ተጨማሪ ይመልከቱ",
+      loading: "አገልግሎቶች በመጫን ላይ...",
+    },
   };
 
   const t = translations[lang];
@@ -82,14 +68,14 @@ export default function Services({ lang = "En" }) {
     return (
       <article className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="text-xl">{t.loading}</div>
+          <div className="text-xl animate-pulse text-gray-500">{t.loading}</div>
         </div>
       </article>
     );
   }
 
   return (
-    <article className="py-20">
+    <article className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <motion.div
@@ -99,63 +85,66 @@ export default function Services({ lang = "En" }) {
           viewport={{ once: true }}
           variants={fadeUp}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">
             {t.ourServices}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
             {t.description}
           </p>
         </motion.div>
 
         {/* Service Cards */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {services.map((service, index) => {
-            const features = getFeatures(service);
-            
-            return (
-              <motion.div
-                key={service._id || index}
-                className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col"
-                variants={fadeUp}
-                custom={index}
-              >
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+          {services.map((service, index) => (
+            <motion.div
+              key={service._id || index}
+              className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col border border-gray-100"
+              variants={fadeUp}
+              custom={index}
+              whileHover={{ scale: 1.02 }}
+            >
+              {/* Image (optional if exists) */}
+              {service.image && (
+                <div className="h-48 w-full overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={service.title_en}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
                   {isAmh && service.title_am ? service.title_am : service.title_en}
                 </h3>
-                <p className="text-gray-600 mb-6 flex-grow">
-                  {isAmh && service.description_am 
-                    ? service.description_am 
+                <p className="text-gray-600 mb-5 flex-grow leading-relaxed">
+                  {isAmh && service.description_am
+                    ? service.description_am
                     : service.description_en}
                 </p>
-                
-                {/* Features List - styled with orange bullet points */}
-                {features.length > 0 && (
-                  <div className="mb-6">
-                    <ul className="space-y-2">
-                      {features.map((feature, i) => (
-                        <li key={i} className="flex items-start">
-                          <div className="flex-shrink-0 mt-1">
-                            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                          </div>
-                          <span className="ml-3 text-gray-600 text-sm">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </motion.div>
-            );
-          })}
+
+                {/* Learn More button (goes to /services page) */}
+                <Link
+                  to="/services"
+                  className="mt-auto inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
+                >
+                  {t.learnMore} <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
 
-        {/* Button */}
+        {/* View All Button */}
         <motion.div
-          className="text-center mt-12"
+          className="text-center mt-14"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
@@ -164,10 +153,9 @@ export default function Services({ lang = "En" }) {
         >
           <Link
             to="/services"
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 inline-flex items-center"
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-2xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 inline-flex items-center"
           >
-            {t.viewAllServices}{" "}
-            <ArrowRight className="h-4 w-4 ml-2" />
+            {t.viewAllServices} <ArrowRight className="h-5 w-5 ml-2" />
           </Link>
         </motion.div>
       </div>
