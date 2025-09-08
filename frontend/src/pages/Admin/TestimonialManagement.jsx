@@ -109,35 +109,35 @@ const TestimonialManagement = () => {
     };
 
     // Function to render user avatar in admin management
-    const renderUserAvatar = (testimonial) => {
-        if (testimonial.image) {
-            return (
-                <div className="relative w-12 h-12 rounded-full overflow-hidden flex items-center justify-center mr-4 border border-gray-200">
-                    <img
-                        src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}${testimonial.image}`}
-                        alt={testimonial.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                            e.target.style.display = "none";
-                            const fallback = document.getElementById(`fallback-${testimonial._id}`);
-                            if (fallback) {
-                                fallback.style.display = "flex";
-                            }
-                        }}
-                    />
-                    <div id={`fallback-${testimonial._id}`} className="absolute inset-0 w-full h-full bg-blue-100 rounded-full items-center justify-center hidden">
-                        <Users className="h-6 w-6 text-blue-600" />
-                    </div>
-                </div>
-            );
-        } else {
-            return (
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                    <Users className="h-6 w-6 text-blue-600" />
-                </div>
-            );
-        }
-    };
+const renderUserAvatar = (testimonial) => {
+  if (testimonial.image) {
+    return (
+      <div className="relative w-12 h-12 rounded-full overflow-hidden flex items-center justify-center mr-4 border border-gray-200">
+        <img
+          src={testimonial.image} // Use the Cloudinary URL directly
+          alt={testimonial.name}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.style.display = "none";
+            const fallback = document.getElementById(`fallback-${testimonial._id}`);
+            if (fallback) {
+              fallback.style.display = "flex";
+            }
+          }}
+        />
+        <div id={`fallback-${testimonial._id}`} className="absolute inset-0 w-full h-full bg-blue-100 rounded-full items-center justify-center hidden">
+          <Users className="h-6 w-6 text-blue-600" />
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+        <Users className="h-6 w-6 text-blue-600" />
+      </div>
+    );
+  }
+};
 
     // Stats Card Component
     const StatsCard = ({ label, value, color, icon: Icon }) => {

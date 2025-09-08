@@ -134,35 +134,35 @@ export default function Testimonials({ lang = "En" }) {
   };
 
   // Avatar
-  const renderUserAvatar = (testimonial) => {
-    if (testimonial.image) {
-      return (
-        <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center mr-4 border border-gray-200">
-          <img
-            src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}${testimonial.image}`}
-            alt={testimonial.name}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.target.style.display = "none";
-              const defaultAvatar = e.target.parentNode.querySelector('.default-avatar');
-              if (defaultAvatar) {
-                defaultAvatar.style.display = "flex";
-              }
-            }}
-          />
-          <div className="w-12 h-12 bg-blue-100 rounded-full items-center justify-center hidden default-avatar">
-            <Users className="h-6 w-6 text-blue-600" />
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+const renderUserAvatar = (testimonial) => {
+  if (testimonial.image) {
+    return (
+      <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center mr-4 border border-gray-200">
+        <img
+          src={testimonial.image} // Use the Cloudinary URL directly
+          alt={testimonial.name}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.style.display = "none";
+            const defaultAvatar = e.target.parentNode.querySelector('.default-avatar');
+            if (defaultAvatar) {
+              defaultAvatar.style.display = "flex";
+            }
+          }}
+        />
+        <div className="w-12 h-12 bg-blue-100 rounded-full items-center justify-center hidden default-avatar">
           <Users className="h-6 w-6 text-blue-600" />
         </div>
-      );
-    }
-  };
+      </div>
+    );
+  } else {
+    return (
+      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+        <Users className="h-6 w-6 text-blue-600" />
+      </div>
+    );
+  }
+};
 
   // Success Notification Component
   const SuccessNotification = ({ onClose }) => {

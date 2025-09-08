@@ -65,6 +65,7 @@ export const getTestimonialById = async (req, res) => {
 };
 
 // Create testimonial
+// In testimonialController.js, update the createTestimonial function:
 export const createTestimonial = async (req, res) => {
   try {
     const { name, email, title, treatment, testimony, rating } = req.body;
@@ -73,7 +74,7 @@ export const createTestimonial = async (req, res) => {
     let imageUrl = null;
     if (req.file) {
       // req.file.path contains the Cloudinary URL
-      imageUrl = req.file.path;
+      imageUrl = req.file.path; // This should be the full Cloudinary URL
     }
 
     const testimonial = new Testimonial({
@@ -83,7 +84,7 @@ export const createTestimonial = async (req, res) => {
       treatment,
       testimony,
       rating: parseInt(rating),
-      image: imageUrl,
+      image: imageUrl, // Store the Cloudinary URL directly
     });
 
     await testimonial.save();
