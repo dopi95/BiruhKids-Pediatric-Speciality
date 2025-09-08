@@ -1,4 +1,5 @@
 import Doctor from "../models/Doctor.js";
+import { cloudinary } from "../middleware/upload.js";
 
 // Create a new doctor
 export const createDoctor = async (req, res) => {
@@ -6,7 +7,13 @@ export const createDoctor = async (req, res) => {
     const { name, nameAmh, field, fieldAmh, experience, experienceAmh } = req.body;
     
     // Check if photo was uploaded
-    const photo = req.file ? req.file.path : null;
+    let photoData = {};
+    if (req.file) {
+      photoData = {
+        photo: req.file.path,
+        photoPublicId: req.file.filename
+      };
+    }
     
     const doctor = new Doctor({
       name,
@@ -15,7 +22,7 @@ export const createDoctor = async (req, res) => {
       fieldAmh,
       experience,
       experienceAmh,
-      photo
+      ...photoData
     });
     
     const savedDoctor = await doctor.save();
@@ -106,6 +113,9 @@ export const updateDoctor = async (req, res) => {
   try {
     const { name, nameAmh, field, fieldAmh, experience, experienceAmh } = req.body;
     
+    // Find the current doctor to check for existing photo
+    const currentDoctor = await Doctor.findById(req.params.id);
+    
     const updateData = {
       name,
       nameAmh,
@@ -117,7 +127,17 @@ export const updateDoctor = async (req, res) => {
     
     // If a new photo was uploaded
     if (req.file) {
+      // Delete old photo from Cloudinary if exists
+      if (currentDoctor.photoPublicId) {
+        try {
+          await cloudinary.uploader.destroy(currentDoctor.photoPublicId);
+        } catch (error) {
+          console.error("Error deleting old photo from Cloudinary:", error);
+        }
+      }
+      
       updateData.photo = req.file.path;
+      updateData.photoPublicId = req.file.filename;
     }
     
     const doctor = await Doctor.findByIdAndUpdate(
@@ -149,7 +169,7 @@ export const updateDoctor = async (req, res) => {
 // Delete a doctor
 export const deleteDoctor = async (req, res) => {
   try {
-    const doctor = await Doctor.findByIdAndDelete(req.params.id);
+    const doctor = await Doctor.findById(req.params.id);
     
     if (!doctor) {
       return res.status(404).json({
@@ -157,6 +177,18 @@ export const deleteDoctor = async (req, res) => {
         message: "Doctor not found"
       });
     }
+    
+    // Delete photo from Cloudinary if exists
+    if (doctor.photoPublicId) {
+      try {
+        await cloudinary.uploader.destroy(doctor.photoPublicId);
+      } catch (error) {
+        console.error("Error deleting photo from Cloudinary:", error);
+      }
+    }
+    
+    // Delete doctor from database
+    await Doctor.findByIdAndDelete(req.params.id);
     
     res.status(200).json({
       success: true,

@@ -32,7 +32,11 @@ const doctorSchema = new mongoose.Schema({
     trim: true
   },
   photo: {
-    type: String, // We'll store the file path or URL
+    type: String, // Cloudinary URL
+    default: null
+  },
+  photoPublicId: {
+    type: String, // Cloudinary public ID for deletion
     default: null
   }
 }, {

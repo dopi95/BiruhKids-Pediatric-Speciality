@@ -33,14 +33,6 @@ export default function DoctorsSlider({ lang }) {
     fetchDoctors();
   }, []);
 
-  // Create infinite scroll effect by duplicating doctors only if needed
-  const getDuplicatedDoctors = () => {
-    if (doctors.length <= 1) return doctors; // Don't duplicate if there's only one doctor
-    return [...doctors, ...doctors];
-  };
-
-  const duplicatedDoctors = getDuplicatedDoctors();
-
   const getVisibleCards = () => {
     return window.innerWidth < 768 ? 1 : 3;
   };
@@ -58,48 +50,30 @@ export default function DoctorsSlider({ lang }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // max index so no white space
+  const maxIndex = Math.max(0, doctors.length - visibleCards);
+
+  // Check if we should show slider controls
+  const shouldShowSliderControls = () => {
+    if (isMobile) {
+      return doctors.length > 1;
+    } else {
+      return doctors.length > visibleCards;
+    }
+  };
+
+  const showSliderControls = shouldShowSliderControls();
+
   const nextSlide = () => {
     if (doctors.length === 0) return;
-    
     setIsTransitioning(true);
-    setCurrent((prev) => {
-      if (prev >= doctors.length - 1) {
-        // When we reach the end, jump to beginning without animation
-        setTimeout(() => {
-          setIsTransitioning(false);
-          setCurrent(0);
-        }, 500);
-        return prev + 1;
-      }
-      return prev + 1;
-    });
+    setCurrent((prev) => (prev >= maxIndex ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
     if (doctors.length === 0) return;
-    
     setIsTransitioning(true);
-    setCurrent((prev) => {
-      if (prev <= 0) {
-        // When we reach the beginning, jump to end without animation
-        setTimeout(() => {
-          setIsTransitioning(false);
-          setCurrent(doctors.length - 1);
-        }, 500);
-        return -1;
-      }
-      return prev - 1;
-    });
-  };
-
-  const handleTransitionEnd = () => {
-    if (current >= doctors.length) {
-      setIsTransitioning(false);
-      setCurrent(0);
-    } else if (current < 0) {
-      setIsTransitioning(false);
-      setCurrent(doctors.length - 1);
-    }
+    setCurrent((prev) => (prev <= 0 ? maxIndex : prev - 1));
   };
 
   const handleTouchStart = (e) => {
@@ -142,11 +116,10 @@ export default function DoctorsSlider({ lang }) {
   };
 
   useEffect(() => {
-    if (doctors.length === 0) return;
-    
+    if (doctors.length === 0 || !showSliderControls) return;
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
-  }, [current, visibleCards, doctors.length]);
+  }, [current, visibleCards, doctors.length, showSliderControls]);
 
   // Motion variants
   const headingVariants = {
@@ -288,7 +261,6 @@ export default function DoctorsSlider({ lang }) {
                   ? "transform 0.5s ease-in-out"
                   : "none",
               }}
-              onTransitionEnd={handleTransitionEnd}
               onTouchStart={isMobile ? handleTouchStart : undefined}
               onTouchMove={isMobile ? handleTouchMove : undefined}
               onTouchEnd={isMobile ? handleTouchEnd : undefined}
@@ -296,24 +268,24 @@ export default function DoctorsSlider({ lang }) {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              {duplicatedDoctors.map((doctor, index) => (
+              {doctors.map((doctor, index) => (
                 <motion.div
                   key={`${doctor._id}-${index}`}
                   className="px-2 md:px-4 flex-shrink-0"
                   style={{ width: `${100 / visibleCards}%` }}
                   variants={cardVariants}
-                  custom={index % doctors.length}
+                  custom={index}
                 >
                   <div className="bg-white rounded-lg shadow-lg h-full mx-2 md:mx-0 overflow-hidden group hover:shadow-xl hover:scale-[1.03] transition-all duration-300">
                     <div className="relative">
-                     <img
-  src={doctor.photo ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${doctor.photo}` : "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop"}
-  alt={doctor.name}
-  className="w-full h-80 object-cover"
-  onError={(e) => {
-    e.target.src = "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop";
-  }}
-/>
+                      <img
+                        src={doctor.photo ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${doctor.photo}` : "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop"}
+                        alt={doctor.name}
+                        className="w-full h-80 object-cover"
+                        onError={(e) => {
+                          e.target.src = "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop";
+                        }}
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                     <div className="p-6 text-center">
@@ -333,8 +305,8 @@ export default function DoctorsSlider({ lang }) {
             </motion.div>
           </div>
 
-          {/* Prev/Next buttons - Only show if there's more than one doctor */}
-          {doctors.length > 1 && (
+          {/* Prev/Next buttons */}
+          {showSliderControls && (
             <>
               <button
                 onClick={prevSlide}
@@ -352,10 +324,10 @@ export default function DoctorsSlider({ lang }) {
           )}
         </div>
 
-        {/* Indicators - Only show if there's more than one doctor */}
-        {doctors.length > 1 && (
+        {/* Indicators */}
+        {showSliderControls && (
           <div className="flex justify-center mt-8">
-            {doctors.map((_, index) => (
+            {Array.from({ length: maxIndex + 1 }).map((_, index) => (
               <motion.button
                 key={index}
                 onClick={() => {
@@ -363,7 +335,7 @@ export default function DoctorsSlider({ lang }) {
                   setCurrent(index);
                 }}
                 className={`h-3 w-3 rounded-full mx-1 transition-all duration-300 ${
-                  current % doctors.length === index
+                  current === index
                     ? "bg-blue-600 scale-110"
                     : "bg-gray-300 hover:bg-gray-400"
                 }`}
