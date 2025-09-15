@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, User, Smartphone } from "lucide-react";
 import Alert from "../components/Alert";
+import { useAuth } from "../context/AuthContext";
 
 const translations = {
   En: {
@@ -76,6 +77,8 @@ const translations = {
 
 export default function SignUp({ lang = "En" }) {
   const t = translations[lang];
+  const navigate = useNavigate();
+  const { register } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -84,10 +87,9 @@ export default function SignUp({ lang = "En" }) {
   const [showPw, setShowPw] = useState(false);
   const [showPw2, setShowPw2] = useState(false);
   const [notify, setNotify] = useState(false);
-
   const [alert, setAlert] = useState(null);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const emailRegex = /^[^\s@]+@(gmail\.com|yahoo\.com|outlook\.com)$/i;
   const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -108,15 +110,34 @@ export default function SignUp({ lang = "En" }) {
     return Object.keys(next).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) {
       setAlert({ type: "error", message: t.alerts.error });
       return;
     }
-    console.log("Notify by email:", notify);
-    setAlert({ type: "success", message: t.alerts.success });
-    setTimeout(() => navigate("/signin"), 1200);
+
+    setIsLoading(true);
+    setAlert(null);
+
+    const userData = {
+      name: fullName,
+      email,
+      phone,
+      password,
+      emailNotifications: notify
+    };
+
+    const result = await register(userData);
+    
+    if (result.success) {
+      setAlert({ type: "success", message: t.alerts.success });
+      setTimeout(() => navigate("/login"), 1500);
+    } else {
+      setAlert({ type: "error", message: result.error });
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -293,9 +314,10 @@ export default function SignUp({ lang = "En" }) {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-sm sm:text-base"
+            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {t.signUp}
+            {isLoading ? "Creating account..." : t.signUp}
           </button>
         </form>
 

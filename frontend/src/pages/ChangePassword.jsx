@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock, CheckCircle, ArrowLeft } from "lucide-react";
+import authService from "../services/authService";
+import Alert from "../components/Alert";
 
 const ChangePassword = ({ backPath, lang = "En" }) => {
   const navigate = useNavigate();
@@ -16,6 +18,8 @@ const ChangePassword = ({ backPath, lang = "En" }) => {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   const t = {
     En: {
@@ -122,7 +126,7 @@ const ChangePassword = ({ backPath, lang = "En" }) => {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = [];
 
@@ -144,11 +148,25 @@ const ChangePassword = ({ backPath, lang = "En" }) => {
       return;
     }
 
+    setIsLoading(true);
     setErrors([]);
-    setIsSubmitted(true);
-    setTimeout(() => {
-      navigate("/profile");
-    }, 3000);
+    setAlert(null);
+
+    const result = await authService.changePassword(
+      formData.currentPassword,
+      formData.newPassword
+    );
+    
+    if (result.success) {
+      setIsSubmitted(true);
+      setTimeout(() => {
+        navigate(backPath || "/profile");
+      }, 3000);
+    } else {
+      setAlert({ type: "error", message: result.error });
+    }
+    
+    setIsLoading(false);
   };
 
   const handleChange = (e) => {
@@ -209,6 +227,12 @@ const ChangePassword = ({ backPath, lang = "En" }) => {
 
       {/* Form */}
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {alert && (
+          <div className="mb-8">
+            <Alert type={alert.type} message={alert.message} />
+          </div>
+        )}
+        
         {errors.length > 0 && (
           <div className="mb-8 bg-red-50 border border-red-200 rounded-lg p-4">
             <h3 className="text-sm font-medium text-red-800 mb-2">
@@ -347,9 +371,10 @@ const ChangePassword = ({ backPath, lang = "En" }) => {
               </Link>
               <button
                 type="submit"
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                disabled={isLoading}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {t[lang].submit}
+                {isLoading ? "Changing..." : t[lang].submit}
               </button>
             </div>
           </form>

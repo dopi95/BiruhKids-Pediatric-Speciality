@@ -137,25 +137,31 @@ export default function App() {
                     <Route
                         path="/profile"
                         element={
-                            <MainLayout>
-                                <Profile />
-                            </MainLayout>
+                            <ProtectedRoute>
+                                <MainLayout>
+                                    <Profile />
+                                </MainLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/user-dashboard"
                         element={
-                            <MainLayout>
-                                <UserDashboard />
-                            </MainLayout>
+                            <ProtectedRoute>
+                                <MainLayout>
+                                    <UserDashboard />
+                                </MainLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/change-password"
                         element={
-                            <MainLayout>
-                                <ChangePassword backPath="/profile" />
-                            </MainLayout>
+                            <ProtectedRoute>
+                                <MainLayout>
+                                    <ChangePassword backPath="/profile" />
+                                </MainLayout>
+                            </ProtectedRoute>
                         }
                     />
 
@@ -163,9 +169,11 @@ export default function App() {
                     <Route
                         path="/admin"
                         element={
-                            <AdminLayout>
-                                <AdminDashboard />
-                            </AdminLayout>
+                            <ProtectedRoute requiredRole="admin">
+                                <AdminLayout>
+                                    <AdminDashboard />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
