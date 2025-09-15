@@ -30,11 +30,15 @@ import TestimonialManagement from "./pages/Admin/TestimonialManagement";
 import SubscriberManagement from "./pages/Admin/SubscriberManagement";
 import AdminLayout from "./layouts/AdminLayout";
 import ScrollToTop from "./components/ScrollToTop";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 export default function App() {
     return (
-        <Router>
-               <ScrollToTop /> 
-            <div className="flex flex-col min-h-screen">
+        <AuthProvider>
+            <Router>
+                <ScrollToTop /> 
+                <div className="flex flex-col min-h-screen">
                 <Routes>
                     {/* Public routes */}
                     <Route
@@ -155,7 +159,7 @@ export default function App() {
                         }
                     />
 
-                    {/* Admin route */}
+                    {/* Admin routes with permission protection */}
                     <Route
                         path="/admin"
                         element={
@@ -167,25 +171,31 @@ export default function App() {
                     <Route
                         path="/admin/doctors"
                         element={
-                            <AdminLayout>
-                                <DoctorManagement />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="doctorManagement">
+                                <AdminLayout>
+                                    <DoctorManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/admin/users"
                         element={
-                            <AdminLayout>
-                                <UserManagement />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="userManagement">
+                                <AdminLayout>
+                                    <UserManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/admin/admins"
                         element={
-                            <AdminLayout>
-                                <AdminManagement />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="adminManagement">
+                                <AdminLayout>
+                                    <AdminManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
@@ -199,9 +209,11 @@ export default function App() {
                     <Route
                         path="/admin/services"
                         element={
-                            <AdminLayout>
-                                <ServiceManagement />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="serviceManagement">
+                                <AdminLayout>
+                                    <ServiceManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
@@ -215,62 +227,77 @@ export default function App() {
                     <Route
                         path="/admin/appointments"
                         element={
-                            <AdminLayout>
-                                <AppointmentManagement />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="appointmentManagement">
+                                <AdminLayout>
+                                    <AppointmentManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/admin/results"
                         element={
-                            <AdminLayout>
-                                <ResultManagement />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="resultManagement">
+                                <AdminLayout>
+                                    <ResultManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/admin/results/form"
                         element={
-                            <AdminLayout>
-                                <ResultForm />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="resultManagement">
+                                <AdminLayout>
+                                    <ResultForm />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/admin/videos"
                         element={
-                            <AdminLayout>
-                                <AdminVideos />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="videoManagement">
+                                <AdminLayout>
+                                    <AdminVideos />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
 
                     <Route
                         path="/admin/videos/form"
                         element={
-                            <AdminLayout>
-                                <AdminVideosForm />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="videoManagement">
+                                <AdminLayout>
+                                    <AdminVideosForm />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/admin/testimonials"
                         element={
-                            <AdminLayout>
-                                <TestimonialManagement />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="testimonialManagement">
+                                <AdminLayout>
+                                    <TestimonialManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/admin/subscribers"
                         element={
-                            <AdminLayout>
-                                <SubscriberManagement />
-                            </AdminLayout>
+                            <ProtectedRoute requiredPermission="subscriberManagement">
+                                <AdminLayout>
+                                    <SubscriberManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
                         }
                     />
                 </Routes>
-            </div>
-        </Router>
+                </div>
+            </Router>
+        </AuthProvider>
     );
 }
