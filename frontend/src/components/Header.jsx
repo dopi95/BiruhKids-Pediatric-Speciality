@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../assets/logo.png";
-import { Menu, X, ChevronRight, Globe } from "lucide-react";
+import { Menu, X, ChevronRight, Globe, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
+import { getUserDisplayName } from "../utils/authHelpers";
 
 function Header({ lang, setLang }) {
     const [isOpen, setIsOpen] = useState(false);
+    const { user, logout } = useAuth();
 
     function toggleLang() {
         setLang((prevLang) => (prevLang === "En" ? "Am" : "En"));
@@ -28,6 +31,9 @@ function Header({ lang, setLang }) {
             register: "Register",
             signin: "Sign In",
             signup: "Sign Up",
+            dashboard: "Dashboard",
+            logout: "Logout",
+            welcome: "Welcome",
         },
         Am: {
             home: "መነሻ",
@@ -40,6 +46,9 @@ function Header({ lang, setLang }) {
             register: "ይመዝገቡ",
             signin: "ግባ",
             signup: "መዝግብ",
+            dashboard: "ዳሽቦርድ",
+            logout: "ውጣ",
+            welcome: "እንኳን ደህና መጡ",
         },
     };
 
@@ -101,22 +110,55 @@ function Header({ lang, setLang }) {
                     >
                         {translations[lang].book}
                     </Link>
-                    <Link
-                        to="/login"
-                        className="relative text-blue-500 font-semibold flex items-center 
-                           hover:text-blue-600 transition group"
-                    >
-                        {translations[lang].login}{" "}
-                        <ChevronRight className="inline ml-0 transform transition-transform duration-300 group-hover:translate-x-1" />
-                        <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
-                    <Link
-                        to="/register"
-                        className="relative text-blue-500 font-semibold hover:text-blue-600 transition group"
-                    >
-                        {translations[lang].register}
-                        <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
+                    
+                    {user ? (
+                        // Authenticated user menu
+                        <>
+                            <Link
+                                to={user.role === 'user' ? '/user-dashboard' : '/admin'}
+                                className="relative text-blue-500 font-semibold flex items-center 
+                                   hover:text-blue-600 transition group"
+                            >
+                                <User className="w-4 h-4 mr-1" />
+                                {translations[lang].dashboard}
+                                <ChevronRight className="inline ml-0 transform transition-transform duration-300 group-hover:translate-x-1" />
+                                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                            </Link>
+                            <button
+                                onClick={logout}
+                                className="relative text-red-500 font-semibold flex items-center 
+                                   hover:text-red-600 transition group"
+                            >
+                                <LogOut className="w-4 h-4 mr-1" />
+                                {translations[lang].logout}
+                                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-red-500 transition-all duration-300 group-hover:w-full"></span>
+                            </button>
+                            <span className="text-sm text-gray-600">
+                                {translations[lang].welcome}, {getUserDisplayName(user)}
+                            </span>
+                        </>
+                    ) : (
+                        // Guest user menu
+                        <>
+                            <Link
+                                to="/login"
+                                className="relative text-blue-500 font-semibold flex items-center 
+                                   hover:text-blue-600 transition group"
+                            >
+                                {translations[lang].login}{" "}
+                                <ChevronRight className="inline ml-0 transform transition-transform duration-300 group-hover:translate-x-1" />
+                                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                            </Link>
+                            <Link
+                                to="/register"
+                                className="relative text-blue-500 font-semibold hover:text-blue-600 transition group"
+                            >
+                                {translations[lang].register}
+                                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                            </Link>
+                        </>
+                    )}
+                    
                     <section className="flex items-center">
                         <Globe className="w-5 h-5 cursor-pointer" onClick={toggleLang} />
                         <button className="px-1 cursor-pointer" onClick={toggleLang}>
@@ -181,25 +223,60 @@ function Header({ lang, setLang }) {
 
                         <hr className="my-4 border border-gray-300 w-full" />
 
-                        <motion.div variants={linkVariants}>
-                            <Link
-                                to="/login"
-                                onClick={handleCloseMenu}
-                                className="block text-blue-500 font-semibold hover:text-blue-600 transition"
-                            >
-                                {translations[lang].signin} <ChevronRight className="inline" />
-                            </Link>
-                        </motion.div>
-
-                        <motion.div variants={linkVariants}>
-                            <Link
-                                to="/register"
-                                onClick={handleCloseMenu}
-                                className="block text-blue-500 font-semibold hover:text-blue-600 transition"
-                            >
-                                {translations[lang].signup}
-                            </Link>
-                        </motion.div>
+                        {user ? (
+                            // Authenticated mobile menu
+                            <>
+                                <motion.div variants={linkVariants}>
+                                    <span className="block text-sm text-gray-600 mb-2">
+                                        {translations[lang].welcome}, {getUserDisplayName(user)}
+                                    </span>
+                                </motion.div>
+                                <motion.div variants={linkVariants}>
+                                    <Link
+                                        to={user.role === 'user' ? '/user-dashboard' : '/admin'}
+                                        onClick={handleCloseMenu}
+                                        className="block text-blue-500 font-semibold hover:text-blue-600 transition flex items-center"
+                                    >
+                                        <User className="w-4 h-4 mr-2" />
+                                        {translations[lang].dashboard} <ChevronRight className="inline ml-1" />
+                                    </Link>
+                                </motion.div>
+                                <motion.div variants={linkVariants}>
+                                    <button
+                                        onClick={() => {
+                                            logout();
+                                            handleCloseMenu();
+                                        }}
+                                        className="block text-red-500 font-semibold hover:text-red-600 transition flex items-center"
+                                    >
+                                        <LogOut className="w-4 h-4 mr-2" />
+                                        {translations[lang].logout}
+                                    </button>
+                                </motion.div>
+                            </>
+                        ) : (
+                            // Guest mobile menu
+                            <>
+                                <motion.div variants={linkVariants}>
+                                    <Link
+                                        to="/login"
+                                        onClick={handleCloseMenu}
+                                        className="block text-blue-500 font-semibold hover:text-blue-600 transition"
+                                    >
+                                        {translations[lang].signin} <ChevronRight className="inline" />
+                                    </Link>
+                                </motion.div>
+                                <motion.div variants={linkVariants}>
+                                    <Link
+                                        to="/register"
+                                        onClick={handleCloseMenu}
+                                        className="block text-blue-500 font-semibold hover:text-blue-600 transition"
+                                    >
+                                        {translations[lang].signup}
+                                    </Link>
+                                </motion.div>
+                            </>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>

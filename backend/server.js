@@ -4,12 +4,14 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./src/config/db.js";
+import authRoutes from "./src/routes/authRoutes.js";
 import doctorRoutes from "./src/routes/doctorRoutes.js";
 import appointmentRoutes from "./src/routes/appointmentRoutes.js";
 import subscriberRoutes from "./src/routes/subscriberRoutes.js";
 import videoRoutes from "./src/routes/videoRoutes.js";
 import serviceRoutes from "./src/routes/serviceRoutes.js";
 import testimonialRoutes from "./src/routes/testimonialRoutes.js";
+import userRoutes from "./src/routes/userRoutes.js";
 
 // ES module fix for __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -31,12 +33,14 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/subscribers", subscriberRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/testimonials", testimonialRoutes);
+app.use("/api/users", userRoutes);
 
 
 // Health check endpoint

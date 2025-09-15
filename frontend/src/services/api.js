@@ -61,15 +61,15 @@ class ApiService {
     });
   }
 
-  async resetPassword(token, password) {
+  async resetPassword(email, password) {
     return this.request('/auth/reset-password', {
       method: 'POST',
-      body: JSON.stringify({ token, password })
+      body: JSON.stringify({ email, password })
     });
   }
 
   async verifyOtp(email, otp) {
-    return this.request('/auth/verify-otp', {
+    return this.request('/auth/verify-reset-otp', {
       method: 'POST',
       body: JSON.stringify({ email, otp })
     });

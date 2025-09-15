@@ -3,6 +3,7 @@ import { Plus, UserCog, Trash2 } from "lucide-react";
 import StatsCard from "../../../components/StatsCard";
 import AdminTable from "./AdminTable";
 import AddAdminModal from "./AddAdminModal";
+import userService from "../../../services/userService";
 
 export default function AdminManagement() {
     const [showAddForm, setShowAddForm] = useState(false);
@@ -91,25 +92,30 @@ export default function AdminManagement() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Add new admin:", formData);
-        setShowAddForm(false);
-        setFormData({
-            name: "",
-            email: "",
-            password: "",
-            role: "admin",
-            permissions: {
-                dashboard: true,
-                userManagement: false,
-                resultManagement: false,
-                videoManagement: false,
-                testimonialManagement: false,
-                subscriberManagement: false,
-                adminManagement: false,
-            },
-        });
+        try {
+            await userService.createAdmin(formData);
+            alert('Admin created successfully!');
+            setShowAddForm(false);
+            setFormData({
+                name: "",
+                email: "",
+                password: "",
+                role: "admin",
+                permissions: {
+                    dashboard: true,
+                    userManagement: false,
+                    resultManagement: false,
+                    videoManagement: false,
+                    testimonialManagement: false,
+                    subscriberManagement: false,
+                    adminManagement: false,
+                },
+            });
+        } catch (error) {
+            alert('Error creating admin: ' + (error.response?.data?.message || error.message));
+        }
     };
 
     const handleDeleteAdmin = (adminId) => {

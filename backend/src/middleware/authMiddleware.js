@@ -22,15 +22,7 @@ export const protect = asyncHandler(async (req, res, next) => {
                     message: "User not found or account deactivated",
                 });
             }
-            if (
-                !req.user.emailVerified &&
-                process.env.NODE_ENV === "production"
-            ) {
-                return res.status(401).json({
-                    success: false,
-                    message: "Please verify your email to access this resource",
-                });
-            }
+
 
             next();
         } catch (error) {
@@ -154,6 +146,37 @@ export const createRateLimit = (windowMs = 15 * 60 * 1000, max = 5) => {
             return res.status(429).json({
                 success: false,
                 message: "Too many requests. Please try again later.",
+            });
+        }
+
+        currentRequests.push(now);
+        requests.set(key, currentRequests);
+
+        next();
+    };
+};
+
+export const loginRateLimit = (windowMs = 15 * 60 * 1000, max = 5) => {
+    const requests = new Map();
+
+    return (req, res, next) => {
+        const key = req.body.email ? req.body.email : req.ip; // use email if available
+        const now = Date.now();
+        const windowStart = now - windowMs;
+
+        if (requests.has(key)) {
+            const userRequests = requests
+                .get(key)
+                .filter((time) => time > windowStart);
+            requests.set(key, userRequests);
+        }
+
+        const currentRequests = requests.get(key) || [];
+
+        if (currentRequests.length >= max) {
+            return res.status(429).json({
+                success: false,
+                message: "Too many login attempts. Please try again later.",
             });
         }
 
