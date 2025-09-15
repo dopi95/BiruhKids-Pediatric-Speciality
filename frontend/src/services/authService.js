@@ -10,9 +10,9 @@ export const authService = {
     }
   },
 
-  async resetPassword(token, password) {
+  async resetPassword(email, password) {
     try {
-      const response = await apiService.resetPassword(token, password);
+      const response = await apiService.resetPassword(email, password);
       return { success: true, data: response };
     } catch (error) {
       return { success: false, error: error.message };

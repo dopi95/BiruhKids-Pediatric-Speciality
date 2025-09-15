@@ -14,7 +14,7 @@ export default function ResetPassword({ lang = "En" }) {
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState(null);
   
-  const token = new URLSearchParams(location.search).get('token');
+  const email = location.state?.email;
 
   const t = {
     En: {
@@ -55,7 +55,7 @@ export default function ResetPassword({ lang = "En" }) {
     setIsLoading(true);
     setAlert(null);
 
-    const result = await authService.resetPassword(token, newPassword);
+    const result = await authService.resetPassword(email, newPassword);
     
     if (result.success) {
       setAlert({ type: "success", message: t[lang].success });

@@ -31,12 +31,13 @@ export default function Services({ lang = "En" }) {
   const fetchLatestServices = async () => {
     try {
       const response = await serviceService.getServices();
-      const latestServices = response.data
+      const latestServices = (response.data || [])
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 6);
       setServices(latestServices);
     } catch (error) {
       console.error("Error fetching services:", error);
+      setServices([]);
     } finally {
       setLoading(false);
     }
