@@ -84,4 +84,36 @@ userSchema.methods.setSuperAdminPermissions = function() {
   }
 };
 
+// Generate password reset token
+userSchema.methods.getResetPasswordToken = function() {
+  const crypto = require('crypto');
+  
+  // Generate token
+  const resetToken = crypto.randomBytes(20).toString('hex');
+  
+  // Hash token and set to resetPasswordToken field
+  this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  
+  // Set expire
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+  
+  return resetToken;
+};
+
+// Generate email verification token
+userSchema.methods.getEmailVerificationToken = function() {
+  const crypto = require('crypto');
+  
+  // Generate token
+  const verificationToken = crypto.randomBytes(20).toString('hex');
+  
+  // Hash token and set to verificationToken field
+  this.verificationToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+  
+  // Set expire (24 hours)
+  this.verificationTokenExpire = Date.now() + 24 * 60 * 60 * 1000;
+  
+  return verificationToken;
+};
+
 export default mongoose.model('User', userSchema);
