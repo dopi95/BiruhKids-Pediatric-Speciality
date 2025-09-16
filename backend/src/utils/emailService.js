@@ -54,7 +54,7 @@ export const sendWelcomeEmail = async (email, name) => {
     const transporter = createTransporter();
 
     const mailOptions = {
-        from: `"Biruh Kids Clinic" <${
+        from: `"Biruh Kids Pediatric Speciality Clinic" <${
             process.env.EMAIL_FROM || process.env.EMAIL_USER
         }>`,
         to: email,
@@ -70,6 +70,38 @@ export const sendWelcomeEmail = async (email, name) => {
           <li>Receive important health updates</li>
         </ul>
         <p>If you have any questions, feel free to contact us.</p>
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+        <p style="color: #666; font-size: 12px;">Biruh Kids Pediatric Specialty Clinic</p>
+      </div>
+    `,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        return { success: true };
+    } catch (error) {
+        console.error("Email send error:", error);
+        return { success: false, error: error.message };
+    }
+};
+
+// Send result notification email
+export const sendResultNotification = async (email, name) => {
+    const transporter = createTransporter();
+
+    const mailOptions = {
+        from: `"Biruh Kids Pediatric Speciality Clinic" <${
+            process.env.EMAIL_FROM || process.env.EMAIL_USER
+        }>`,
+        to: email,
+        subject: "Test Results Available - Biruh Kids Clinic",
+        html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #007799;">Test Results Available</h2>
+        <p>Dear ${name},</p>
+        <p>Your test results have been sent to your dashboard. Please log in and check.</p>
+        <p>You can access your results by logging into your account on our website.</p>
+        <p>If you have any questions about your results, please contact us or schedule a follow-up appointment.</p>
         <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
         <p style="color: #666; font-size: 12px;">Biruh Kids Pediatric Specialty Clinic</p>
       </div>

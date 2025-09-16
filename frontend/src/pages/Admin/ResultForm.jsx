@@ -1,21 +1,23 @@
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { CheckCircle, ArrowLeft, Send, X } from "lucide-react";
+import resultService from "../../services/resultService.js";
 
 const ResultForm = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const fileInputRef = useRef(null); // ✅ to reset file input
+    const location = useLocation();
+    const fileInputRef = useRef(null);
 
     const todayDate = new Date().toISOString().split("T")[0];
 
     const [formData, setFormData] = useState({
         patientName: "",
-        doctorName: "", // ✅ doctor name field
+        doctorName: "",
         phoneNumber: "",
         email: "",
         testDate: todayDate,
-        resultFile: null,
+        resultFiles: [], // ✅ multiple files
         notifyByEmail: false,
         additionalNotes: "",
     });
@@ -23,15 +25,20 @@ const ResultForm = () => {
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    // Prefill patientName from query params
+    // Prefill from query params + patient passed via state
     useEffect(() => {
         const patientName = searchParams.get("patientName") || "";
+        const patient = location.state?.patient || null;
+
         setFormData((prev) => ({
             ...prev,
-            patientName,
+            patientName: patient?.name || patientName,
+            email: patient?.email || prev.email,
+            phoneNumber: patient?.phone || prev.phoneNumber,
         }));
-    }, [searchParams]);
+    }, [searchParams, location.state]);
 
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
@@ -39,10 +46,23 @@ const ResultForm = () => {
         // Prevent non-numeric input for phone number
         if (name === "phoneNumber" && /[^0-9]/.test(value)) return;
 
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : files ? files[0] : value,
-        }));
+        if (name === "resultFiles" && files) {
+            // ✅ Append new files to existing files
+            setFormData((prev) => ({
+                ...prev,
+                resultFiles: [...prev.resultFiles, ...Array.from(files)],
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]:
+                    type === "checkbox"
+                        ? checked
+                        : files
+                        ? Array.from(files)
+                        : value,
+            }));
+        }
     };
 
     const validate = () => {
@@ -50,52 +70,60 @@ const ResultForm = () => {
         if (!formData.patientName)
             newErrors.patientName = "Patient name is required";
         if (!formData.doctorName)
-            newErrors.doctorName = "Doctor name is required"; // ✅ validation
+            newErrors.doctorName = "Doctor name is required";
         if (!formData.phoneNumber)
             newErrors.phoneNumber = "Phone number is required";
         if (!formData.email) newErrors.email = "Email is required";
         if (!formData.testDate) newErrors.testDate = "Test date is required";
-        if (!formData.resultFile)
-            newErrors.resultFile = "Result file is required";
+        if (!formData.resultFiles.length)
+            newErrors.resultFiles = "At least one result file is required";
         return newErrors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const validationErrors = validate();
         setErrors(validationErrors);
 
         if (Object.keys(validationErrors).length === 0) {
-            console.log("Result sent to patient:", formData);
+            setLoading(true);
+            try {
+                await resultService.createResult(formData);
+                
+                setSuccessMessage(
+                    `Result(s) sent to ${formData.patientName} successfully! Email notification sent.`
+                );
+                setSubmitted(true);
 
-            setSuccessMessage(
-                `Result sent to ${formData.patientName} successfully!`
-            );
-            setSubmitted(true);
+                // Reset form fields
+                setFormData({
+                    patientName: "",
+                    doctorName: "",
+                    phoneNumber: "",
+                    email: "",
+                    testDate: todayDate,
+                    resultFiles: [],
+                    notifyByEmail: false,
+                    additionalNotes: "",
+                });
 
-            // Reset form fields
-            setFormData({
-                patientName: "",
-                doctorName: "",
-                phoneNumber: "",
-                email: "",
-                testDate: todayDate,
-                resultFile: null,
-                notifyByEmail: false,
-                additionalNotes: "",
-            });
+                // Clear file input manually
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                }
 
-            // ✅ Clear file input manually
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";
+                // Hide success after 3s
+                setTimeout(() => {
+                    setSubmitted(false);
+                    setSuccessMessage("");
+                }, 3000);
+            } catch (error) {
+                console.error("Error sending result:", error);
+                setErrors({ submit: error.response?.data?.message || "Failed to send result" });
+            } finally {
+                setLoading(false);
             }
-
-            // Hide success after 3s
-            setTimeout(() => {
-                setSubmitted(false);
-                setSuccessMessage("");
-            }, 3000);
         }
     };
 
@@ -192,10 +220,10 @@ const ResultForm = () => {
                         )}
                     </div>
 
-                    {/* Test Date */}
+                    {/* Date */}
                     <div>
                         <label className="block text-sm font-medium mb-1">
-                            Test Date
+                            Date
                         </label>
                         <input
                             type="date"
@@ -210,27 +238,38 @@ const ResultForm = () => {
                         />
                     </div>
 
-                    {/* Result File */}
+                    {/* Result Files */}
                     <div>
                         <label className="block text-sm font-medium mb-1">
-                            Upload Result
+                            Upload Result(s)
                         </label>
                         <input
                             type="file"
-                            name="resultFile"
+                            name="resultFiles"
                             ref={fileInputRef}
                             onChange={handleChange}
+                            multiple // ✅ allow multiple files
                             className={`w-full text-sm sm:text-base ${
-                                errors.resultFile ? "border-red-500" : ""
+                                errors.resultFiles ? "border-red-500" : ""
                             }`}
                         />
-                        {errors.resultFile && (
+                        {errors.resultFiles && (
                             <p className="text-red-500 text-xs mt-1">
-                                {errors.resultFile}
+                                {errors.resultFiles}
                             </p>
+                        )}
+
+                        {/* Preview selected files */}
+                        {formData.resultFiles.length > 0 && (
+                            <ul className="mt-2 text-sm text-gray-600 list-disc pl-5">
+                                {formData.resultFiles.map((file, idx) => (
+                                    <li key={idx}>{file.name}</li>
+                                ))}
+                            </ul>
                         )}
                     </div>
 
+                    {/* Doctor Name */}
                     <div>
                         <label className="block text-sm font-medium mb-1">
                             Doctor Name
@@ -267,7 +306,7 @@ const ResultForm = () => {
                         />
                     </div>
 
-                    {/* ✅ Success message */}
+                    {/* Success message */}
                     {submitted && (
                         <div className="flex items-center justify-center mb-4 text-green-600 font-medium bg-green-50 border border-green-200 rounded-lg p-3">
                             <CheckCircle className="w-5 h-5 mr-2" />
@@ -275,14 +314,22 @@ const ResultForm = () => {
                         </div>
                     )}
 
+                    {/* Error message */}
+                    {errors.submit && (
+                        <div className="mb-4 text-red-600 font-medium bg-red-50 border border-red-200 rounded-lg p-3">
+                            {errors.submit}
+                        </div>
+                    )}
+
                     {/* Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3">
                         <button
                             type="submit"
-                            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium w-full sm:w-auto"
+                            disabled={loading}
+                            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg font-medium w-full sm:w-auto"
                         >
                             <Send className="w-5 h-5 mr-2" />
-                            Send Result to Patient
+                            {loading ? "Sending..." : "Send Result to Patient"}
                         </button>
                         <button
                             type="button"
