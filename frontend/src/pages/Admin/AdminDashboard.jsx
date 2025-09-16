@@ -8,7 +8,7 @@ import {
     UserCheck,
     CalendarDays,
 } from "lucide-react";
-
+import resultService from "../../services/resultService";
 import userService from "../../services/userService";
 
 const AdminDashboard = () => {
@@ -53,6 +53,41 @@ const AdminDashboard = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
+                const newStats = [...stats];
+                
+                // Fetch users and results stats
+                try {
+                    const [usersResponse, statsResponse] = await Promise.all([
+                        userService.getUsers(),
+                        resultService.getResultStats()
+                    ]);
+                    
+                    // Update registered users count
+                    if (usersResponse) {
+                        let usersData = [];
+                        if (Array.isArray(usersResponse)) {
+                            usersData = usersResponse;
+                        } else if (usersResponse.users) {
+                            usersData = usersResponse.users;
+                        }
+                        const regularUsers = usersData.filter(user => user.role === 'user' || !user.role);
+                        newStats[0].value = regularUsers.length.toString();
+                    }
+                    
+                    // Update results count
+                    if (statsResponse && statsResponse.stats) {
+                        newStats[2].value = statsResponse.stats.totalResults.toString();
+                    }
+                } catch (err) {
+                    console.error("Error fetching users/results stats:", err);
+                }
+
+                const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+                const token = localStorage.getItem('token');
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                };
 
                 const [
                     doctorsResponse,
@@ -62,12 +97,12 @@ const AdminDashboard = () => {
                     appointmentsResponse,
                     servicesResponse
                 ] = await Promise.allSettled([
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/doctors`),
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/testimonials`),
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers/stats`),
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/videos`),
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/appointments`),
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/services`), // <- New
+                    fetch(`${baseUrl}/doctors`, { headers }),
+                    fetch(`${baseUrl}/testimonials`, { headers }),
+                    fetch(`${baseUrl}/subscribers/stats`, { headers }),
+                    fetch(`${baseUrl}/videos`, { headers }),
+                    fetch(`${baseUrl}/appointments`, { headers }),
+                    fetch(`${baseUrl}/services`, { headers })
                 ]);
 
                 // Doctors count
