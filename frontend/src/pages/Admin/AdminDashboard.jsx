@@ -8,6 +8,7 @@ import {
     UserCheck,
     CalendarDays,
 } from "lucide-react";
+import userService from "../../services/userService";
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState([
@@ -117,9 +118,23 @@ const AdminDashboard = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
+                setError(null);
 
                 // Clone stats
                 const newStats = [...stats];
+
+                // Fetch user stats first
+                try {
+                    const userStatsData = await userService.getUserStats();
+                    console.log('User stats response:', userStatsData);
+                    if (userStatsData.success) {
+                        newStats[0].value = userStatsData.stats.regularUsers.toString();
+                        console.log('Updated registered users count:', userStatsData.stats.regularUsers);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user stats:", error);
+                    setError("Failed to load user statistics");
+                }
 
                 // Fetch other data in parallel
                 const [
@@ -201,7 +216,7 @@ const AdminDashboard = () => {
         };
 
         fetchData();
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (loading) {
         return (
