@@ -8,6 +8,7 @@ export const ProfileHeader = ({
     onCancel,
     onSave,
     role,
+    submitting = false,
 }) => {
     return (
         <div className="bg-white shadow-sm border-b">
@@ -52,17 +53,19 @@ export const ProfileHeader = ({
                             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                                 <button
                                     onClick={onCancel}
-                                    className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+                                    disabled={submitting}
+                                    className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                                 >
                                     <X className="h-4 w-4 mr-2" />
                                     Cancel
                                 </button>
                                 <button
                                     onClick={onSave}
-                                    className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition-colors duration-200"
+                                    disabled={submitting}
+                                    className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                                 >
                                     <Save className="h-4 w-4 mr-2" />
-                                    Save Changes
+                                    {submitting ? 'Saving...' : 'Save Changes'}
                                 </button>
                             </div>
                         )}

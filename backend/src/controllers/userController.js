@@ -60,6 +60,36 @@ export const getUsers = asyncHandler(async (req, res) => {
     });
 });
 
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Private (Own profile or Admin)
+export const getUserById = asyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const currentUser = req.user;
+    
+    // Users can only access their own profile unless they're admin
+    if (currentUser._id.toString() !== userId && !['admin', 'super_admin'].includes(currentUser.role)) {
+        return res.status(403).json({
+            success: false,
+            message: "Access denied"
+        });
+    }
+    
+    const user = await User.findById(userId).select("-password -refreshToken");
+    
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+    
+    res.json({
+        success: true,
+        user
+    });
+});
+
 // @desc    Update user
 // @route   PUT /api/users/:id
 // @access  Private (Admin only)
