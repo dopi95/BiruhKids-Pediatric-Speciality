@@ -24,11 +24,34 @@ export const submitTestimonial = async (formData) => {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      timeout: 30000, // 30 second timeout
     });
     return response.data;
   } catch (error) {
     console.error("Error submitting testimonial:", error);
-    throw error;
+    
+    // Handle different types of errors
+    if (error.code === 'ECONNABORTED') {
+      throw new Error('Request timeout. Please check your internet connection and try again.');
+    }
+    
+    if (error.response) {
+      // Server responded with error status
+      const errorMessage = error.response.data?.message || 'Failed to submit testimonial';
+      const errorDetails = error.response.data?.errors;
+      
+      if (errorDetails && Array.isArray(errorDetails)) {
+        throw new Error(errorDetails.join(', '));
+      }
+      
+      throw new Error(errorMessage);
+    } else if (error.request) {
+      // Network error
+      throw new Error('Network error. Please check your internet connection and try again.');
+    } else {
+      // Other error
+      throw new Error(error.message || 'An unexpected error occurred. Please try again.');
+    }
   }
 };
 

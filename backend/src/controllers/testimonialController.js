@@ -1,5 +1,5 @@
 import Testimonial from "../models/Testimonial.js";
-import cloudinary from "../config/cloudinary.js";
+// import cloudinary from "../config/cloudinary.js";
 
 // Get all testimonials (for admin)
 export const getTestimonials = async (req, res) => {
@@ -30,6 +30,7 @@ export const getTestimonialsForDisplay = async (req, res) => {
     const testimonials = await Testimonial.find({ status: "approved" }).sort({
       createdAt: -1,
     });
+    console.log('Testimonials with images:', testimonials.map(t => ({ name: t.name, image: t.image })));
     res.status(200).json({
       success: true,
       data: testimonials,
@@ -65,16 +66,24 @@ export const getTestimonialById = async (req, res) => {
 };
 
 // Create testimonial
-// In testimonialController.js, update the createTestimonial function:
 export const createTestimonial = async (req, res) => {
   try {
+    console.log('Received testimonial data:', req.body);
+    console.log('Received file:', req.file ? 'Yes' : 'No');
+    if (req.file) {
+      console.log('File details:', {
+        filename: req.file.filename,
+        path: req.file.path,
+        size: req.file.size
+      });
+    }
+    
     const { name, email, title, treatment, testimony, rating } = req.body;
 
-    // Handle image upload to Cloudinary
     let imageUrl = null;
     if (req.file) {
-      // req.file.path contains the Cloudinary URL
-      imageUrl = req.file.path; // This should be the full Cloudinary URL
+      imageUrl = req.file.filename;
+      console.log('Image saved:', imageUrl);
     }
 
     const testimonial = new Testimonial({
@@ -84,10 +93,11 @@ export const createTestimonial = async (req, res) => {
       treatment,
       testimony,
       rating: parseInt(rating),
-      image: imageUrl, // Store the Cloudinary URL directly
+      image: imageUrl,
     });
 
     await testimonial.save();
+    console.log('Testimonial saved successfully with image:', testimonial.image);
 
     res.status(201).json({
       success: true,
@@ -98,7 +108,7 @@ export const createTestimonial = async (req, res) => {
     console.error("Error creating testimonial:", error);
     res.status(500).json({
       success: false,
-      message: error.message || "Internal server error",
+      message: error.message,
     });
   }
 };
@@ -132,10 +142,22 @@ export const updateTestimonial = async (req, res) => {
       testimonial.image = req.file.path;
     }
 
-    // Update other fields
+    // Update other fields with validation
     Object.keys(req.body).forEach(key => {
-      if (req.body[key] !== undefined) {
-        testimonial[key] = key === 'rating' ? parseInt(req.body[key]) : req.body[key];
+      if (req.body[key] !== undefined && req.body[key] !== '') {
+        if (key === 'rating') {
+          const ratingNum = parseInt(req.body[key]);
+          if (!isNaN(ratingNum) && ratingNum >= 1 && ratingNum <= 5) {
+            testimonial[key] = ratingNum;
+          }
+        } else if (key === 'email') {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (emailRegex.test(req.body[key])) {
+            testimonial[key] = req.body[key].trim().toLowerCase();
+          }
+        } else {
+          testimonial[key] = typeof req.body[key] === 'string' ? req.body[key].trim() : req.body[key];
+        }
       }
     });
 
@@ -147,9 +169,19 @@ export const updateTestimonial = async (req, res) => {
       data: testimonial,
     });
   } catch (error) {
+    console.error("Error updating testimonial:", error);
+    
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        message: "Validation error: " + validationErrors.join(', '),
+      });
+    }
+    
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal server error. Please try again later.",
     });
   }
 };
@@ -186,9 +218,10 @@ export const deleteTestimonial = async (req, res) => {
       message: "Testimonial deleted successfully",
     });
   } catch (error) {
+    console.error("Error deleting testimonial:", error);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal server error. Please try again later.",
     });
   }
 };
@@ -214,9 +247,10 @@ export const approveTestimonial = async (req, res) => {
       data: testimonial,
     });
   } catch (error) {
+    console.error("Error approving testimonial:", error);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal server error. Please try again later.",
     });
   }
 };
@@ -242,9 +276,10 @@ export const rejectTestimonial = async (req, res) => {
       data: testimonial,
     });
   } catch (error) {
+    console.error("Error rejecting testimonial:", error);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal server error. Please try again later.",
     });
   }
 };

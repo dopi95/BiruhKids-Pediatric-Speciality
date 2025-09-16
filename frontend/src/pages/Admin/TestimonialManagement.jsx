@@ -114,7 +114,7 @@ const renderUserAvatar = (testimonial) => {
     return (
       <div className="relative w-12 h-12 rounded-full overflow-hidden flex items-center justify-center mr-4 border border-gray-200">
         <img
-          src={testimonial.image} // Use the Cloudinary URL directly
+          src={`http://localhost:5000/uploads/testimonials/${testimonial.image}`}
           alt={testimonial.name}
           className="w-full h-full object-cover"
           onError={(e) => {

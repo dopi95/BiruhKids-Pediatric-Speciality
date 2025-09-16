@@ -52,20 +52,110 @@ app.get("/api/health", (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Debug endpoint for testimonials
+app.get("/api/debug/testimonials", async (req, res) => {
+  try {
+    const mongoose = await import('mongoose');
+    const dbStatus = mongoose.default.connection.readyState;
+    const dbStates = {
+      0: 'disconnected',
+      1: 'connected',
+      2: 'connecting',
+      3: 'disconnecting'
+    };
+    
+    res.status(200).json({
+      success: true,
+      debug: {
+        server: "running",
+        database: dbStates[dbStatus] || 'unknown',
+        cloudinary: {
+          configured: !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET),
+          cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? 'configured' : 'missing'
+        },
+        environment: process.env.NODE_ENV || 'development',
+        timestamp: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      debug: {
+        server: "running",
+        error: error.message,
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+});
 // 404 handler - Place this AFTER all other routes
 app.use((req, res) => {
+  console.log(`404 - Route not found: ${req.method} ${req.path}`);
   res.status(404).json({
     success: false,
-    message: "API endpoint not found"
+    message: "API endpoint not found",
+    path: req.path,
+    method: req.method
   });
 });
 
 // Error handling middleware
 app.use((error, req, res, next) => {
   console.error("Error:", error);
-  res.status(500).json({
+  
+  // Handle Multer errors
+  if (error.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({
+      success: false,
+      message: "File size too large. Maximum size is 5MB."
+    });
+  }
+  
+  if (error.code === 'LIMIT_UNEXPECTED_FILE') {
+    return res.status(400).json({
+      success: false,
+      message: "Unexpected file field. Only 'image' field is allowed."
+    });
+  }
+  
+  // Handle MongoDB connection errors
+  if (error.name === 'MongoNetworkError' || error.name === 'MongooseServerSelectionError') {
+    return res.status(503).json({
+      success: false,
+      message: "Database connection error. Please try again later."
+    });
+  }
+  
+  // Handle validation errors
+  if (error.name === 'ValidationError') {
+    const validationErrors = Object.values(error.errors).map(err => err.message);
+    return res.status(400).json({
+      success: false,
+      message: "Validation error: " + validationErrors.join(', ')
+    });
+  }
+  
+  // Handle duplicate key errors
+  if (error.code === 11000) {
+    return res.status(400).json({
+      success: false,
+      message: "Duplicate entry. This record already exists."
+    });
+  }
+  
+  // Handle Cloudinary errors
+  if (error.message && error.message.includes('cloudinary')) {
+    return res.status(500).json({
+      success: false,
+      message: "Image upload service error. Please try again later."
+    });
+  }
+  
+  // Default error response
+  res.status(error.status || 500).json({
     success: false,
-    message: error.message || "Internal server error"
+    message: process.env.NODE_ENV === 'development' ? error.message : "Internal server error"
   });
 });
 

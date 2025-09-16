@@ -1,26 +1,22 @@
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// Create testimonials upload directory if it doesn't exist
+const uploadsDir = 'uploads/testimonials';
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
-// Configure storage for multer
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'biruh-kids/testimonials',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-    transformation: [
-      { width: 500, height: 500, crop: 'limit' },
-      { quality: 'auto' },
-      { format: 'auto' }
-    ],
+// Configure local storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
   },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'testimonial-' + uniqueSuffix + path.extname(file.originalname));
+  }
 });
 
 // File filter
@@ -41,4 +37,4 @@ export const upload = multer({
   },
 });
 
-export default cloudinary;
+export default null;
