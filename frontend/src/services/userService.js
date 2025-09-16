@@ -29,9 +29,45 @@ const getUsers = async () => {
   return response.data;
 };
 
+// Update user
+const updateUser = async (userId, userData) => {
+  const token = getAuthToken();
+  const response = await axios.put(`${API_URL}/${userId}`, userData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+// Delete user
+const deleteUser = async (userId) => {
+  const token = getAuthToken();
+  const response = await axios.delete(`${API_URL}/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+// Get user statistics
+const getUserStats = async () => {
+  const token = getAuthToken();
+  const response = await axios.get(`${API_URL}/stats`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 const userService = {
   createAdmin,
   getUsers,
+  updateUser,
+  deleteUser,
+  getUserStats,
 };
 
 export default userService;

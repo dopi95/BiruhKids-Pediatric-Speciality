@@ -16,7 +16,7 @@ const translations = {
     rememberMe: "Remember me",
     forgotPassword: "Forgot your password?",
     signIn: "Sign In",
-    noAccount: "Don’t have an account?",
+    noAccount: "Don't have an account?",
     signUp: "Sign Up",
     alerts: {
       success: "Signed in successfully!",
@@ -98,109 +98,117 @@ export default function SignIn({ lang = "En" }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center items-center px-4 pb-48">
-      <div className="w-full mt-20 max-w-md bg-white shadow-md rounded-xl p-8">
-        {/* Avatar */}
-        <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-            <User className="text-blue-600" size={32} />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white shadow-xl rounded-2xl p-8 space-y-6">
+          {/* Avatar */}
+          <div className="flex justify-center">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+              <User className="text-white" size={32} />
+            </div>
+          </div>
+
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {t.title}
+            </h1>
+            <p className="text-gray-600 text-sm">
+              {t.subtitle}
+            </p>
+          </div>
+
+          {alert && <Alert type={alert.type} message={alert.message} />}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                {t.emailLabel}
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  id="email"
+                  type="email"
+                  placeholder={t.emailPlaceholder}
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                    errors.email ? "border-red-300 bg-red-50" : "border-gray-300"
+                  }`}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (alert) setAlert(null);
+                  }}
+                />
+              </div>
+              {errors.email && (
+                <p className="text-sm text-red-600">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className="space-y-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                {t.passwordLabel}
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  id="password"
+                  type={showPw ? "text" : "password"}
+                  placeholder={t.passwordPlaceholder}
+                  className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                    errors.password ? "border-red-300 bg-red-50" : "border-gray-300"
+                  }`}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (alert) setAlert(null);
+                  }}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowPw((v) => !v)}
+                >
+                  {showPw ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-sm text-red-600">{errors.password}</p>
+              )}
+            </div>
+
+            {/* Remember + Forgot */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center space-x-2 text-sm">
+                <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <span className="text-gray-700">{t.rememberMe}</span>
+              </label>
+              <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800 hover:underline">
+                {t.forgotPassword}
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-lg"
+            >
+              {isLoading ? "Signing in..." : t.signIn}
+            </button>
+          </form>
+
+          <div className="text-center">
+            <p className="text-sm text-gray-600">
+              {t.noAccount}{" "}
+              <Link to="/register" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                {t.signUp}
+              </Link>
+            </p>
           </div>
         </div>
-
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-center mb-2">
-          {t.title}
-        </h1>
-        <p className="text-center text-gray-500 mb-6 text-sm sm:text-base">
-          {t.subtitle}
-        </p>
-
-        {alert && <Alert type={alert.type} message={alert.message} />}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2">
-              {t.emailLabel}
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
-              <input
-                id="email"
-                type="email"
-                placeholder={t.emailPlaceholder}
-                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
-                  errors.email ? "border-red-300" : "border-gray-300"
-                }`}
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (alert) setAlert(null);
-                }}
-              />
-            </div>
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-2">
-              {t.passwordLabel}
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
-              <input
-                id="password"
-                type={showPw ? "text" : "password"}
-                placeholder={t.passwordPlaceholder}
-                className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
-                  errors.password ? "border-red-300" : "border-gray-300"
-                }`}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (alert) setAlert(null);
-                }}
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-2.5 text-gray-500"
-                onClick={() => setShowPw((v) => !v)}
-              >
-                {showPw ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-            {errors.password && (
-              <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-            )}
-          </div>
-
-          {/* Remember + Forgot */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="w-4 h-4" /> {t.rememberMe}
-            </label>
-            <Link to="/forgot-password" className="text-blue-600 hover:underline">
-              {t.forgotPassword}
-            </Link>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Signing in..." : t.signIn}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-500 mt-6">
-          {t.noAccount}{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            {t.signUp}
-          </Link>
-        </p>
       </div>
     </div>
   );

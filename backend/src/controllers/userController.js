@@ -59,3 +59,80 @@ export const getUsers = asyncHandler(async (req, res) => {
         users,
     });
 });
+
+// @desc    Update user
+// @route   PUT /api/users/:id
+// @access  Private (Admin only)
+export const updateUser = asyncHandler(async (req, res) => {
+    const { name, email, phone } = req.body;
+    
+    const user = await User.findById(req.params.id);
+    
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+    
+    // Update fields
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
+    
+    await user.save();
+    
+    res.json({
+        success: true,
+        message: "User updated successfully",
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            createdAt: user.createdAt
+        }
+    });
+});
+
+// @desc    Delete user
+// @route   DELETE /api/users/:id
+// @access  Private (Admin only)
+export const deleteUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+    
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+    
+    await User.findByIdAndDelete(req.params.id);
+    
+    res.json({
+        success: true,
+        message: "User deleted successfully"
+    });
+});
+
+// @desc    Get user statistics
+// @route   GET /api/users/stats
+// @access  Private (Admin only)
+export const getUserStats = asyncHandler(async (req, res) => {
+    const totalUsers = await User.countDocuments();
+    const adminUsers = await User.countDocuments({ role: { $in: ['admin', 'super_admin'] } });
+    const regularUsers = await User.countDocuments({ role: 'user' });
+    const verifiedUsers = await User.countDocuments({ emailVerified: true });
+    
+    res.json({
+        success: true,
+        stats: {
+            totalUsers,
+            adminUsers,
+            regularUsers,
+            verifiedUsers
+        }
+    });
+});
