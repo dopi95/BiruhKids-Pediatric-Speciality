@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema(
             default: "user",
         },
         permissions: {
+            dashboard: { type: Boolean, default: false },
             userManagement: { type: Boolean, default: false },
             doctorManagement: { type: Boolean, default: false },
             serviceManagement: { type: Boolean, default: false },
