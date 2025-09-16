@@ -44,9 +44,24 @@ const UserDashboard = ({ lang = "En" }) => {
     }
   };
 
-  const handleViewFile = async (filename) => {
+  const handleViewFile = async (filename, originalName) => {
     try {
-      await resultService.viewResultFile(filename);
+      const fileExt = originalName?.toLowerCase().split('.').pop() || filename.toLowerCase().split('.').pop();
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      const fileUrl = `${baseUrl}/results/file/${filename}?token=${localStorage.getItem('token')}`;
+      
+      // For Word documents, force download instead of trying to view
+      if (fileExt === 'doc' || fileExt === 'docx') {
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = originalName || filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        // For PDFs and images, open in new tab
+        window.open(fileUrl, '_blank');
+      }
     } catch (error) {
       console.error("Error viewing file:", error);
     }
@@ -152,7 +167,7 @@ const UserDashboard = ({ lang = "En" }) => {
                             <button 
                               className="p-1 text-blue-600 hover:text-blue-700"
                               onClick={() => {
-                                handleViewFile(file.filename);
+                                handleViewFile(file.filename, file.originalName);
                                 !result.isRead && handleMarkAsRead(result._id);
                               }}
                             >

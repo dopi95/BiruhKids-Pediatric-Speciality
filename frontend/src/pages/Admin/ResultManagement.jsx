@@ -450,7 +450,11 @@ const ResultManagement = () => {
                                                             <span className="text-sm text-gray-700">{file.originalName}</span>
                                                         </div>
                                                         <button
-                                                            onClick={() => window.open(`/api/results/file/${file.filename}?token=${localStorage.getItem('token')}`, '_blank')}
+                                                            onClick={() => {
+                                                                const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+                                                                const fileUrl = `${baseUrl}/results/file/${file.filename}?token=${localStorage.getItem('token')}`;
+                                                                window.open(fileUrl, '_blank');
+                                                            }}
                                                             className="text-blue-600 hover:text-blue-800 p-1"
                                                             title="View file"
                                                         >

@@ -194,6 +194,13 @@ export const serveResultFile = asyncHandler(async (req, res) => {
     
     const contentType = contentTypes[ext] || 'application/octet-stream';
     res.setHeader('Content-Type', contentType);
-    res.setHeader('Content-Disposition', 'inline');
+    
+    // For Word documents, set as attachment to force download
+    if (ext === 'doc' || ext === 'docx') {
+        res.setHeader('Content-Disposition', 'attachment');
+    } else {
+        res.setHeader('Content-Disposition', 'inline');
+    }
+    
     res.sendFile(path.resolve(filePath));
 });
