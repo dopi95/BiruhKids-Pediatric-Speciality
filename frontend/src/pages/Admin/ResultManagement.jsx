@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Search, FileText, Send } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Search, FileText, Send, History, X, Trash2, Calendar, Eye } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import StatsCard from "../../components/StatsCard";
 import userService from "../../services/userService";
+import resultService from "../../services/resultService";
 
 const ResultManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -11,12 +12,39 @@ const ResultManagement = () => {
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [stats, setStats] = useState({ totalResults: 0, totalUsers: 0 });
+    const [showHistoryModal, setShowHistoryModal] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [patientResults, setPatientResults] = useState([]);
+    const [historyLoading, setHistoryLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
-    // Fetch users on component mount
+    // Fetch users and stats on component mount and when page is focused
     useEffect(() => {
         fetchUsers();
+        fetchStats();
+        
+        // Add event listener for page focus to refresh data
+        const handleFocus = () => {
+            fetchUsers();
+            fetchStats();
+        };
+        
+        window.addEventListener('focus', handleFocus);
+        
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
     }, []);
+    
+    // Refresh data when navigating to this page
+    useEffect(() => {
+        if (location.pathname === '/admin/results') {
+            fetchUsers();
+            fetchStats();
+        }
+    }, [location.pathname]);
 
     // Filter users when search term changes
     useEffect(() => {
@@ -35,11 +63,20 @@ const ResultManagement = () => {
         }
     }, [searchTerm, regularUsers]);
 
-    const fetchUsers = async () => {
+    const fetchUsers = async (retryCount = 0) => {
         try {
             setLoading(true);
-            const response = await userService.getUsers();
-            console.log("API Response:", response); // Debug log
+            setError(null);
+            
+            // Add timeout to prevent hanging requests
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Request timeout')), 10000)
+            );
+            
+            const response = await Promise.race([
+                userService.getUsers(),
+                timeoutPromise
+            ]);
             
             // Handle different response structures
             let usersData = [];
@@ -65,16 +102,32 @@ const ResultManagement = () => {
             setFilteredUsers(regularUsersOnly);
         } catch (err) {
             console.error("Error fetching users:", err);
-            setError("Failed to fetch users. Please try again later.");
+            
+            // Retry once if first attempt fails
+            if (retryCount === 0) {
+                setTimeout(() => fetchUsers(1), 1000);
+                return;
+            }
+            
+            setError("Failed to fetch users. Please check your connection and try again.");
         } finally {
             setLoading(false);
         }
     };
 
-    const stats = [
+    const fetchStats = async () => {
+        try {
+            const response = await resultService.getResultStats();
+            setStats(response.stats);
+        } catch (err) {
+            console.error("Error fetching stats:", err);
+        }
+    };
+
+    const statsCards = [
         {
-            label: "Total Results",
-            value: "1,284",
+            label: "Total Results Submitted",
+            value: stats.totalResults.toString(),
             color: "blue",
             icon: FileText,
         },
@@ -90,6 +143,40 @@ const ResultManagement = () => {
         navigate("/admin/results/form", { state: { patient: user } });
     };
 
+    const handleViewHistory = async (user) => {
+        setSelectedPatient(user);
+        setShowHistoryModal(true);
+        setHistoryLoading(true);
+        try {
+            const response = await resultService.getPatientResultsByEmail(user.email);
+            setPatientResults(response.results || []);
+        } catch (err) {
+            console.error("Error fetching patient results:", err);
+            setPatientResults([]);
+        } finally {
+            setHistoryLoading(false);
+        }
+    };
+
+    const handleDeleteResult = async (resultId) => {
+        if (window.confirm('Are you sure you want to delete this result?')) {
+            try {
+                await resultService.deleteResult(resultId);
+                // Refresh the results after deletion
+                handleViewHistory(selectedPatient);
+                // Refresh stats
+                fetchStats();
+            } catch (err) {
+                console.error("Error deleting result:", err);
+                alert('Failed to delete result. Please try again.');
+            }
+        }
+    };
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString();
+    };
+
     if (loading) {
         return (
             <div className="flex-1 pt-14 md:pt-0 p-4 flex items-center justify-center">
@@ -102,12 +189,20 @@ const ResultManagement = () => {
         return (
             <div className="flex-1 pt-14 md:pt-0 p-4 flex items-center justify-center">
                 <div className="text-red-500">{error}</div>
-                <button 
-                    onClick={fetchUsers}
-                    className="ml-4 px-4 py-2 bg-blue-600 text-white rounded"
-                >
-                    Retry
-                </button>
+                <div className="ml-4 space-x-2">
+                    <button 
+                        onClick={() => fetchUsers()}
+                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        Retry
+                    </button>
+                    <button 
+                        onClick={() => window.location.reload()}
+                        className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                    >
+                        Reload Page
+                    </button>
+                </div>
             </div>
         );
     }
@@ -125,13 +220,22 @@ const ResultManagement = () => {
                             Upload and send results to patients
                         </p>
                     </div>
+                    <button
+                        onClick={() => {
+                            fetchUsers();
+                            fetchStats();
+                        }}
+                        className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Refresh
+                    </button>
                 </div>
             </div>
 
             <div className="p-4 md:p-6">
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-6">
-                    {stats.map((stat, i) => (
+                    {statsCards.map((stat, i) => (
                         <StatsCard key={i} {...stat} icon={stat.icon} />
                     ))}
                 </div>
@@ -209,13 +313,22 @@ const ResultManagement = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <button
-                                                        onClick={() => handleSendResult(user)}
-                                                        className="inline-flex items-center px-3 py-2 rounded-md transition-colors duration-200 text-white bg-blue-600 hover:bg-blue-700"
-                                                    >
-                                                        <Send className="h-3 w-3 mr-1" />
-                                                        Send Result
-                                                    </button>
+                                                    <div className="flex space-x-2">
+                                                        <button
+                                                            onClick={() => handleSendResult(user)}
+                                                            className="inline-flex items-center px-3 py-2 rounded-md transition-colors duration-200 text-white bg-blue-600 hover:bg-blue-700"
+                                                        >
+                                                            <Send className="h-3 w-3 mr-1" />
+                                                            Send Result
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleViewHistory(user)}
+                                                            className="inline-flex items-center px-3 py-2 rounded-md transition-colors duration-200 text-gray-700 bg-gray-100 hover:bg-gray-200"
+                                                        >
+                                                            <History className="h-3 w-3 mr-1" />
+                                                            History
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
@@ -254,13 +367,22 @@ const ResultManagement = () => {
                                             {user.phone || "No phone"}
                                         </p>
 
-                                        <button
-                                            onClick={() => handleSendResult(user)}
-                                            className="mt-3 w-full flex items-center justify-center px-3 py-2 rounded-md text-sm transition-colors duration-200 text-white bg-blue-600 hover:bg-blue-700"
-                                        >
-                                            <Send className="h-3 w-3 mr-1" />
-                                            Send Result
-                                        </button>
+                                        <div className="mt-3 flex space-x-2">
+                                            <button
+                                                onClick={() => handleSendResult(user)}
+                                                className="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm transition-colors duration-200 text-white bg-blue-600 hover:bg-blue-700"
+                                            >
+                                                <Send className="h-3 w-3 mr-1" />
+                                                Send Result
+                                            </button>
+                                            <button
+                                                onClick={() => handleViewHistory(user)}
+                                                className="flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm transition-colors duration-200 text-gray-700 bg-gray-100 hover:bg-gray-200"
+                                            >
+                                                <History className="h-3 w-3 mr-1" />
+                                                History
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -272,6 +394,88 @@ const ResultManagement = () => {
                     )}
                 </div>
             </div>
+
+            {/* History Modal */}
+            {showHistoryModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                        <div className="flex items-center justify-between p-6 border-b">
+                            <h2 className="text-xl font-semibold text-gray-900">
+                                Results History - {selectedPatient?.name || selectedPatient?.email}
+                            </h2>
+                            <button
+                                onClick={() => setShowHistoryModal(false)}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                <X className="h-6 w-6" />
+                            </button>
+                        </div>
+                        
+                        <div className="p-6 overflow-y-auto max-h-[70vh]">
+                            {historyLoading ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <div className="text-gray-500">Loading results...</div>
+                                </div>
+                            ) : patientResults.length === 0 ? (
+                                <div className="text-center py-8 text-gray-500">
+                                    No results found for this patient
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {patientResults.map((result) => (
+                                        <div key={result._id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                            <div className="flex items-center justify-between mb-3">
+                                                <div className="flex items-center space-x-2">
+                                                    <Calendar className="h-4 w-4 text-gray-500" />
+                                                    <span className="text-sm text-gray-600">
+                                                        {formatDate(result.testDate)}
+                                                    </span>
+                                                    <span className="text-sm text-gray-500">by {result.doctorName}</span>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleDeleteResult(result._id)}
+                                                    className="text-red-500 hover:text-red-700 p-1"
+                                                    title="Delete result"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                            
+                                            <div className="space-y-2">
+                                                <h4 className="font-medium text-gray-900">Files:</h4>
+                                                {result.resultFiles.map((file, index) => (
+                                                    <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                                                        <div className="flex items-center space-x-2">
+                                                            <FileText className="h-4 w-4 text-blue-600" />
+                                                            <span className="text-sm text-gray-700">{file.originalName}</span>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => window.open(`/api/results/file/${file.filename}?token=${localStorage.getItem('token')}`, '_blank')}
+                                                            className="text-blue-600 hover:text-blue-800 p-1"
+                                                            title="View file"
+                                                        >
+                                                            <Eye className="h-4 w-4" />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            
+                                            {result.additionalNotes && (
+                                                <div className="mt-3">
+                                                    <h4 className="font-medium text-gray-900 mb-1">Notes:</h4>
+                                                    <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded">
+                                                        {result.additionalNotes}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

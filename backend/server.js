@@ -12,6 +12,7 @@ import videoRoutes from "./src/routes/videoRoutes.js";
 import serviceRoutes from "./src/routes/serviceRoutes.js";
 import testimonialRoutes from "./src/routes/testimonialRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
+import resultRoutes from "./src/routes/resultRoutes.js";
 
 // ES module fix for __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -41,7 +42,7 @@ app.use("/api/videos", videoRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/users", userRoutes);
-
+app.use("/api/results", resultRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

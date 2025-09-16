@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { CheckCircle, ArrowLeft, Send, X } from "lucide-react";
+import resultService from "../../services/resultService.js";
 
 const ResultForm = () => {
     const [searchParams] = useSearchParams();
@@ -24,6 +25,7 @@ const ResultForm = () => {
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     // Prefill from query params + patient passed via state
     useEffect(() => {
@@ -78,42 +80,50 @@ const ResultForm = () => {
         return newErrors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const validationErrors = validate();
         setErrors(validationErrors);
 
         if (Object.keys(validationErrors).length === 0) {
-            console.log("Result sent to patient:", formData);
+            setLoading(true);
+            try {
+                await resultService.createResult(formData);
+                
+                setSuccessMessage(
+                    `Result(s) sent to ${formData.patientName} successfully! Email notification sent.`
+                );
+                setSubmitted(true);
 
-            setSuccessMessage(
-                `Result(s) sent to ${formData.patientName} successfully!`
-            );
-            setSubmitted(true);
+                // Reset form fields
+                setFormData({
+                    patientName: "",
+                    doctorName: "",
+                    phoneNumber: "",
+                    email: "",
+                    testDate: todayDate,
+                    resultFiles: [],
+                    notifyByEmail: false,
+                    additionalNotes: "",
+                });
 
-            // Reset form fields
-            setFormData({
-                patientName: "",
-                doctorName: "",
-                phoneNumber: "",
-                email: "",
-                testDate: todayDate,
-                resultFiles: [],
-                notifyByEmail: false,
-                additionalNotes: "",
-            });
+                // Clear file input manually
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                }
 
-            // ✅ Clear file input manually (after sending)
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";
+                // Hide success after 3s
+                setTimeout(() => {
+                    setSubmitted(false);
+                    setSuccessMessage("");
+                }, 3000);
+            } catch (error) {
+                console.error("Error sending result:", error);
+                setErrors({ submit: error.response?.data?.message || "Failed to send result" });
+            } finally {
+                setLoading(false);
             }
-
-            // Hide success after 3s
-            setTimeout(() => {
-                setSubmitted(false);
-                setSuccessMessage("");
-            }, 3000);
         }
     };
 
@@ -147,7 +157,7 @@ const ResultForm = () => {
                         <input
                             type="text"
                             name="patientName"
-                            value=""
+                            value={formData.patientName}
                             onChange={handleChange}
                             className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
                                 errors.patientName
@@ -170,7 +180,7 @@ const ResultForm = () => {
                         <input
                             type="tel"
                             name="phoneNumber"
-                            value=""
+                            value={formData.phoneNumber}
                             onChange={handleChange}
                             pattern="[0-9]*"
                             inputMode="numeric"
@@ -296,7 +306,7 @@ const ResultForm = () => {
                         />
                     </div>
 
-                    {/* ✅ Success message */}
+                    {/* Success message */}
                     {submitted && (
                         <div className="flex items-center justify-center mb-4 text-green-600 font-medium bg-green-50 border border-green-200 rounded-lg p-3">
                             <CheckCircle className="w-5 h-5 mr-2" />
@@ -304,14 +314,22 @@ const ResultForm = () => {
                         </div>
                     )}
 
+                    {/* Error message */}
+                    {errors.submit && (
+                        <div className="mb-4 text-red-600 font-medium bg-red-50 border border-red-200 rounded-lg p-3">
+                            {errors.submit}
+                        </div>
+                    )}
+
                     {/* Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3">
                         <button
                             type="submit"
-                            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium w-full sm:w-auto"
+                            disabled={loading}
+                            className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg font-medium w-full sm:w-auto"
                         >
                             <Send className="w-5 h-5 mr-2" />
-                            Send Result to Patient
+                            {loading ? "Sending..." : "Send Result to Patient"}
                         </button>
                         <button
                             type="button"
