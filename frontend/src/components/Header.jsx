@@ -133,9 +133,15 @@ function Header({ lang, setLang }) {
                 {translations[lang].logout}
                 <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-red-500 transition-all duration-300 group-hover:w-full"></span>
               </button>
-              <span className="text-sm text-gray-600">
-                {translations[lang].welcome}, {getUserDisplayName(user)}
-              </span>
+              <Link
+                to={user.role === "user" ? "/profile" : "/admin/profile"}
+                className="relative text-gray-600 font-medium flex items-center 
+                                   hover:text-gray-800 transition group"
+              >
+                <User className="w-4 h-4 mr-1" />
+                {getUserDisplayName(user)}
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-600 transition-all duration-300 group-hover:w-full"></span>
+              </Link>
             </>
           ) : (
             // Guest user menu
@@ -227,9 +233,14 @@ function Header({ lang, setLang }) {
               // Authenticated mobile menu
               <>
                 <motion.div variants={linkVariants}>
-                  <span className="block text-sm text-gray-600 mb-2">
-                    {translations[lang].welcome}, {getUserDisplayName(user)}
-                  </span>
+                  <Link
+                    to={user.role === "user" ? "/profile" : "/admin/profile"}
+                    onClick={handleCloseMenu}
+                    className="block text-gray-600 font-medium hover:text-gray-800 transition flex items-center"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    {getUserDisplayName(user)}
+                  </Link>
                 </motion.div>
                 <motion.div variants={linkVariants}>
                   <Link
