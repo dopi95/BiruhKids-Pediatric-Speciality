@@ -1,21 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus, UserCog, Trash2 } from "lucide-react";
 import StatsCard from "../../../components/StatsCard";
 import AdminTable from "./AdminTable";
 import AddAdminModal from "./AddAdminModal";
+import DeleteAdminModal from "./DeleteAdminModal";
 import userService from "../../../services/userService";
+import { toast } from "react-toastify";
 
 export default function AdminManagement() {
     const [showAddForm, setShowAddForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [editingAdmin, setEditingAdmin] = useState(null);
+    const [deletingAdmin, setDeletingAdmin] = useState(null);
+    const [admins, setAdmins] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         password: "",
         role: "admin",
         permissions: {
-            dashboard: true,
+            dashboard: false,
             userManagement: false,
             resultManagement: false,
+            doctorManagement: false,
+            serviceManagement: false,
+            appointmentManagement: false,
             videoManagement: false,
             testimonialManagement: false,
             subscriberManagement: false,
@@ -23,105 +35,236 @@ export default function AdminManagement() {
         },
     });
 
+    useEffect(() => {
+        fetchAdmins();
+    }, []);
+
+    const fetchAdmins = async () => {
+        try {
+            setLoading(true);
+            const response = await userService.getAdmins();
+            setAdmins(response.admins || []);
+        } catch (error) {
+            toast.error('Failed to fetch admins: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const totalAdmins = admins.length;
+    const superAdmins = admins.filter(admin => admin.role === 'super_admin').length;
+    const regularAdmins = admins.filter(admin => admin.role === 'admin').length;
+
     const stats = [
         {
             label: "Total Admins",
-            value: "3",
-            change: "+2 this month",
+            value: totalAdmins.toString(),
+            change: `${totalAdmins} total`,
             color: "blue",
         },
         {
             label: "Super Admins",
-            value: "2",
-            change: "Unchanged",
+            value: superAdmins.toString(),
+            change: `${superAdmins} active`,
             color: "purple",
         },
         {
             label: "Regular Admins",
-            value: "1",
-            change: "+2 new",
+            value: regularAdmins.toString(),
+            change: `${regularAdmins} active`,
             color: "green",
-        },
-    ];
-
-    const admins = [
-        {
-            id: 1,
-            name: "Dr. Sarah Johnson",
-            email: "sarah.johnson@clinic.com",
-            role: "Super Admin",
-            permissions: ["All Permissions"],
-            lastLogin: "2025-01-10 14:30",
-            status: "Active",
-            createdAt: "2024-08-15",
-        },
-        {
-            id: 2,
-            name: "Michael Chen",
-            email: "michael.chen@clinic.com",
-            role: "Super Admin",
-            permissions: ["All Permissions"],
-            lastLogin: "2025-01-10 09:15",
-            status: "Active",
-            createdAt: "2024-08-15",
-        },
-        {
-            id: 3,
-            name: "Emily Davis",
-            email: "emily.davis@clinic.com",
-            role: "Admin",
-            permissions: ["Dashboard", "User Management", "Result Management"],
-            lastLogin: "2025-01-09 16:45",
-            status: "Active",
-            createdAt: "2024-12-01",
         },
     ];
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (name === 'role') {
+            if (value === 'super_admin') {
+                // Auto-check all permissions for super admin
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: value,
+                    permissions: {
+                        dashboard: true,
+                        userManagement: true,
+                        resultManagement: true,
+                        doctorManagement: true,
+                        serviceManagement: true,
+                        appointmentManagement: true,
+                        videoManagement: true,
+                        testimonialManagement: true,
+                        subscriberManagement: true,
+                        adminManagement: true,
+                    },
+                }));
+            } else {
+                setFormData((prev) => ({ ...prev, [name]: value }));
+            }
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const handlePermissionChange = (permission) => {
-        setFormData((prev) => ({
-            ...prev,
-            permissions: {
+        setFormData((prev) => {
+            const newPermissions = {
                 ...prev.permissions,
                 [permission]: !prev.permissions[permission],
+            };
+            
+            // Check if all permissions are selected
+            const allPermissionsSelected = Object.values(newPermissions).every(value => value === true);
+            
+            // Determine new role based on permissions
+            let newRole = prev.role;
+            if (allPermissionsSelected) {
+                newRole = 'super_admin';
+            } else if (prev.role === 'super_admin' && !newPermissions[permission]) {
+                newRole = 'admin';
+            }
+            
+            return {
+                ...prev,
+                role: newRole,
+                permissions: newPermissions,
+            };
+        });
+    };
+
+
+
+    const resetForm = () => {
+        setFormData({
+            name: "",
+            email: "",
+            password: "",
+            role: "admin",
+            permissions: {
+                dashboard: false,
+                userManagement: false,
+                resultManagement: false,
+                doctorManagement: false,
+                serviceManagement: false,
+                appointmentManagement: false,
+                videoManagement: false,
+                testimonialManagement: false,
+                subscriberManagement: false,
+                adminManagement: false,
             },
-        }));
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validate required fields
+        if (!formData.name.trim()) {
+            toast.error('Admin name is required');
+            return;
+        }
+        
+        if (!formData.email.trim()) {
+            toast.error('Email address is required');
+            return;
+        }
+        
+        if (!editingAdmin && !formData.password.trim()) {
+            toast.error('Password is required for new admin');
+            return;
+        }
+        
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            toast.error('Please enter a valid email address');
+            return;
+        }
+        
+        // Validate role and permissions consistency
+        const allPermissionsChecked = Object.values(formData.permissions).every(value => value === true);
+        if (formData.role === 'admin' && allPermissionsChecked) {
+            toast.error('Uncheck at least one box so the role can be admin otherwise the role will be super admin');
+            return;
+        }
+        
         try {
-            await userService.createAdmin(formData);
-            alert('Admin created successfully!');
-            setShowAddForm(false);
-            setFormData({
-                name: "",
-                email: "",
-                password: "",
-                role: "admin",
-                permissions: {
-                    dashboard: true,
-                    userManagement: false,
-                    resultManagement: false,
-                    videoManagement: false,
-                    testimonialManagement: false,
-                    subscriberManagement: false,
-                    adminManagement: false,
-                },
-            });
+            setSubmitting(true);
+            if (editingAdmin) {
+                await userService.updateAdmin(editingAdmin._id, formData);
+                toast.success('Admin updated successfully!');
+                setShowEditForm(false);
+                setEditingAdmin(null);
+            } else {
+                await userService.createAdmin(formData);
+                toast.success('Admin created successfully!');
+                setShowAddForm(false);
+            }
+            resetForm();
+            fetchAdmins();
         } catch (error) {
-            alert('Error creating admin: ' + (error.response?.data?.message || error.message));
+            console.error('Admin operation error:', error);
+            if (error.response?.status === 400) {
+                toast.error('Validation error: ' + (error.response?.data?.message || 'Invalid data provided'));
+            } else if (error.response?.status === 401) {
+                toast.error('Unauthorized: Please login again');
+            } else if (error.response?.status === 403) {
+                toast.error('Access denied: Insufficient permissions');
+            } else if (error.response?.status === 409) {
+                toast.error('Conflict: Admin with this email already exists');
+            } else if (error.code === 'NETWORK_ERROR') {
+                toast.error('Network error: Please check your connection');
+            } else {
+                toast.error('Operation failed: ' + (error.response?.data?.message || error.message));
+            }
+        } finally {
+            setSubmitting(false);
         }
     };
 
-    const handleDeleteAdmin = (adminId) => {
-        if (window.confirm("Are you sure you want to delete this admin?")) {
-            console.log("Delete admin:", adminId);
+    const handleEditAdmin = (admin) => {
+        setEditingAdmin(admin);
+        setFormData({
+            name: admin.name,
+            email: admin.email,
+            password: "", // Don't populate password for editing
+            role: admin.role,
+            permissions: admin.permissions || {},
+        });
+        setShowEditForm(true);
+    };
+
+    const handleDeleteAdmin = (admin) => {
+        setDeletingAdmin(admin);
+        setShowDeleteModal(true);
+    };
+
+    const confirmDeleteAdmin = async (adminId) => {
+        try {
+            await userService.deleteAdmin(adminId);
+            toast.success('Admin deleted successfully!');
+            fetchAdmins();
+        } catch (error) {
+            console.error('Delete admin error:', error);
+            if (error.response?.status === 403) {
+                toast.error('Cannot delete admin: Insufficient permissions');
+            } else if (error.response?.status === 404) {
+                toast.error('Admin not found or already deleted');
+            } else {
+                toast.error('Failed to delete admin: ' + (error.response?.data?.message || error.message));
+            }
         }
+    };
+
+    const handleCloseModal = () => {
+        setShowAddForm(false);
+        setShowEditForm(false);
+        setEditingAdmin(null);
+        resetForm();
+    };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setDeletingAdmin(null);
     };
 
     return (
@@ -152,23 +295,64 @@ export default function AdminManagement() {
                     ))}
                 </div>
 
-                {/* Modal */}
+                {/* Add Modal */}
                 {showAddForm && (
                     <AddAdminModal
                         formData={formData}
-                        onClose={() => setShowAddForm(false)}
+                        onClose={handleCloseModal}
                         onSubmit={handleSubmit}
                         onChange={handleInputChange}
                         onPermissionChange={handlePermissionChange}
+                        isEditing={false}
+                        submitting={submitting}
+                    />
+                )}
+
+                {/* Edit Modal */}
+                {showEditForm && (
+                    <AddAdminModal
+                        formData={formData}
+                        onClose={handleCloseModal}
+                        onSubmit={handleSubmit}
+                        onChange={handleInputChange}
+                        onPermissionChange={handlePermissionChange}
+                        isEditing={true}
+                        title="Edit Admin"
+                        submitting={submitting}
+                    />
+                )}
+
+                {/* Delete Modal */}
+                {showDeleteModal && deletingAdmin && (
+                    <DeleteAdminModal
+                        admin={deletingAdmin}
+                        onClose={handleCloseDeleteModal}
+                        onConfirm={confirmDeleteAdmin}
                     />
                 )}
 
                 {/* Admin Table */}
-                <AdminTable
-                    admins={admins}
-                    onDelete={handleDeleteAdmin}
-                    deleteIcon={Trash2} // ✅ force delete icon everywhere
-                />
+                {loading ? (
+                    <div className="flex justify-center items-center py-8">
+                        <div className="text-gray-500">Loading admins...</div>
+                    </div>
+                ) : admins.length === 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                        <div className="text-gray-500 mb-4">No administrators found</div>
+                        <button
+                            onClick={() => setShowAddForm(true)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                        >
+                            Add First Admin
+                        </button>
+                    </div>
+                ) : (
+                    <AdminTable
+                        admins={admins}
+                        onEdit={handleEditAdmin}
+                        onDelete={handleDeleteAdmin}
+                    />
+                )}
             </div>
         </div>
     );

@@ -64,7 +64,7 @@ export const getUsers = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 // @access  Private (Admin only)
 export const updateUser = asyncHandler(async (req, res) => {
-    const { name, email, phone } = req.body;
+    const { name, email, phone, role, permissions, password } = req.body;
     
     const user = await User.findById(req.params.id);
     
@@ -80,6 +80,17 @@ export const updateUser = asyncHandler(async (req, res) => {
     user.email = email || user.email;
     user.phone = phone || user.phone;
     
+    // Update admin-specific fields if provided
+    if (role) {
+        user.role = role;
+    }
+    if (permissions) {
+        user.permissions = permissions;
+    }
+    if (password && password.trim() !== '') {
+        user.password = password;
+    }
+    
     await user.save();
     
     res.json({
@@ -91,7 +102,9 @@ export const updateUser = asyncHandler(async (req, res) => {
             email: user.email,
             phone: user.phone,
             role: user.role,
-            createdAt: user.createdAt
+            permissions: user.permissions,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
         }
     });
 });

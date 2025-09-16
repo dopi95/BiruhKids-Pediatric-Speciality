@@ -62,12 +62,64 @@ const getUserStats = async () => {
   return response.data;
 };
 
+// Get user by ID
+const getUserById = async (userId) => {
+  const token = getAuthToken();
+  const response = await axios.get(`${API_URL}/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+// Get admin users only
+const getAdmins = async () => {
+  const token = getAuthToken();
+  const response = await axios.get(API_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  // Filter only admin and super_admin users
+  const adminUsers = response.data.users.filter(user => 
+    user.role === 'admin' || user.role === 'super_admin'
+  );
+  return { ...response.data, admins: adminUsers };
+};
+
+// Update admin user
+const updateAdmin = async (adminId, adminData) => {
+  const token = getAuthToken();
+  const response = await axios.put(`${API_URL}/${adminId}`, adminData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+// Delete admin user
+const deleteAdmin = async (adminId) => {
+  const token = getAuthToken();
+  const response = await axios.delete(`${API_URL}/${adminId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 const userService = {
   createAdmin,
   getUsers,
+  getAdmins,
   updateUser,
+  updateAdmin,
   deleteUser,
+  deleteAdmin,
   getUserStats,
+  getUserById,
 };
 
 export default userService;
