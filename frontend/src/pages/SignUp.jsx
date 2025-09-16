@@ -141,192 +141,199 @@ export default function SignUp({ lang = "En" }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center items-center px-4 sm:px-6 lg:px-8 pb-20">
-      <div className="w-full mt-10 sm:mt-16 max-w-md bg-white shadow-md rounded-xl p-6 sm:p-8">
-        {/* Avatar */}
-        <div className="flex justify-center mb-6">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-blue-100 flex items-center justify-center">
-            <User className="text-blue-600" size={28} />
-          </div>
-        </div>
-
-        <h1 className="text-xl sm:text-3xl font-extrabold text-center mb-2">
-          {t.title}
-        </h1>
-        <p className="text-center text-gray-500 mb-6 text-sm sm:text-base">
-          {t.subtitle}
-        </p>
-
-        {alert && <Alert type={alert.type} message={alert.message} />}
-
-        <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
-          {/* Name */}
-          <div>
-            <label htmlFor="fullName" className="block text-sm font-medium mb-2">
-              {t.fullNameLabel}
-            </label>
-            <input
-              id="fullName"
-              type="text"
-              placeholder={t.fullNamePlaceholder}
-              className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
-                errors.fullName ? "border-red-300" : "border-gray-300"
-              }`}
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-            {errors.fullName && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.fullName}</p>
-            )}
-          </div>
-
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2">
-              {t.emailLabel}
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-2.5 text-gray-400" size={18} />
-              <input
-                id="email"
-                type="email"
-                placeholder={t.emailPlaceholder}
-                className={`w-full pl-10 pr-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
-                  errors.email ? "border-red-300" : "border-gray-300"
-                }`}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white shadow-xl rounded-2xl p-8 space-y-6">
+          {/* Avatar */}
+          <div className="flex justify-center">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-500 to-blue-600 flex items-center justify-center shadow-lg">
+              <User className="text-white" size={32} />
             </div>
-            {errors.email && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.email}</p>
-            )}
           </div>
 
-          {/* Phone */}
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium mb-2">
-              {t.phoneLabel}
-            </label>
-            <div className="relative">
-              <Smartphone className="absolute left-3 top-2.5 text-gray-400" size={18} />
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {t.title}
+            </h1>
+            <p className="text-gray-600 text-sm">
+              {t.subtitle}
+            </p>
+          </div>
+
+          {alert && <Alert type={alert.type} message={alert.message} />}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name */}
+            <div className="space-y-1">
+              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                {t.fullNameLabel}
+              </label>
               <input
-                id="phone"
-                type="tel"
-                placeholder={t.phonePlaceholder}
-                className={`w-full pl-10 pr-3 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
-                  errors.phone ? "border-red-300" : "border-gray-300"
+                id="fullName"
+                type="text"
+                placeholder={t.fullNamePlaceholder}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                  errors.fullName ? "border-red-300 bg-red-50" : "border-gray-300"
                 }`}
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
               />
+              {errors.fullName && (
+                <p className="text-xs text-red-600">{errors.fullName}</p>
+              )}
             </div>
-            {errors.phone && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.phone}</p>
-            )}
-          </div>
 
-          {/* Password */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-2">
-              {t.passwordLabel}
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-2.5 text-gray-400" size={18} />
-              <input
-                id="password"
-                type={showPw ? "text" : "password"}
-                placeholder={t.passwordPlaceholder}
-                className={`w-full pl-10 pr-10 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
-                  errors.password ? "border-red-300" : "border-gray-300"
-                }`}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+            {/* Email */}
+            <div className="space-y-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                {t.emailLabel}
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  id="email"
+                  type="email"
+                  placeholder={t.emailPlaceholder}
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                    errors.email ? "border-red-300 bg-red-50" : "border-gray-300"
+                  }`}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              {errors.email && (
+                <p className="text-xs text-red-600">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Phone */}
+            <div className="space-y-1">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                {t.phoneLabel}
+              </label>
+              <div className="relative">
+                <Smartphone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder={t.phonePlaceholder}
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                    errors.phone ? "border-red-300 bg-red-50" : "border-gray-300"
+                  }`}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+              {errors.phone && (
+                <p className="text-xs text-red-600">{errors.phone}</p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className="space-y-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                {t.passwordLabel}
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  id="password"
+                  type={showPw ? "text" : "password"}
+                  placeholder={t.passwordPlaceholder}
+                  className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                    errors.password ? "border-red-300 bg-red-50" : "border-gray-300"
+                  }`}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowPw((v) => !v)}
+                >
+                  {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-xs text-red-600">{errors.password}</p>
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div className="space-y-1">
+              <label htmlFor="confirm" className="block text-sm font-medium text-gray-700">
+                {t.confirmPasswordLabel}
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  id="confirm"
+                  type={showPw2 ? "text" : "password"}
+                  placeholder={t.confirmPasswordPlaceholder}
+                  className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                    errors.confirm ? "border-red-300 bg-red-50" : "border-gray-300"
+                  }`}
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowPw2((v) => !v)}
+                >
+                  {showPw2 ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.confirm && (
+                <p className="text-xs text-red-600">{errors.confirm}</p>
+              )}
+            </div>
+
+            {/* Notify toggle */}
+            <div className="flex items-center justify-between py-2">
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-700 font-medium">
+                  {t.notifyTitle}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {t.notifyDesc}
+                </span>
+              </div>
+
               <button
                 type="button"
-                className="absolute right-3 top-2 text-gray-500"
-                onClick={() => setShowPw((v) => !v)}
-              >
-                {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-            {errors.password && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.password}</p>
-            )}
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <label htmlFor="confirm" className="block text-sm font-medium mb-2">
-              {t.confirmPasswordLabel}
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-2.5 text-gray-400" size={18} />
-              <input
-                id="confirm"
-                type={showPw2 ? "text" : "password"}
-                placeholder={t.confirmPasswordPlaceholder}
-                className={`w-full pl-10 pr-10 py-2 border rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 ${
-                  errors.confirm ? "border-red-300" : "border-gray-300"
+                onClick={() => setNotify((v) => !v)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  notify ? "bg-blue-600" : "bg-gray-300"
                 }`}
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-2 text-gray-500"
-                onClick={() => setShowPw2((v) => !v)}
               >
-                {showPw2 ? <EyeOff size={18} /> : <Eye size={18} />}
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
+                    notify ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
               </button>
-            </div>
-            {errors.confirm && (
-              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.confirm}</p>
-            )}
-          </div>
-
-          {/* Notify toggle */}
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className="text-sm sm:text-base text-gray-600 font-medium">
-                {t.notifyTitle}
-              </span>
-              <span className="text-xs sm:text-sm text-gray-400">
-                {t.notifyDesc}
-              </span>
             </div>
 
             <button
-              type="button"
-              onClick={() => setNotify((v) => !v)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${
-                notify ? "bg-blue-600" : "bg-gray-300"
-              }`}
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 rounded-lg hover:from-green-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-lg"
             >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
-                  notify ? "translate-x-6" : "translate-x-1"
-                }`}
-              />
+              {isLoading ? "Creating account..." : t.signUp}
             </button>
+          </form>
+
+          <div className="text-center">
+            <p className="text-sm text-gray-600">
+              {t.haveAccount}{" "}
+              <Link to="/login" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                {t.signIn}
+              </Link>
+            </p>
           </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Creating account..." : t.signUp}
-          </button>
-        </form>
-
-        <p className="text-center text-xs sm:text-sm text-gray-500 mt-6">
-          {t.haveAccount}{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
-            {t.signIn}
-          </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

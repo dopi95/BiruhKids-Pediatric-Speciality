@@ -8,7 +8,7 @@ import {
     UserCheck,
     CalendarDays,
 } from "lucide-react";
-import resultService from "../../services/resultService";
+
 import userService from "../../services/userService";
 
 const AdminDashboard = () => {
@@ -53,28 +53,6 @@ const AdminDashboard = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const newStats = [...stats];
-
-                // Fetch users and results stats
-                try {
-                    const [usersResponse, statsResponse] = await Promise.all([
-                        userService.getUsers(),
-                        resultService.getResultStats()
-                    ]);
-                    
-                    // Update registered users count
-                    if (usersResponse && usersResponse.users) {
-                        const regularUsers = usersResponse.users.filter(user => user.role === 'user' || !user.role);
-                        newStats[0].value = regularUsers.length.toString();
-                    }
-                    
-                    // Update results count
-                    if (statsResponse && statsResponse.stats) {
-                        newStats[2].value = statsResponse.stats.totalResults.toString();
-                    }
-                } catch (err) {
-                    console.error("Error fetching users/results stats:", err);
-                }
 
                 const [
                     doctorsResponse,
@@ -147,7 +125,7 @@ const AdminDashboard = () => {
         };
 
         fetchData();
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (loading) {
         return (
