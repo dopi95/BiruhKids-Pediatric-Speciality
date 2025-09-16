@@ -1,13 +1,20 @@
 // src/pages/ResetPassword.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import authService from "../services/authService";
+import Alert from "../components/Alert";
 
 export default function ResetPassword({ lang = "En" }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
+  
+  const email = location.state?.email;
 
   const t = {
     En: {
@@ -32,14 +39,32 @@ export default function ResetPassword({ lang = "En" }) {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (newPassword === confirmPassword && newPassword.length >= 6) {
-      alert(t[lang].success);
-      navigate("/login");
-    } else {
-      alert(t[lang].error);
+    
+    if (newPassword !== confirmPassword) {
+      setAlert({ type: "error", message: t[lang].error });
+      return;
     }
+    
+    if (newPassword.length < 6) {
+      setAlert({ type: "error", message: t[lang].error });
+      return;
+    }
+
+    setIsLoading(true);
+    setAlert(null);
+
+    const result = await authService.resetPassword(email, newPassword);
+    
+    if (result.success) {
+      setAlert({ type: "success", message: t[lang].success });
+      setTimeout(() => navigate("/login"), 2000);
+    } else {
+      setAlert({ type: "error", message: result.error });
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -48,6 +73,8 @@ export default function ResetPassword({ lang = "En" }) {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           {t[lang].title}
         </h2>
+        
+        {alert && <Alert type={alert.type} message={alert.message} />}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* New Password */}
           <div className="relative">
@@ -89,9 +116,10 @@ export default function ResetPassword({ lang = "En" }) {
 
           <button
             type="submit"
-            className="w-full bg-[#007799] text-white py-3 rounded-lg font-semibold hover:bg-[#006680] transition"
+            disabled={isLoading}
+            className="w-full bg-[#007799] text-white py-3 rounded-lg font-semibold hover:bg-[#006680] transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {t[lang].button}
+            {isLoading ? "Changing..." : t[lang].button}
           </button>
         </form>
       </div>

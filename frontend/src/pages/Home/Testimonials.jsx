@@ -30,11 +30,11 @@ export default function Testimonials({ lang = "En" }) {
       try {
         setIsLoading(true);
         const response = await getPublicTestimonials();
-        setTestimonials(response.data);
+        setTestimonials(response.data || []);
       } catch (error) {
         console.error("Error loading testimonials:", error);
-        // Fallback to sample data if API fails
-        setTestimonials(sampleTestimonials);
+        // Fallback to empty array if API fails
+        setTestimonials([]);
       } finally {
         setIsLoading(false);
       }
@@ -115,7 +115,7 @@ export default function Testimonials({ lang = "En" }) {
 
   // Slides count
   const totalSlides =
-    testimonials.length > visibleCards
+    testimonials && testimonials.length > visibleCards
       ? testimonials.length - visibleCards + 1
       : 1;
 
@@ -524,7 +524,7 @@ const renderUserAvatar = (testimonial) => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">Loading testimonials...</p>
           </div>
-        ) : testimonials.length === 0 ? (
+        ) : !testimonials || testimonials.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-600">{t.noTestimonials}</p>
           </div>
@@ -540,7 +540,7 @@ const renderUserAvatar = (testimonial) => {
                     transform: `translateX(-${(current * 100) / visibleCards}%)`,
                   }}
                 >
-                  {testimonials.map((testimonial, index) => (
+                  {(testimonials || []).map((testimonial, index) => (
                     <div
                       key={testimonial._id || index}
                       className="px-2 md:px-4 flex-shrink-0"
@@ -635,7 +635,7 @@ const renderUserAvatar = (testimonial) => {
       {/* Success Notification */}
       {showSuccess && <SuccessNotification onClose={() => setShowSuccess(false)} />}
       
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in {
           from { opacity: 0; }
           to { opacity: 1; }

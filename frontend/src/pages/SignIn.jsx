@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import Alert from "../components/Alert";
+import { useAuth } from "../context/AuthContext";
+import { getUserRoleRedirect } from "../utils/authHelpers";
 
 const translations = {
   En: {
@@ -52,11 +54,14 @@ const translations = {
 
 export default function SignIn({ lang = "En" }) {
   const t = translations[lang];
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [alert, setAlert] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -69,13 +74,27 @@ export default function SignIn({ lang = "En" }) {
     return Object.keys(next).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) {
       setAlert({ type: "error", message: t.alerts.error });
       return;
     }
-    setAlert({ type: "success", message: t.alerts.success });
+
+    setIsLoading(true);
+    setAlert(null);
+
+    const result = await login({ email, password });
+    
+    if (result.success) {
+      setAlert({ type: "success", message: t.alerts.success });
+      const redirectPath = getUserRoleRedirect(result.user.role);
+      setTimeout(() => navigate(redirectPath), 1000);
+    } else {
+      setAlert({ type: "error", message: result.error });
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -169,9 +188,10 @@ export default function SignIn({ lang = "En" }) {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {t.signIn}
+            {isLoading ? "Signing in..." : t.signIn}
           </button>
         </form>
 

@@ -17,34 +17,47 @@ import {
     Menu,
     X,
 } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const AdminSidebar = () => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
+    const { user, hasPermission, logout } = useAuth();
 
     const isActive = (path) => location.pathname === path;
 
-    const menuItems = [
-        { path: "/admin", icon: LayoutDashboard, label: "Dashboard" },
-        { path: "/admin/users", icon: Users, label: "Users" },
-        { path: "/admin/results", icon: FileText, label: "Results" },
-        { path: "/admin/doctors", icon: Stethoscope, label: "Doctors" },
-        { path: "/admin/services", icon: BriefcaseMedical, label: "Services" },
+    const allMenuItems = [
+        { path: "/admin", icon: LayoutDashboard, label: "Dashboard", permission: "dashboard" },
+        { path: "/admin/users", icon: Users, label: "Users", permission: "userManagement" },
+        { path: "/admin/results", icon: FileText, label: "Results", permission: "resultManagement" },
+        { path: "/admin/doctors", icon: Stethoscope, label: "Doctors", permission: "doctorManagement" },
+        { path: "/admin/services", icon: BriefcaseMedical, label: "Services", permission: "serviceManagement" },
         {
             path: "/admin/appointments",
             icon: CalendarDays,
             label: "Appointments",
+            permission: "appointmentManagement"
         },
-        { path: "/admin/videos", icon: Play, label: "Videos" },
+        { path: "/admin/videos", icon: Play, label: "Videos", permission: "videoManagement" },
         {
             path: "/admin/testimonials",
             icon: MessageSquare,
             label: "Testimonials",
+            permission: "testimonialManagement"
         },
-        { path: "/admin/subscribers", icon: Mail, label: "Subscribers" },
-        { path: "/admin/admins", icon: UserCog, label: "Admins" },
-        { path: "/admin/profile", icon: User, label: "Profile" },
+        { path: "/admin/subscribers", icon: Mail, label: "Subscribers", permission: "subscriberManagement" },
+        { path: "/admin/admins", icon: UserCog, label: "Admins", permission: "adminManagement" },
+        { path: "/admin/profile", icon: User, label: "Profile", permission: null }, // Always visible
     ];
+
+    // Filter menu items based on user permissions
+    const menuItems = allMenuItems.filter(item => 
+        !item.permission || hasPermission(item.permission)
+    );
+
+    const handleLogout = () => {
+        logout();
+    };
 
     return (
         <>
@@ -61,14 +74,14 @@ const AdminSidebar = () => {
                 <div className="flex items-center space-x-4">
                     <div className="text-right">
                         <p className="text-sm font-medium text-gray-50">
-                            Dr. Admin
+                            {user?.name || 'Admin'}
                         </p>
                         <p className="text-xs text-gray-200">
-                            Super Administrator
+                            {user?.role === 'super_admin' ? 'Super Administrator' : 'Administrator'}
                         </p>
                     </div>
                     <img
-                        src="https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+                        src={user?.avatar || "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"}
                         alt="Admin"
                         className="h-10 w-10 rounded-full"
                     />
@@ -87,14 +100,14 @@ const AdminSidebar = () => {
                     <div className="flex items-center space-x-4">
                         <div className="text-right">
                             <p className="text-sm font-medium text-gray-50">
-                                Dr. Admin
+                                {user?.name || 'Admin'}
                             </p>
                             <p className="text-xs text-gray-200">
-                                Super Administrator
+                                {user?.role === 'super_admin' ? 'Super Administrator' : 'Administrator'}
                             </p>
                         </div>
                         <img
-                            src="https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+                            src={user?.avatar || "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"}
                             alt="Admin"
                             className="h-10 w-10 rounded-full"
                         />
@@ -133,14 +146,16 @@ const AdminSidebar = () => {
                         <Globe className="h-4 w-4" />
                         <span>Back To Website</span>
                     </Link>
-                    <Link
-                        to="/login"
-                        className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors duration-200"
-                        onClick={() => setIsOpen(false)}
+                    <button
+                        onClick={() => {
+                            handleLogout();
+                            setIsOpen(false);
+                        }}
+                        className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors duration-200 w-full text-left"
                     >
                         <LogOut className="h-4 w-4" />
                         <span>Logout</span>
-                    </Link>
+                    </button>
                 </div>
             </div>
 
