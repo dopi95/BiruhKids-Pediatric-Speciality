@@ -1,56 +1,91 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProfileHeader } from "../../components/profile/ProfileHeader";
 import { PersonalInfoForm } from "../../components/profile/PersonalInfoForm";
-import { EmergencyContactForm } from "../../components/profile/EmergencyContactForm";
 import { AccountActions } from "../../components/profile/AccountActions";
+import { useAuth } from "../../context/AuthContext";
+import userService from "../../services/userService";
+import { toast } from "react-toastify";
 
 export default function AdminProfile() {
+    const { user } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useState({
-        firstName: "Tim",
-        lastName: "Doe",
-        email: "john.doe@email.com",
-        phone: "+251 11 123 4567",
-        address: "Bole Road, Addis Ababa, Ethiopia",
-        dateOfBirth: "1990-05-15",
-        gender: "male",
-        emergencyContact: "Jane Doe",
-        emergencyPhone: "+251 11 987 6543",
-        occupation: "Software Engineer",
-        insuranceProvider: "Ethiopian Insurance Corporation",
-        policyNumber: "EIC123456789",
+        name: "",
+        email: "",
+        phone: "",
     });
+    const [originalData, setOriginalData] = useState({});
 
-    const role = "admin"; // or superAdmin
+    useEffect(() => {
+        if (user) {
+            fetchUserProfile();
+        }
+    }, [user]);
+
+    const fetchUserProfile = async () => {
+        try {
+            setLoading(true);
+            const response = await userService.getUserById(user.id || user._id);
+            const userData = response.user;
+            const profileData = {
+                name: userData.name || "",
+                email: userData.email || "",
+                phone: userData.phone || "",
+            };
+            setFormData(profileData);
+            setOriginalData(profileData);
+        } catch (error) {
+            toast.error('Failed to load profile: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleCancel = () => {
-        // Reset to original
-        setFormData({
-            firstName: "John",
-            lastName: "Doe",
-            email: "john.doe@email.com",
-            phone: "+251 11 123 4567",
-            address: "Bole Road, Addis Ababa, Ethiopia",
-            dateOfBirth: "1990-05-15",
-            gender: "male",
-            emergencyContact: "Jane Doe",
-            emergencyPhone: "+251 11 987 6543",
-            occupation: "Software Engineer",
-            insuranceProvider: "Ethiopian Insurance Corporation",
-            policyNumber: "EIC123456789",
-        });
+        setFormData(originalData);
         setIsEditing(false);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Profile updated:", formData);
-        setIsEditing(false);
+        
+        if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+            toast.error('All fields are required');
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            toast.error('Please enter a valid email address');
+            return;
+        }
+
+        try {
+            setSubmitting(true);
+            await userService.updateUser(user.id || user._id, formData);
+            setOriginalData(formData);
+            setIsEditing(false);
+            toast.success('Profile updated successfully!');
+        } catch (error) {
+            toast.error('Failed to update profile: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setSubmitting(false);
+        }
     };
+
+    if (loading) {
+        return (
+            <div className="flex-1 mt-20 sm:mt-0 flex items-center justify-center">
+                <div className="text-gray-500">Loading profile...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex-1 mt-20 sm:mt-0">
@@ -59,7 +94,8 @@ export default function AdminProfile() {
                 onEdit={() => setIsEditing(true)}
                 onCancel={handleCancel}
                 onSave={handleSubmit}
-                role="admin"
+                role={user?.role || "admin"}
+                submitting={submitting}
             />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <form onSubmit={handleSubmit}>
@@ -68,15 +104,10 @@ export default function AdminProfile() {
                             formData={formData}
                             isEditing={isEditing}
                             handleChange={handleChange}
-                            role={role}
-                        />
-                        <EmergencyContactForm
-                            formData={formData}
-                            isEditing={isEditing}
-                            handleChange={handleChange}
+                            role={user?.role}
                         />
                     </div>
-                    <AccountActions showDelete={false} role="admin" />
+                    <AccountActions showDelete={false} role={user?.role || "admin"} />
                 </form>
             </div>
         </div>

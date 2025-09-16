@@ -1,5 +1,5 @@
 import express from 'express';
-import { createAdmin, getUsers, updateUser, deleteUser, getUserStats } from '../controllers/userController.js';
+import { createAdmin, getUsers, getUserById, updateUser, deleteUser, getUserStats } from '../controllers/userController.js';
 import { protect, requirePermission } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -12,6 +12,9 @@ router.post('/admin', protect, requirePermission('adminManagement'), createAdmin
 
 // Get all users - requires user management permission
 router.get('/', protect, requirePermission('userManagement'), getUsers);
+
+// Get user by ID - users can access their own profile, admins can access any
+router.get('/:id', protect, getUserById);
 
 // Update user - requires user management permission
 router.put('/:id', protect, requirePermission('userManagement'), updateUser);
