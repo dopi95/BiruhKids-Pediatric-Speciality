@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import Subscriber from "../models/Subscriber.js";
+import User from "../models/User.js";
 
 // Create transporter
 const createTransporter = () => {
@@ -121,15 +122,27 @@ export const sendResultNotification = async (email, name) => {
 // Newsletter: New Doctor Added
 export const sendNewDoctorNewsletter = async (doctor) => {
     const activeSubscribers = await Subscriber.find({ status: "active" });
-    if (activeSubscribers.length === 0) return { success: true, sent: 0 };
+    const notificationUsers = await User.find({ emailNotifications: true });
+    
+    const allRecipients = [
+        ...activeSubscribers.map(sub => ({ email: sub.email })),
+        ...notificationUsers.map(user => ({ email: user.email }))
+    ];
+    
+    // Remove duplicates
+    const uniqueRecipients = allRecipients.filter((recipient, index, self) => 
+        index === self.findIndex(r => r.email === recipient.email)
+    );
+    
+    if (uniqueRecipients.length === 0) return { success: true, sent: 0 };
 
     const transporter = createTransporter();
     let sentCount = 0;
 
-    for (const subscriber of activeSubscribers) {
+    for (const recipient of uniqueRecipients) {
         const mailOptions = {
             from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-            to: subscriber.email,
+            to: recipient.email,
             subject: "New Doctor Joined Our Team! - Biruh Kids Clinic",
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
@@ -158,25 +171,37 @@ export const sendNewDoctorNewsletter = async (doctor) => {
             await transporter.sendMail(mailOptions);
             sentCount++;
         } catch (error) {
-            console.error(`Failed to send newsletter to ${subscriber.email}:`, error);
+            console.error(`Failed to send newsletter to ${recipient.email}:`, error);
         }
     }
 
-    return { success: true, sent: sentCount, total: activeSubscribers.length };
+    return { success: true, sent: sentCount, total: uniqueRecipients.length };
 };
 
 // Newsletter: New Service Added
 export const sendNewServiceNewsletter = async (service) => {
     const activeSubscribers = await Subscriber.find({ status: "active" });
-    if (activeSubscribers.length === 0) return { success: true, sent: 0 };
+    const notificationUsers = await User.find({ emailNotifications: true });
+    
+    const allRecipients = [
+        ...activeSubscribers.map(sub => ({ email: sub.email })),
+        ...notificationUsers.map(user => ({ email: user.email }))
+    ];
+    
+    // Remove duplicates
+    const uniqueRecipients = allRecipients.filter((recipient, index, self) => 
+        index === self.findIndex(r => r.email === recipient.email)
+    );
+    
+    if (uniqueRecipients.length === 0) return { success: true, sent: 0 };
 
     const transporter = createTransporter();
     let sentCount = 0;
 
-    for (const subscriber of activeSubscribers) {
+    for (const recipient of uniqueRecipients) {
         const mailOptions = {
             from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-            to: subscriber.email,
+            to: recipient.email,
             subject: "New Service Available! - Biruh Kids Clinic",
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
@@ -207,25 +232,37 @@ export const sendNewServiceNewsletter = async (service) => {
             await transporter.sendMail(mailOptions);
             sentCount++;
         } catch (error) {
-            console.error(`Failed to send newsletter to ${subscriber.email}:`, error);
+            console.error(`Failed to send newsletter to ${recipient.email}:`, error);
         }
     }
 
-    return { success: true, sent: sentCount, total: activeSubscribers.length };
+    return { success: true, sent: sentCount, total: uniqueRecipients.length };
 };
 
 // Newsletter: New Video Added
 export const sendNewVideoNewsletter = async (video) => {
     const activeSubscribers = await Subscriber.find({ status: "active" });
-    if (activeSubscribers.length === 0) return { success: true, sent: 0 };
+    const notificationUsers = await User.find({ emailNotifications: true });
+    
+    const allRecipients = [
+        ...activeSubscribers.map(sub => ({ email: sub.email })),
+        ...notificationUsers.map(user => ({ email: user.email }))
+    ];
+    
+    // Remove duplicates
+    const uniqueRecipients = allRecipients.filter((recipient, index, self) => 
+        index === self.findIndex(r => r.email === recipient.email)
+    );
+    
+    if (uniqueRecipients.length === 0) return { success: true, sent: 0 };
 
     const transporter = createTransporter();
     let sentCount = 0;
 
-    for (const subscriber of activeSubscribers) {
+    for (const recipient of uniqueRecipients) {
         const mailOptions = {
             from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-            to: subscriber.email,
+            to: recipient.email,
             subject: "New Educational Video Available! - Biruh Kids Clinic",
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
@@ -257,9 +294,9 @@ export const sendNewVideoNewsletter = async (video) => {
             await transporter.sendMail(mailOptions);
             sentCount++;
         } catch (error) {
-            console.error(`Failed to send newsletter to ${subscriber.email}:`, error);
+            console.error(`Failed to send newsletter to ${recipient.email}:`, error);
         }
     }
 
-    return { success: true, sent: sentCount, total: activeSubscribers.length };
+    return { success: true, sent: sentCount, total: uniqueRecipients.length };
 };
