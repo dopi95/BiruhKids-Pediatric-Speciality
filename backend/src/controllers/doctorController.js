@@ -1,4 +1,5 @@
 import Doctor from "../models/Doctor.js";
+import { sendNewDoctorNewsletter } from "../utils/emailService.js";
 
 // Create a new doctor
 export const createDoctor = async (req, res) => {
@@ -19,6 +20,15 @@ export const createDoctor = async (req, res) => {
     });
     
     const savedDoctor = await doctor.save();
+    
+    // Send newsletter to active subscribers
+    try {
+      const newsletterResult = await sendNewDoctorNewsletter(savedDoctor);
+      console.log(`Newsletter sent to ${newsletterResult.sent}/${newsletterResult.total} subscribers`);
+    } catch (error) {
+      console.error("Newsletter sending failed:", error);
+    }
+    
     res.status(201).json({
       success: true,
       data: savedDoctor,

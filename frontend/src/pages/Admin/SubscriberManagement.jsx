@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Mail, Send, Search, Filter, Calendar, Trash2, RefreshCw } from "lucide-react";
 import StatsCard from "../../components/StatsCard";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import { toast } from "react-toastify";
 
 const SubscriberManagement = () => {
@@ -14,7 +15,9 @@ const SubscriberManagement = () => {
     ]);
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState("all");
+    const [filterSource, setFilterSource] = useState("all");
     const [refreshing, setRefreshing] = useState(false);
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, subscriber: null, isBulk: false });
 
     useEffect(() => {
         fetchSubscribers();
@@ -85,7 +88,11 @@ const SubscriberManagement = () => {
                              (filterStatus === "active" && subscriber.status === "active") ||
                              (filterStatus === "unsubscribed" && subscriber.status === "unsubscribed");
         
-        return matchesSearch && matchesStatus;
+        const matchesSource = filterSource === "all" ||
+                             (filterSource === "newsletter" && subscriber.source === "newsletter") ||
+                             (filterSource === "signup" && subscriber.source === "signup");
+        
+        return matchesSearch && matchesStatus && matchesSource;
     });
 
     const handleSelectAll = () => {
@@ -104,23 +111,12 @@ const SubscriberManagement = () => {
         );
     };
 
-    const handleSendNewsletter = () => {
-        if (selectedSubscribers.length === 0) {
-            toast.warning("Please select at least one subscriber");
-            return;
-        }
-        console.log("Send newsletter to:", selectedSubscribers);
-        toast.info(`Newsletter will be sent to ${selectedSubscribers.length} subscribers`);
-    };
 
-    const handleDeleteSubscriber = async (subscriberId) => {
-        if (!window.confirm("Are you sure you want to delete this subscriber?")) {
-            return;
-        }
 
+    const handleDeleteSubscriber = async () => {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/subscribers/${subscriberId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/subscribers/${deleteModal.subscriber._id}`,
                 {
                     method: "DELETE",
                 }
@@ -130,11 +126,8 @@ const SubscriberManagement = () => {
 
             if (data.success) {
                 toast.success("Subscriber deleted successfully");
-                // Update the UI immediately by removing the subscriber from the local state
-                setSubscribers(subscribers.filter(sub => sub._id !== subscriberId));
-                // Also remove from selected subscribers if it was selected
-                setSelectedSubscribers(selectedSubscribers.filter(id => id !== subscriberId));
-                // Refresh stats
+                setSubscribers(subscribers.filter(sub => sub._id !== deleteModal.subscriber._id));
+                setSelectedSubscribers(selectedSubscribers.filter(id => id !== deleteModal.subscriber._id));
                 fetchStats();
             } else {
                 toast.error(data.message || "Failed to delete subscriber");
@@ -150,13 +143,13 @@ const SubscriberManagement = () => {
             toast.warning("Please select at least one subscriber to delete");
             return;
         }
+        
+        setDeleteModal({ isOpen: true, subscriber: null, isBulk: true });
+    };
 
-        if (!window.confirm(`Are you sure you want to delete ${selectedSubscribers.length} subscribers?`)) {
-            return;
-        }
+    const handleBulkDelete = async () => {
 
         try {
-            // If your API supports bulk deletion, use this approach:
             const response = await fetch(
                 `${import.meta.env.VITE_API_BASE_URL}/subscribers/bulk-delete`,
                 {
@@ -172,12 +165,10 @@ const SubscriberManagement = () => {
 
             if (data.success) {
                 toast.success(`${selectedSubscribers.length} subscribers deleted successfully`);
-                // Update the UI immediately
                 setSubscribers(subscribers.filter(sub => !selectedSubscribers.includes(sub._id)));
                 setSelectedSubscribers([]);
                 fetchStats();
             } else {
-                // If bulk deletion isn't supported, delete one by one
                 toast.info("Bulk delete not supported, deleting individually...");
                 
                 let successCount = 0;
@@ -201,7 +192,6 @@ const SubscriberManagement = () => {
                 
                 toast.success(`${successCount} of ${selectedSubscribers.length} subscribers deleted successfully`);
                 
-                // Refresh the data
                 fetchSubscribers();
                 fetchStats();
                 setSelectedSubscribers([]);
@@ -231,12 +221,13 @@ const SubscriberManagement = () => {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              <button
-                            onClick={handleSendNewsletter}
-                            className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex justify-center items-center"
+                        <button
+                            onClick={handleRefresh}
+                            disabled={refreshing}
+                            className="w-full sm:max-w-[200px] bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 flex justify-center items-center"
                         >
-                            <Send className="w-4 h-4 mr-2" />
-                            Send Newsletter
+                            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                            {refreshing ? 'Refreshing...' : 'Refresh'}
                         </button>
                     </div>
                 </div>
@@ -250,72 +241,7 @@ const SubscriberManagement = () => {
                     ))}
                 </div>
 
-                {/* Newsletter Compose Section */}
-                <div className="mb-6 bg-white rounded-lg shadow-sm">
-                    <div className="p-6 border-b border-gray-200">
-                        <h2 className="text-lg font-semibold text-gray-900">
-                            Newsletter Campaign
-                        </h2>
-                    </div>
-                    <div className="p-6">
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                            <div>
-                                <label
-                                    htmlFor="subject"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Email Subject
-                                </label>
-                                <input
-                                    type="text"
-                                    id="subject"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                                    placeholder="Enter newsletter subject"
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="template"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Email Template
-                                </label>
-                                <select
-                                    id="template"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                                >
-                                    <option value="">Select template</option>
-                                    <option value="health-tips">
-                                        Health Tips Newsletter
-                                    </option>
-                                    <option value="clinic-updates">
-                                        Clinic Updates
-                                    </option>
-                                    <option value="appointment-reminders">
-                                        Appointment Reminders
-                                    </option>
-                                    <option value="wellness-content">
-                                        Wellness Content
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="mt-4">
-                            <label
-                                htmlFor="content"
-                                className="block mb-2 text-sm font-medium text-gray-700"
-                            >
-                                Email Content
-                            </label>
-                            <textarea
-                                id="content"
-                                rows={4}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:border-blue-500"
-                                placeholder="Enter your newsletter content here..."
-                            ></textarea>
-                        </div>
-                    </div>
-                </div>
+
 
                 {/* Search and Filters */}
                 <div className="mb-6 bg-white rounded-lg shadow-sm">
@@ -325,7 +251,7 @@ const SubscriberManagement = () => {
                                 <Search className="absolute w-4 h-4 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
                                 <input
                                     type="text"
-                                    placeholder="Search subscribers by email..."
+                                    placeholder="Search by email..."
                                     value={searchTerm}
                                     onChange={(e) =>
                                         setSearchTerm(e.target.value)
@@ -340,11 +266,20 @@ const SubscriberManagement = () => {
                                     onChange={(e) => setFilterStatus(e.target.value)}
                                     className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                                 >
-                                    <option value="all">All Subscribers</option>
+                                    <option value="all">All Status</option>
                                     <option value="active">Active Only</option>
                                     <option value="unsubscribed">
                                         Unsubscribed
                                     </option>
+                                </select>
+                                <select 
+                                    value={filterSource}
+                                    onChange={(e) => setFilterSource(e.target.value)}
+                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                >
+                                    <option value="all">All Sources</option>
+                                    <option value="newsletter">Newsletter</option>
+                                    <option value="signup">User Signup</option>
                                 </select>
                             </div>
                         </div>
@@ -385,6 +320,9 @@ const SubscriberManagement = () => {
                                     </th>
                                     <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                         Email
+                                    </th>
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                        Source
                                     </th>
                                     <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                         Status
@@ -431,6 +369,17 @@ const SubscriberManagement = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span
                                                     className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                                        subscriber.source === 'newsletter'
+                                                            ? "bg-blue-100 text-blue-800"
+                                                            : "bg-purple-100 text-purple-800"
+                                                    }`}
+                                                >
+                                                    {subscriber.source === 'newsletter' ? 'Newsletter' : 'User Signup'}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span
+                                                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                                         subscriber.status ===
                                                         "active"
                                                             ? "bg-green-100 text-green-800"
@@ -448,7 +397,7 @@ const SubscriberManagement = () => {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <button
-                                                    onClick={() => handleDeleteSubscriber(subscriber._id)}
+                                                    onClick={() => setDeleteModal({ isOpen: true, subscriber, isBulk: false })}
                                                     className="p-1 text-red-600 hover:bg-red-100 rounded-full transition-colors"
                                                     title="Delete subscriber"
                                                 >
@@ -469,6 +418,20 @@ const SubscriberManagement = () => {
                     </div>
                 </div>
             </div>
+            
+            <ConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ isOpen: false, subscriber: null, isBulk: false })}
+                onConfirm={deleteModal.isBulk ? handleBulkDelete : handleDeleteSubscriber}
+                title={deleteModal.isBulk ? "Delete Subscribers" : "Delete Subscriber"}
+                message={deleteModal.isBulk 
+                    ? `Are you sure you want to delete ${selectedSubscribers.length} subscribers?`
+                    : "Are you sure you want to delete this subscriber:"
+                }
+                confirmText={deleteModal.isBulk ? "Delete All" : "Delete"}
+                requireTextConfirmation={!deleteModal.isBulk}
+                confirmationText={deleteModal.subscriber?.email || ""}
+            />
         </div>
     );
 };
