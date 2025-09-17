@@ -1,5 +1,6 @@
 import express from "express";
 import Video from "../models/Video.js";
+import { sendNewVideoNewsletter } from "../utils/emailService.js";
 
 const router = express.Router();
 
@@ -62,6 +63,15 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const video = await Video.create(req.body);
+    
+    // Send newsletter to active subscribers
+    try {
+      const newsletterResult = await sendNewVideoNewsletter(video);
+      console.log(`Newsletter sent to ${newsletterResult.sent}/${newsletterResult.total} subscribers`);
+    } catch (error) {
+      console.error("Newsletter sending failed:", error);
+    }
+    
     res.status(201).json({
       success: true,
       data: video

@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Service from "../models/ServiceModel.js";
+import { sendNewServiceNewsletter } from "../utils/emailService.js";
 
 // @desc    Get all services
 // @route   GET /api/services
@@ -51,6 +52,14 @@ const createService = asyncHandler(async (req, res) => {
     description_am: description_am || "",
     features_am: features_am || [],
   });
+
+  // Send newsletter to active subscribers
+  try {
+    const newsletterResult = await sendNewServiceNewsletter(service);
+    console.log(`Newsletter sent to ${newsletterResult.sent}/${newsletterResult.total} subscribers`);
+  } catch (error) {
+    console.error("Newsletter sending failed:", error);
+  }
 
   res.status(201).json({
     success: true,
