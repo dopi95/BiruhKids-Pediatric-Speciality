@@ -111,14 +111,7 @@ const SubscriberManagement = () => {
         );
     };
 
-    const handleSendNewsletter = () => {
-        if (selectedSubscribers.length === 0) {
-            toast.warning("Please select at least one subscriber");
-            return;
-        }
-        console.log("Send newsletter to:", selectedSubscribers);
-        toast.info(`Newsletter will be sent to ${selectedSubscribers.length} subscribers`);
-    };
+
 
     const handleDeleteSubscriber = async () => {
         try {
@@ -228,12 +221,13 @@ const SubscriberManagement = () => {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              <button
-                            onClick={handleSendNewsletter}
-                            className="w-full sm:max-w-[250px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex justify-center items-center"
+                        <button
+                            onClick={handleRefresh}
+                            disabled={refreshing}
+                            className="w-full sm:max-w-[200px] bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 flex justify-center items-center"
                         >
-                            <Send className="w-4 h-4 mr-2" />
-                            Send Newsletter
+                            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                            {refreshing ? 'Refreshing...' : 'Refresh'}
                         </button>
                     </div>
                 </div>
@@ -247,72 +241,7 @@ const SubscriberManagement = () => {
                     ))}
                 </div>
 
-                {/* Newsletter Compose Section */}
-                <div className="mb-6 bg-white rounded-lg shadow-sm">
-                    <div className="p-6 border-b border-gray-200">
-                        <h2 className="text-lg font-semibold text-gray-900">
-                            Newsletter Campaign
-                        </h2>
-                    </div>
-                    <div className="p-6">
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                            <div>
-                                <label
-                                    htmlFor="subject"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Email Subject
-                                </label>
-                                <input
-                                    type="text"
-                                    id="subject"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                                    placeholder="Enter newsletter subject"
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="template"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Email Template
-                                </label>
-                                <select
-                                    id="template"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                                >
-                                    <option value="">Select template</option>
-                                    <option value="health-tips">
-                                        Health Tips Newsletter
-                                    </option>
-                                    <option value="clinic-updates">
-                                        Clinic Updates
-                                    </option>
-                                    <option value="appointment-reminders">
-                                        Appointment Reminders
-                                    </option>
-                                    <option value="wellness-content">
-                                        Wellness Content
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="mt-4">
-                            <label
-                                htmlFor="content"
-                                className="block mb-2 text-sm font-medium text-gray-700"
-                            >
-                                Email Content
-                            </label>
-                            <textarea
-                                id="content"
-                                rows={4}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:border-blue-500"
-                                placeholder="Enter your newsletter content here..."
-                            ></textarea>
-                        </div>
-                    </div>
-                </div>
+
 
                 {/* Search and Filters */}
                 <div className="mb-6 bg-white rounded-lg shadow-sm">
