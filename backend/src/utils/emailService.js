@@ -269,7 +269,11 @@ export const sendNewVideoNewsletter = async (video) => {
                     <div style="background: white; padding: 30px; border-radius: 10px;">
                         <h2 style="color: #007799; text-align: center;">📹 New Educational Video!</h2>
                         <h3 style="color: #333; text-align: center;">${video.title}</h3>
-                        ${video.thumbnail ? `
+                        ${video.platform === 'youtube' ? `
+                            <div style="text-align: center; margin: 20px 0;">
+                                <iframe width="100%" height="315" src="${video.url}" frameborder="0" allowfullscreen style="max-width: 560px; border-radius: 10px;"></iframe>
+                            </div>
+                        ` : video.thumbnail ? `
                             <div style="text-align: center; margin: 20px 0;">
                                 <img src="${video.thumbnail}" alt="${video.title}" style="max-width: 100%; border-radius: 10px;">
                             </div>
@@ -281,7 +285,7 @@ export const sendNewVideoNewsletter = async (video) => {
                         </div>
                         <p style="text-align: center; color: #666;">Watch this educational video to learn more about pediatric health!</p>
                         <div style="text-align: center; margin: 25px 0;">
-                            <a href="${video.url || process.env.FRONTEND_URL + '/videos'}" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">Watch Video</a>
+                            <a href="${video.url || process.env.FRONTEND_URL + '/videos'}" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">Watch on ${video.platform === 'youtube' ? 'YouTube' : 'TikTok'}</a>
                         </div>
                         <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
                         <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
