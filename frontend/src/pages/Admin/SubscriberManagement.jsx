@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Mail, Send, Search, Filter, Calendar, Trash2, RefreshCw } from "lucide-react";
 import StatsCard from "../../components/StatsCard";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import { toast } from "react-toastify";
 
 const SubscriberManagement = () => {
@@ -14,7 +15,9 @@ const SubscriberManagement = () => {
     ]);
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState("all");
+    const [filterSource, setFilterSource] = useState("all");
     const [refreshing, setRefreshing] = useState(false);
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, subscriber: null, isBulk: false });
 
     useEffect(() => {
         fetchSubscribers();
@@ -85,7 +88,11 @@ const SubscriberManagement = () => {
                              (filterStatus === "active" && subscriber.status === "active") ||
                              (filterStatus === "unsubscribed" && subscriber.status === "unsubscribed");
         
-        return matchesSearch && matchesStatus;
+        const matchesSource = filterSource === "all" ||
+                             (filterSource === "newsletter" && subscriber.source === "newsletter") ||
+                             (filterSource === "signup" && subscriber.source === "signup");
+        
+        return matchesSearch && matchesStatus && matchesSource;
     });
 
     const handleSelectAll = () => {
@@ -113,14 +120,10 @@ const SubscriberManagement = () => {
         toast.info(`Newsletter will be sent to ${selectedSubscribers.length} subscribers`);
     };
 
-    const handleDeleteSubscriber = async (subscriberId) => {
-        if (!window.confirm("Are you sure you want to delete this subscriber?")) {
-            return;
-        }
-
+    const handleDeleteSubscriber = async () => {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/subscribers/${subscriberId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/subscribers/${deleteModal.subscriber._id}`,
                 {
                     method: "DELETE",
                 }
@@ -130,11 +133,8 @@ const SubscriberManagement = () => {
 
             if (data.success) {
                 toast.success("Subscriber deleted successfully");
-                // Update the UI immediately by removing the subscriber from the local state
-                setSubscribers(subscribers.filter(sub => sub._id !== subscriberId));
-                // Also remove from selected subscribers if it was selected
-                setSelectedSubscribers(selectedSubscribers.filter(id => id !== subscriberId));
-                // Refresh stats
+                setSubscribers(subscribers.filter(sub => sub._id !== deleteModal.subscriber._id));
+                setSelectedSubscribers(selectedSubscribers.filter(id => id !== deleteModal.subscriber._id));
                 fetchStats();
             } else {
                 toast.error(data.message || "Failed to delete subscriber");
@@ -150,13 +150,13 @@ const SubscriberManagement = () => {
             toast.warning("Please select at least one subscriber to delete");
             return;
         }
+        
+        setDeleteModal({ isOpen: true, subscriber: null, isBulk: true });
+    };
 
-        if (!window.confirm(`Are you sure you want to delete ${selectedSubscribers.length} subscribers?`)) {
-            return;
-        }
+    const handleBulkDelete = async () => {
 
         try {
-            // If your API supports bulk deletion, use this approach:
             const response = await fetch(
                 `${import.meta.env.VITE_API_BASE_URL}/subscribers/bulk-delete`,
                 {
@@ -172,12 +172,10 @@ const SubscriberManagement = () => {
 
             if (data.success) {
                 toast.success(`${selectedSubscribers.length} subscribers deleted successfully`);
-                // Update the UI immediately
                 setSubscribers(subscribers.filter(sub => !selectedSubscribers.includes(sub._id)));
                 setSelectedSubscribers([]);
                 fetchStats();
             } else {
-                // If bulk deletion isn't supported, delete one by one
                 toast.info("Bulk delete not supported, deleting individually...");
                 
                 let successCount = 0;
@@ -201,7 +199,6 @@ const SubscriberManagement = () => {
                 
                 toast.success(`${successCount} of ${selectedSubscribers.length} subscribers deleted successfully`);
                 
-                // Refresh the data
                 fetchSubscribers();
                 fetchStats();
                 setSelectedSubscribers([]);
@@ -325,7 +322,7 @@ const SubscriberManagement = () => {
                                 <Search className="absolute w-4 h-4 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
                                 <input
                                     type="text"
-                                    placeholder="Search subscribers by email..."
+                                    placeholder="Search by email..."
                                     value={searchTerm}
                                     onChange={(e) =>
                                         setSearchTerm(e.target.value)
@@ -340,11 +337,20 @@ const SubscriberManagement = () => {
                                     onChange={(e) => setFilterStatus(e.target.value)}
                                     className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                                 >
-                                    <option value="all">All Subscribers</option>
+                                    <option value="all">All Status</option>
                                     <option value="active">Active Only</option>
                                     <option value="unsubscribed">
                                         Unsubscribed
                                     </option>
+                                </select>
+                                <select 
+                                    value={filterSource}
+                                    onChange={(e) => setFilterSource(e.target.value)}
+                                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                >
+                                    <option value="all">All Sources</option>
+                                    <option value="newsletter">Newsletter</option>
+                                    <option value="signup">User Signup</option>
                                 </select>
                             </div>
                         </div>
@@ -385,6 +391,9 @@ const SubscriberManagement = () => {
                                     </th>
                                     <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                         Email
+                                    </th>
+                                    <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                        Source
                                     </th>
                                     <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                         Status
@@ -431,6 +440,17 @@ const SubscriberManagement = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span
                                                     className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                                        subscriber.source === 'newsletter'
+                                                            ? "bg-blue-100 text-blue-800"
+                                                            : "bg-purple-100 text-purple-800"
+                                                    }`}
+                                                >
+                                                    {subscriber.source === 'newsletter' ? 'Newsletter' : 'User Signup'}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span
+                                                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                                         subscriber.status ===
                                                         "active"
                                                             ? "bg-green-100 text-green-800"
@@ -448,7 +468,7 @@ const SubscriberManagement = () => {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <button
-                                                    onClick={() => handleDeleteSubscriber(subscriber._id)}
+                                                    onClick={() => setDeleteModal({ isOpen: true, subscriber, isBulk: false })}
                                                     className="p-1 text-red-600 hover:bg-red-100 rounded-full transition-colors"
                                                     title="Delete subscriber"
                                                 >
@@ -469,6 +489,20 @@ const SubscriberManagement = () => {
                     </div>
                 </div>
             </div>
+            
+            <ConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ isOpen: false, subscriber: null, isBulk: false })}
+                onConfirm={deleteModal.isBulk ? handleBulkDelete : handleDeleteSubscriber}
+                title={deleteModal.isBulk ? "Delete Subscribers" : "Delete Subscriber"}
+                message={deleteModal.isBulk 
+                    ? `Are you sure you want to delete ${selectedSubscribers.length} subscribers?`
+                    : "Are you sure you want to delete this subscriber:"
+                }
+                confirmText={deleteModal.isBulk ? "Delete All" : "Delete"}
+                requireTextConfirmation={!deleteModal.isBulk}
+                confirmationText={deleteModal.subscriber?.email || ""}
+            />
         </div>
     );
 };

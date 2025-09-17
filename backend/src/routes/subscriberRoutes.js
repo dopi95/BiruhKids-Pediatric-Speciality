@@ -1,5 +1,6 @@
 import express from "express";
-import Subscriber from "../models/Subscriber.js"; // Your subscriber model
+import Subscriber from "../models/Subscriber.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -108,14 +109,57 @@ router.post("/unsubscribe", async (req, res) => {
   }
 });
 
-// Get all subscribers
+// Get all subscribers (including users with email notifications)
 router.get("/", async (req, res) => {
   try {
-    const subscribers = await Subscriber.find().sort({ subscribedAt: -1 });
+    // Get newsletter subscribers
+    const newsletterSubscribers = await Subscriber.find().sort({ subscribedAt: -1 });
+    
+    // Get users who opted for email notifications
+    const notificationUsers = await User.find({ 
+      emailNotifications: true 
+    }).select('email name createdAt').sort({ createdAt: -1 });
+    
+    // Combine both lists, avoiding duplicates
+    const allSubscribers = [];
+    const emailSet = new Set();
+    
+    // Add newsletter subscribers first
+    newsletterSubscribers.forEach(sub => {
+      if (!emailSet.has(sub.email)) {
+        allSubscribers.push({
+          _id: sub._id,
+          email: sub.email,
+          status: sub.status,
+          subscribedAt: sub.subscribedAt,
+          source: 'newsletter',
+          name: null
+        });
+        emailSet.add(sub.email);
+      }
+    });
+    
+    // Add notification users (avoid duplicates)
+    notificationUsers.forEach(user => {
+      if (!emailSet.has(user.email)) {
+        allSubscribers.push({
+          _id: user._id,
+          email: user.email,
+          status: 'active',
+          subscribedAt: user.createdAt,
+          source: 'signup',
+          name: user.name
+        });
+        emailSet.add(user.email);
+      }
+    });
+    
+    // Sort by subscription date (newest first)
+    allSubscribers.sort((a, b) => new Date(b.subscribedAt) - new Date(a.subscribedAt));
 
     res.json({
       success: true,
-      data: { subscribers },
+      data: { subscribers: allSubscribers },
     });
   } catch (error) {
     console.error("Get subscribers error:", error);
@@ -126,12 +170,28 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get subscriber statistics
+// Get subscriber statistics (including users with email notifications)
 router.get("/stats", async (req, res) => {
   try {
-    const total = await Subscriber.countDocuments();
-    const active = await Subscriber.countDocuments({ status: "active" });
-    const unsubscribed = await Subscriber.countDocuments({ status: "unsubscribed" });
+    // Newsletter subscriber stats
+    const newsletterTotal = await Subscriber.countDocuments();
+    const newsletterActive = await Subscriber.countDocuments({ status: "active" });
+    const newsletterUnsubscribed = await Subscriber.countDocuments({ status: "unsubscribed" });
+    
+    // User notification stats
+    const notificationUsers = await User.countDocuments({ emailNotifications: true });
+    
+    // Get unique emails to avoid double counting
+    const newsletterEmails = await Subscriber.find({}, 'email');
+    const userEmails = await User.find({ emailNotifications: true }, 'email');
+    
+    const allEmails = new Set();
+    newsletterEmails.forEach(sub => allEmails.add(sub.email));
+    userEmails.forEach(user => allEmails.add(user.email));
+    
+    const total = allEmails.size;
+    const active = newsletterActive + notificationUsers - (newsletterTotal + notificationUsers - total); // Adjust for duplicates
+    const unsubscribed = newsletterUnsubscribed;
 
     res.json({
       success: true,

@@ -299,6 +299,11 @@ export default function SignUp({ lang = "En" }) {
                 <span className="text-xs text-gray-500">
                   {t.notifyDesc}
                 </span>
+                {notify && (
+                  <span className="text-xs text-blue-600 font-medium mt-1">
+                    {lang === "En" ? "✓ Notifications enabled" : "✓ ማሳወቂያ ተነቅቷል"}
+                  </span>
+                )}
               </div>
 
               <button
