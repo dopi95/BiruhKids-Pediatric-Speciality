@@ -1,23 +1,43 @@
-import React, { useState, useEffect } from "react";
-import { MessageCircle, X, History } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { MessageCircle, X, History, Send } from "lucide-react";
+import { SYSTEM_PROMPT, SAMPLE_PROMPTS, FALLBACK_RESPONSES } from "../utils/chatbotContext";
 
 const Chatbot = () => {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    {
+      id: "1",
+      text: "Hi! I'm here to help you with any questions about BiruhKids Pediatric Specialty Clinic. How can I assist you with your child's healthcare today?",
+      sender: "bot",
+      timestamp: new Date(),
+    },
+  ]);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+  const messagesEndRef = useRef(null);
+  const conversationHistory = useRef([
+    { role: "system", content: SYSTEM_PROMPT },
+  ]);
 
-  const quickQuestions = [
-    "What services do you provide?",
-    "What is your mission?",
-    "What makes Biruhkids different?",
-  ];
+  // Load Puter SDK
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://js.puter.com/v2/";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
 
   // Load history from localStorage
   useEffect(() => {
-    const savedHistory = localStorage.getItem("chatHistory");
+    const savedHistory = localStorage.getItem("biruhkids-chatHistory");
     if (savedHistory) {
       setHistory(JSON.parse(savedHistory));
     }
@@ -25,43 +45,100 @@ const Chatbot = () => {
 
   // Save history to localStorage
   useEffect(() => {
-    localStorage.setItem("chatHistory", JSON.stringify(history));
+    localStorage.setItem("biruhkids-chatHistory", JSON.stringify(history));
   }, [history]);
 
-  const getBotReply = (question) => {
-    switch (question.toLowerCase()) {
-      case "what services do you provide?":
-        return "🌟 We provide pediatric check-ups, vaccinations, growth monitoring, and specialized care for children with unique needs.";
-      case "what is your mission?":
-        return "💙 Our mission is to deliver compassionate, family-centered healthcare that helps every child grow healthy and strong.";
-      case "what makes biruhkids different?":
-        return "✨ At Biruhkids, we offer personalized care in a child-friendly environment, supported by a team of pediatric specialists who truly care.";
-      default:
-        return "Thanks for asking! Our friendly staff can provide more details if you contact us directly.";
+  // Auto scroll to bottom
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const generateAIResponse = async (userMessage) => {
+    if (!window.puter) {
+      return getFallbackResponse(userMessage);
+    }
+
+    try {
+      conversationHistory.current.push({
+        role: "user",
+        content: userMessage,
+      });
+
+      const response = await window.puter.ai.chat(conversationHistory.current);
+      const reply = response.message?.content || getFallbackResponse(userMessage);
+
+      conversationHistory.current.push({
+        role: "assistant",
+        content: reply,
+      });
+
+      return reply;
+    } catch (error) {
+      console.error("AI response error:", error);
+      return getFallbackResponse(userMessage);
     }
   };
 
-  const handleSend = (customText) => {
+  const getFallbackResponse = (question) => {
+    const lowerQuestion = question.toLowerCase();
+    
+    for (const [key, response] of Object.entries(FALLBACK_RESPONSES)) {
+      if (lowerQuestion.includes(key.replace(/\?/g, ""))) {
+        return response;
+      }
+    }
+    
+    return FALLBACK_RESPONSES.default;
+  };
+
+  const handleSend = async (customText) => {
     const message = customText || input;
     if (!message.trim()) return;
 
-    setMessages((prev) => [...prev, { sender: "user", text: message }]);
+    const userMessage = {
+      id: Date.now().toString(),
+      text: message,
+      sender: "user",
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
-
     setTyping(true);
-    setTimeout(() => {
+
+    try {
+      const responseText = await generateAIResponse(message);
+      
+      const botMessage = {
+        id: (Date.now() + 1).toString(),
+        text: responseText,
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+      
+      const newConversation = [userMessage, botMessage];
+      setHistory((prev) => [...prev, newConversation]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      const errorMessage = {
+        id: (Date.now() + 1).toString(),
+        text: "Sorry, I encountered an error. Please try again or contact our team directly.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setTyping(false);
-      const reply = getBotReply(message);
-      const newMessages = [
-        { sender: "user", text: message },
-        { sender: "bot", text: reply },
-      ];
+    }
+  };
 
-      setMessages((prev) => [...prev, { sender: "bot", text: reply }]);
-
-      // Save this Q&A into history
-      setHistory((prev) => [...prev, newMessages]);
-    }, 1200);
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   const handleClose = () => {
@@ -127,10 +204,18 @@ const Chatbot = () => {
                 </div>
               ))}
               {typing && (
-                <div className="px-3 py-2 bg-white border rounded-2xl text-sm text-gray-500 w-fit animate-pulse">
-                  Bot is typing...
+                <div className="px-3 py-2 bg-white border rounded-2xl text-sm text-gray-500 w-fit">
+                  <div className="flex items-center gap-2">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{animationDelay: "0.2s"}}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{animationDelay: "0.4s"}}></div>
+                    </div>
+                    <span>Assistant is typing...</span>
+                  </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
           ) : (
             <div className="flex-1 px-4 py-3 space-y-4 bg-gray-50 overflow-y-auto">
@@ -171,18 +256,21 @@ const Chatbot = () => {
             </div>
           )}
 
-          {/* Quick Questions (only if no messages and not viewing history) */}
-          {messages.length === 0 && !showHistory && (
-            <div className="p-3 bg-white border-t flex flex-wrap gap-2 justify-center">
-              {quickQuestions.map((q, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSend(q)}
-                  className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs hover:bg-blue-200 transition"
-                >
-                  {q}
-                </button>
-              ))}
+          {/* Quick Questions (only if initial message and not viewing history) */}
+          {messages.length === 1 && !showHistory && (
+            <div className="p-3 bg-white border-t">
+              <p className="text-xs text-gray-500 mb-2 text-center">Try asking:</p>
+              <div className="grid grid-cols-1 gap-2">
+                {SAMPLE_PROMPTS.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSend(q)}
+                    className="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg text-xs hover:bg-blue-200 transition text-left"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -200,13 +288,16 @@ const Chatbot = () => {
                   }
                 }}
                 className="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Type your message..."
+                placeholder="Ask me about your child's healthcare..."
+                onKeyPress={handleKeyPress}
+                disabled={typing}
               />
               <button
                 onClick={() => handleSend()}
-                className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-5 py-2 rounded-full hover:opacity-90 transition"
+                disabled={!input.trim() || typing}
+                className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded-full hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
               >
-                Send
+                <Send size={16} />
               </button>
             </div>
           )}
