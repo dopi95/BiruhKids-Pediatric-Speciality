@@ -39,24 +39,9 @@ const UserDashboard = ({ lang = "En" }) => {
 
   const handleDownloadFile = async (file) => {
     try {
-      console.log('Downloading file:', file);
-      
-      // Create download URL manually using Cloudinary's download format
       if (file.cloudinaryPublicId) {
-        const cloudName = 'dl0ytvdvz'; // Your Cloudinary cloud name
-        const downloadUrl = `https://res.cloudinary.com/${cloudName}/raw/upload/fl_attachment/${file.cloudinaryPublicId}`;
-        
-        console.log('Using direct download URL:', downloadUrl);
-        
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = file.originalName;
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        resultService.downloadResultFile(file.cloudinaryPublicId, file.originalName);
       } else {
-        console.error('No Cloudinary public ID available for file:', file);
         alert('Download not available. Please contact support.');
       }
     } catch (error) {
@@ -67,20 +52,21 @@ const UserDashboard = ({ lang = "En" }) => {
 
   const handleViewFile = async (file) => {
     try {
-      console.log('Viewing file:', file);
-      const fileExt = file.originalName?.toLowerCase().split('.').pop() || '';
-      
-      // Always use Cloudinary URL directly for viewing
-      if (file.cloudinaryUrl) {
-        console.log('Using direct Cloudinary URL:', file.cloudinaryUrl);
+      if (file.cloudinaryPublicId) {
+        resultService.viewResultFile(file.cloudinaryPublicId);
+      } else if (file.cloudinaryUrl) {
         window.open(file.cloudinaryUrl, '_blank');
       } else {
-        console.error('No Cloudinary URL available for file:', file);
         alert('File URL not available. Please contact support.');
       }
     } catch (error) {
       console.error("Error viewing file:", error);
-      alert('Failed to view file. Please try again.');
+      // Fallback to direct URL if available
+      if (file.cloudinaryUrl) {
+        window.open(file.cloudinaryUrl, '_blank');
+      } else {
+        alert('Failed to view file. Please try again.');
+      }
     }
   };
 

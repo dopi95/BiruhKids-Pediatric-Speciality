@@ -94,23 +94,8 @@ const deleteResult = async (resultId) => {
 // Download result file
 const downloadResultFile = async (publicId, originalName) => {
   const token = getAuthToken();
-  
-  try {
-    // Use the download endpoint which redirects to Cloudinary with attachment flag
-    const downloadUrl = `${API_URL}/download/${encodeURIComponent(publicId)}?token=${token}`;
-    
-    // Create a temporary link and click it to trigger download
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = originalName || publicId;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } catch (error) {
-    console.error('Download error:', error);
-    throw error;
-  }
+  const downloadUrl = `${API_URL}/download/${encodeURIComponent(publicId)}?token=${token}`;
+  window.open(downloadUrl, '_blank');
 };
 
 // View result file
