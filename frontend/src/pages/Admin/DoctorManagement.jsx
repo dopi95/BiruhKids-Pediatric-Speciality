@@ -351,7 +351,7 @@ export default function DoctorManagement() {
                                                         {doc.photo ? (
                                                             <>
                                                                 <img 
-                                                                    src={`http://localhost:5000/${doc.photo}`}
+                                                                    src={doc.photo}
                                                                     alt={doc.name}
                                                                     className="w-10 h-10 object-cover"
                                                                     onError={(e) => {

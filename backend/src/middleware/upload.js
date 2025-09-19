@@ -44,7 +44,7 @@ const getDoctorCloudinaryStorage = () => {
                 resource_type: "image",
                 public_id: `doctor-${timestamp}-${random}`,
                 transformation: [
-                    { width: 400, height: 400, crop: "fill", quality: "auto" }
+                    { width: 400, height: 400, crop: "fit", quality: "auto" }
                 ]
             };
         },
