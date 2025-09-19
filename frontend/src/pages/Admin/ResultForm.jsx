@@ -65,6 +65,13 @@ const ResultForm = () => {
         }
     };
 
+    const removeFile = (indexToRemove) => {
+        setFormData((prev) => ({
+            ...prev,
+            resultFiles: prev.resultFiles.filter((_, index) => index !== indexToRemove),
+        }));
+    };
+
     const validate = () => {
         let newErrors = {};
         if (!formData.patientName)
@@ -261,11 +268,21 @@ const ResultForm = () => {
 
                         {/* Preview selected files */}
                         {formData.resultFiles.length > 0 && (
-                            <ul className="mt-2 text-sm text-gray-600 list-disc pl-5">
+                            <div className="mt-2 space-y-2">
                                 {formData.resultFiles.map((file, idx) => (
-                                    <li key={idx}>{file.name}</li>
+                                    <div key={idx} className="flex items-center justify-between bg-gray-50 p-2 rounded border">
+                                        <span className="text-sm text-gray-700">{file.name}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeFile(idx)}
+                                            className="text-red-500 hover:text-red-700 p-1"
+                                            title="Remove file"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         )}
                     </div>
 
