@@ -9,7 +9,7 @@ import {
   rejectTestimonial,
   getTestimonialsForDisplay,
 } from "../controllers/testimonialController.js";
-import { upload } from "../config/cloudinary.js";
+import { testimonialUpload } from "../middleware/upload.js";
 import { validateTestimonialData, rateLimitTestimonials } from "../middleware/testimonialValidation.js";
 
 const router = express.Router();
@@ -50,12 +50,12 @@ router.get("/debug", asyncHandler(async (req, res) => {
   const testimonials = await Testimonial.find().limit(5);
   res.json({ testimonials: testimonials.map(t => ({ name: t.name, image: t.image, status: t.status })) });
 }));
-router.post("/", upload.single("image"), asyncHandler(createTestimonial));
+router.post("/", testimonialUpload.single("image"), handleMulterError, asyncHandler(createTestimonial));
 
 // Admin routes
 router.get("/", asyncHandler(getTestimonials));
 router.get("/:id", asyncHandler(getTestimonialById));
-router.put("/:id", upload.single("image"), handleMulterError, asyncHandler(updateTestimonial));
+router.put("/:id", testimonialUpload.single("image"), handleMulterError, asyncHandler(updateTestimonial));
 router.delete("/:id", asyncHandler(deleteTestimonial));
 router.patch("/:id/approve", asyncHandler(approveTestimonial));
 router.patch("/:id/reject", asyncHandler(rejectTestimonial));

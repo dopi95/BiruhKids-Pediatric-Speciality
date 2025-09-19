@@ -31,6 +31,8 @@ const resultSchema = new mongoose.Schema(
             filename: String,
             originalName: String,
             path: String,
+            cloudinaryUrl: String,
+            cloudinaryPublicId: String,
             mimetype: String,
             size: Number,
         }],

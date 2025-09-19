@@ -92,29 +92,31 @@ const deleteResult = async (resultId) => {
 };
 
 // Download result file
-const downloadResultFile = async (filename, originalName) => {
+const downloadResultFile = async (publicId, originalName) => {
   const token = getAuthToken();
-  const response = await axios.get(`${API_URL}/file/${filename}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    responseType: 'blob',
-  });
   
-  const url = window.URL.createObjectURL(new Blob([response.data]));
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', originalName || filename);
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(url);
+  try {
+    // Use the download endpoint which redirects to Cloudinary with attachment flag
+    const downloadUrl = `${API_URL}/download/${encodeURIComponent(publicId)}?token=${token}`;
+    
+    // Create a temporary link and click it to trigger download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = originalName || publicId;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error('Download error:', error);
+    throw error;
+  }
 };
 
 // View result file
-const viewResultFile = async (filename) => {
+const viewResultFile = async (publicId) => {
   const token = getAuthToken();
-  const fileUrl = `${API_URL}/file/${filename}?token=${token}`;
+  const fileUrl = `${API_URL}/file/${encodeURIComponent(publicId)}?token=${token}`;
   window.open(fileUrl, '_blank');
 };
 

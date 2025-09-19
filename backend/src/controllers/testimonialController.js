@@ -1,5 +1,6 @@
 import Testimonial from "../models/Testimonial.js";
-// import cloudinary from "../config/cloudinary.js";
+import fs from "fs";
+import path from "path";
 
 // Get all testimonials (for admin)
 export const getTestimonials = async (req, res) => {
@@ -126,20 +127,18 @@ export const updateTestimonial = async (req, res) => {
 
     // Handle image update
     if (req.file) {
-      // Delete old image from Cloudinary if exists
+      // Delete old image file if exists
       if (testimonial.image) {
         try {
-          // Extract public_id from Cloudinary URL
-          const urlParts = testimonial.image.split('/');
-          const publicId = urlParts[urlParts.length - 1].split('.')[0];
-          const fullPublicId = `biruh-kids/testimonials/${publicId}`;
-          
-          await cloudinary.uploader.destroy(fullPublicId);
+          const oldImagePath = path.join(process.cwd(), 'uploads', 'testimonials', testimonial.image);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
         } catch (deleteError) {
           console.warn("Error deleting old image:", deleteError.message);
         }
       }
-      testimonial.image = req.file.path;
+      testimonial.image = req.file.filename;
     }
 
     // Update other fields with validation
@@ -197,17 +196,15 @@ export const deleteTestimonial = async (req, res) => {
       });
     }
 
-    // Delete associated image from Cloudinary
+    // Delete associated image file
     if (testimonial.image) {
       try {
-        // Extract public_id from Cloudinary URL
-        const urlParts = testimonial.image.split('/');
-        const publicId = urlParts[urlParts.length - 1].split('.')[0];
-        const fullPublicId = `biruh-kids/testimonials/${publicId}`;
-        
-        await cloudinary.uploader.destroy(fullPublicId);
+        const imagePath = path.join(process.cwd(), 'uploads', 'testimonials', testimonial.image);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
       } catch (deleteError) {
-        console.warn("Error deleting image from Cloudinary:", deleteError.message);
+        console.warn("Error deleting image file:", deleteError.message);
       }
     }
 

@@ -1,8 +1,33 @@
-import express from "express";
+// Load environment variables FIRST
 import dotenv from "dotenv";
-import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+
+// ES module fix for __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables with explicit path
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// Debug: Check if environment variables are loaded
+console.log('Environment check:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PORT:', process.env.PORT);
+console.log('CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME ? 'Loaded' : 'Missing');
+console.log('CLOUDINARY_API_KEY:', process.env.CLOUDINARY_API_KEY ? 'Loaded' : 'Missing');
+
+// Validate Cloudinary environment variables
+if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    console.error('Missing Cloudinary environment variables:');
+    console.error('CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME ? 'Set' : 'Missing');
+    console.error('CLOUDINARY_API_KEY:', process.env.CLOUDINARY_API_KEY ? 'Set' : 'Missing');
+    console.error('CLOUDINARY_API_SECRET:', process.env.CLOUDINARY_API_SECRET ? 'Set' : 'Missing');
+    process.exit(1);
+}
+
+import express from "express";
+import cors from "cors";
 import connectDB from "./src/config/db.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import doctorRoutes from "./src/routes/doctorRoutes.js";
@@ -13,13 +38,6 @@ import serviceRoutes from "./src/routes/serviceRoutes.js";
 import testimonialRoutes from "./src/routes/testimonialRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import resultRoutes from "./src/routes/resultRoutes.js";
-
-// ES module fix for __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load environment variables
-dotenv.config();
 
 // Connect to database
 connectDB();
@@ -53,6 +71,63 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// Cloudinary test endpoint
+app.get("/api/test/cloudinary", (req, res) => {
+  const cloudinaryConfig = {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? 'Set' : 'Missing',
+    api_key: process.env.CLOUDINARY_API_KEY ? 'Set' : 'Missing',
+    api_secret: process.env.CLOUDINARY_API_SECRET ? 'Set' : 'Missing'
+  };
+  
+  res.status(200).json({
+    success: true,
+    message: "Cloudinary configuration check",
+    config: cloudinaryConfig,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Test upload endpoint
+app.post("/api/test/upload", (req, res) => {
+  try {
+    // Import the upload middleware dynamically
+    import('./src/middleware/upload.js').then(({ resultUpload }) => {
+      const upload = resultUpload();
+      upload.single('testFile')(req, res, (err) => {
+        if (err) {
+          console.error('Upload test error:', err);
+          return res.status(400).json({
+            success: false,
+            message: err.message,
+            error: err
+          });
+        }
+        
+        res.json({
+          success: true,
+          message: "File upload test successful",
+          file: req.file,
+          timestamp: new Date().toISOString()
+        });
+      });
+    }).catch(err => {
+      console.error('Import error:', err);
+      res.status(500).json({
+        success: false,
+        message: "Failed to load upload middleware",
+        error: err.message
+      });
+    });
+  } catch (error) {
+    console.error('Test upload error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Test upload failed",
+      error: error.message
+    });
+  }
+});
+
 // Debug endpoint for testimonials
 app.get("/api/debug/testimonials", async (req, res) => {
   try {
@@ -70,10 +145,6 @@ app.get("/api/debug/testimonials", async (req, res) => {
       debug: {
         server: "running",
         database: dbStates[dbStatus] || 'unknown',
-        cloudinary: {
-          configured: !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET),
-          cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? 'configured' : 'missing'
-        },
         environment: process.env.NODE_ENV || 'development',
         timestamp: new Date().toISOString()
       }

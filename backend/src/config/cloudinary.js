@@ -1,40 +1,64 @@
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-// Create testimonials upload directory if it doesn't exist
-const uploadsDir = 'uploads/testimonials';
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-// Configure local storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'testimonial-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-// File filter
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only image files are allowed'), false);
-  }
+// Configure Cloudinary with validation (lazy initialization)
+const configureCloudinary = () => {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+        console.error('Missing Cloudinary environment variables:');
+        console.error('CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME ? 'Set' : 'Missing');
+        console.error('CLOUDINARY_API_KEY:', process.env.CLOUDINARY_API_KEY ? 'Set' : 'Missing');
+        console.error('CLOUDINARY_API_SECRET:', process.env.CLOUDINARY_API_SECRET ? 'Set' : 'Missing');
+        return false;
+    }
+    
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+        secure: true
+    });
+    
+    console.log('Cloudinary configured successfully');
+    return true;
 };
 
-// Create multer instance
-export const upload = multer({
-  storage,
-  fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
-  },
-});
+// Initialize configuration when environment variables are available
+let isConfigured = false;
+const ensureCloudinaryConfigured = () => {
+    if (!isConfigured) {
+        isConfigured = configureCloudinary();
+    }
+    return isConfigured;
+};
 
-export default null;
+// Configure Cloudinary storage for result files (lazy initialization)
+const getResultCloudinaryStorage = () => {
+    if (!ensureCloudinaryConfigured()) {
+        throw new Error('Cloudinary not configured properly');
+    }
+    
+    return new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: {
+            folder: 'biruh-kids/results',
+            resource_type: 'auto',
+            public_id: (req, file) => {
+                const timestamp = Date.now();
+                const random = Math.round(Math.random() * 1e9);
+                return `result-${timestamp}-${random}`;
+            },
+            // Remove allowed_formats to let Cloudinary handle all file types
+        },
+    });
+};
+
+// Create storage instance lazily
+let resultCloudinaryStorage = null;
+const getResultStorage = () => {
+    if (!resultCloudinaryStorage) {
+        resultCloudinaryStorage = getResultCloudinaryStorage();
+    }
+    return resultCloudinaryStorage;
+};
+
+export { cloudinary, getResultStorage as resultCloudinaryStorage, ensureCloudinaryConfigured };
