@@ -88,8 +88,14 @@ export const sendWelcomeEmail = async (email, name) => {
 };
 
 // Send result notification email
-export const sendResultNotification = async (email, name) => {
+export const sendResultNotification = async (email, name, resultFiles = []) => {
     const transporter = createTransporter();
+    
+    // Generate download links for files
+    const fileLinks = resultFiles.map(file => {
+        const downloadUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/fl_attachment/${file.cloudinaryPublicId}`;
+        return `<li><a href="${downloadUrl}" style="color: #007799; text-decoration: none;">${file.originalName}</a></li>`;
+    }).join('');
 
     const mailOptions = {
         from: `"Biruh Kids Pediatric Speciality Clinic" <${
@@ -102,7 +108,15 @@ export const sendResultNotification = async (email, name) => {
         <h2 style="color: #007799;">Test Results Available</h2>
         <p>Dear ${name},</p>
         <p>Your test results have been sent to your dashboard. Please log in and check.</p>
-        <p>You can access your results by logging into your account on our website.</p>
+        ${fileLinks ? `
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+          <h3 style="color: #333; margin-top: 0;">Download Your Results:</h3>
+          <ul style="margin: 0; padding-left: 20px;">
+            ${fileLinks}
+          </ul>
+        </div>
+        ` : ''}
+        <p>You can also access your results by logging into your account on our website.</p>
         <p>If you have any questions about your results, please contact us or schedule a follow-up appointment.</p>
         <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
         <p style="color: #666; font-size: 12px;">Biruh Kids Pediatric Specialty Clinic</p>

@@ -14,6 +14,7 @@ const UserDashboard = ({ lang = "En" }) => {
     const fetchResults = async () => {
       try {
         const response = await resultService.getPatientResults();
+        console.log('Fetched results:', response.results);
         setResults(response.results || []);
       } catch (error) {
         console.error("Error fetching results:", error);
@@ -36,34 +37,50 @@ const UserDashboard = ({ lang = "En" }) => {
     }
   };
 
-  const handleDownloadFile = async (filename, originalName) => {
+  const handleDownloadFile = async (file) => {
     try {
-      await resultService.downloadResultFile(filename, originalName);
-    } catch (error) {
-      console.error("Error downloading file:", error);
-    }
-  };
-
-  const handleViewFile = async (filename, originalName) => {
-    try {
-      const fileExt = originalName?.toLowerCase().split('.').pop() || filename.toLowerCase().split('.').pop();
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
-      const fileUrl = `${baseUrl}/results/file/${filename}?token=${localStorage.getItem('token')}`;
+      console.log('Downloading file:', file);
       
-      // For Word documents, force download instead of trying to view
-      if (fileExt === 'doc' || fileExt === 'docx') {
+      // Create download URL manually using Cloudinary's download format
+      if (file.cloudinaryPublicId) {
+        const cloudName = 'dl0ytvdvz'; // Your Cloudinary cloud name
+        const downloadUrl = `https://res.cloudinary.com/${cloudName}/raw/upload/fl_attachment/${file.cloudinaryPublicId}`;
+        
+        console.log('Using direct download URL:', downloadUrl);
+        
         const link = document.createElement('a');
-        link.href = fileUrl;
-        link.download = originalName || filename;
+        link.href = downloadUrl;
+        link.download = file.originalName;
+        link.target = '_blank';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
       } else {
-        // For PDFs and images, open in new tab
-        window.open(fileUrl, '_blank');
+        console.error('No Cloudinary public ID available for file:', file);
+        alert('Download not available. Please contact support.');
+      }
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      alert('Failed to download file. Please try again.');
+    }
+  };
+
+  const handleViewFile = async (file) => {
+    try {
+      console.log('Viewing file:', file);
+      const fileExt = file.originalName?.toLowerCase().split('.').pop() || '';
+      
+      // Always use Cloudinary URL directly for viewing
+      if (file.cloudinaryUrl) {
+        console.log('Using direct Cloudinary URL:', file.cloudinaryUrl);
+        window.open(file.cloudinaryUrl, '_blank');
+      } else {
+        console.error('No Cloudinary URL available for file:', file);
+        alert('File URL not available. Please contact support.');
       }
     } catch (error) {
       console.error("Error viewing file:", error);
+      alert('Failed to view file. Please try again.');
     }
   };
 
@@ -167,15 +184,17 @@ const UserDashboard = ({ lang = "En" }) => {
                             <button 
                               className="p-1 text-blue-600 hover:text-blue-700"
                               onClick={() => {
-                                handleViewFile(file.filename, file.originalName);
+                                handleViewFile(file);
                                 !result.isRead && handleMarkAsRead(result._id);
                               }}
+                              title="View file"
                             >
                               <Eye className="h-4 w-4" />
                             </button>
                             <button 
                               className="p-1 text-blue-600 hover:text-blue-700"
-                              onClick={() => handleDownloadFile(file.filename, file.originalName)}
+                              onClick={() => handleDownloadFile(file)}
+                              title="Download file"
                             >
                               <Download className="h-4 w-4" />
                             </button>
