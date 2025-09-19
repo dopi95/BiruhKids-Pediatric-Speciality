@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { MessageSquare, Filter, Check, X, Trash2, Star, Users } from "lucide-react";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import { getTestimonials, approveTestimonial, rejectTestimonial, deleteTestimonial } from "../../services/testimonialService";
 
 const TestimonialManagement = () => {
@@ -13,6 +14,7 @@ const TestimonialManagement = () => {
     ]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, testimonial: null });
 
 
     // Load testimonials from API
@@ -79,13 +81,13 @@ const TestimonialManagement = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!confirm("Are you sure you want to delete this testimonial? This action cannot be undone.")) {
-            return;
-        }
-        
+    const handleDelete = async (testimonial) => {
+        setDeleteModal({ isOpen: true, testimonial });
+    };
+
+    const confirmDelete = async () => {
         try {
-            await deleteTestimonial(id);
+            await deleteTestimonial(deleteModal.testimonial._id);
             const response = await getTestimonials(filterStatus);
             setTestimonials(response.data);
             updateStats(response.data);
@@ -318,7 +320,7 @@ const renderUserAvatar = (testimonial) => {
                                                 </button>
                                             )}
                                             <button
-                                                onClick={() => handleDelete(testimonial._id)}
+                                                onClick={() => handleDelete(testimonial)}
                                                 className="flex items-center px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
                                             >
                                                 <Trash2 className="h-4 w-4 mr-1" />
@@ -332,6 +334,18 @@ const renderUserAvatar = (testimonial) => {
                     )}
                 </div>
             </div>
+            
+            <ConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ isOpen: false, testimonial: null })}
+                onConfirm={confirmDelete}
+                title="Delete Testimonial"
+                message="Are you sure you want to delete this testimonial from:"
+                confirmText="Delete"
+                requireTextConfirmation={true}
+                confirmationText={deleteModal.testimonial?.email || ""}
+                isLoading={isLoading}
+            />
         </div>
     );
 };

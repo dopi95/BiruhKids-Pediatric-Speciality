@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, FileText, Send, History, X, Trash2, Calendar, Eye } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StatsCard from "../../components/StatsCard";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import userService from "../../services/userService";
 import resultService from "../../services/resultService";
 
@@ -17,6 +18,7 @@ const ResultManagement = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [patientResults, setPatientResults] = useState([]);
     const [historyLoading, setHistoryLoading] = useState(false);
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, result: null });
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -158,18 +160,20 @@ const ResultManagement = () => {
         }
     };
 
-    const handleDeleteResult = async (resultId) => {
-        if (window.confirm('Are you sure you want to delete this result?')) {
-            try {
-                await resultService.deleteResult(resultId);
-                // Refresh the results after deletion
-                handleViewHistory(selectedPatient);
-                // Refresh stats
-                fetchStats();
-            } catch (err) {
-                console.error("Error deleting result:", err);
-                alert('Failed to delete result. Please try again.');
-            }
+    const handleDeleteResult = async (result) => {
+        setDeleteModal({ isOpen: true, result });
+    };
+
+    const confirmDeleteResult = async () => {
+        try {
+            await resultService.deleteResult(deleteModal.result._id);
+            // Refresh the results after deletion
+            handleViewHistory(selectedPatient);
+            // Refresh stats
+            fetchStats();
+        } catch (err) {
+            console.error("Error deleting result:", err);
+            setError('Failed to delete result. Please try again.');
         }
     };
 
@@ -433,7 +437,7 @@ const ResultManagement = () => {
                                                     <span className="text-sm text-gray-500">by {result.doctorName}</span>
                                                 </div>
                                                 <button
-                                                    onClick={() => handleDeleteResult(result._id)}
+                                                    onClick={() => handleDeleteResult(result)}
                                                     className="text-red-500 hover:text-red-700 p-1"
                                                     title="Delete result"
                                                 >
@@ -480,6 +484,18 @@ const ResultManagement = () => {
                     </div>
                 </div>
             )}
+            
+            <ConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ isOpen: false, result: null })}
+                onConfirm={confirmDeleteResult}
+                title="Delete Result"
+                message={`Are you sure you want to delete this result:`}
+                confirmText="Delete"
+                requireTextConfirmation={true}
+                confirmationText={deleteModal.result ? `${deleteModal.result.doctorName} - ${new Date(deleteModal.result.testDate).toLocaleDateString()}` : ""}
+                isLoading={false}
+            />
         </div>
     );
 };
