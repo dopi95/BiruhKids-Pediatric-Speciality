@@ -16,8 +16,8 @@ router.get('/', protect, requirePermission('userManagement'), getUsers);
 // Get user by ID - users can access their own profile, admins can access any
 router.get('/:id', protect, getUserById);
 
-// Update user - requires user management permission
-router.put('/:id', protect, requirePermission('userManagement'), updateUser);
+// Update user - users can update their own profile, admins can update any
+router.put('/:id', protect, updateUser);
 
 // Delete user - requires user management permission
 router.delete('/:id', protect, requirePermission('userManagement'), deleteUser);

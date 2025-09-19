@@ -16,17 +16,27 @@ const SubscriberManagement = () => {
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState("all");
     const [filterSource, setFilterSource] = useState("all");
-    const [refreshing, setRefreshing] = useState(false);
+
+    const [lastUpdate, setLastUpdate] = useState(Date.now());
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, subscriber: null, isBulk: false });
 
     useEffect(() => {
         fetchSubscribers();
         fetchStats();
+        
+        // Poll for updates every 30 seconds
+        const interval = setInterval(() => {
+            fetchSubscribers(false);
+            fetchStats();
+            setLastUpdate(Date.now());
+        }, 30000);
+        
+        return () => clearInterval(interval);
     }, []);
 
-    const fetchSubscribers = async () => {
+    const fetchSubscribers = async (showLoading = true) => {
         try {
-            setLoading(true);
+            if (showLoading) setLoading(true);
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers`);
             const data = await response.json();
             
@@ -39,8 +49,7 @@ const SubscriberManagement = () => {
             console.error("Error fetching subscribers:", error);
             toast.error("Network error. Please try again.");
         } finally {
-            setLoading(false);
-            setRefreshing(false);
+            if (showLoading) setLoading(false);
         }
     };
 
@@ -73,11 +82,7 @@ const SubscriberManagement = () => {
         }
     };
 
-    const handleRefresh = () => {
-        setRefreshing(true);
-        fetchSubscribers();
-        fetchStats();
-    };
+
 
     const filteredSubscribers = subscribers.filter((subscriber) => {
         const matchesSearch = subscriber.email
@@ -220,16 +225,7 @@ const SubscriberManagement = () => {
                         </p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                        <button
-                            onClick={handleRefresh}
-                            disabled={refreshing}
-                            className="w-full sm:max-w-[200px] bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 flex justify-center items-center"
-                        >
-                            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                            {refreshing ? 'Refreshing...' : 'Refresh'}
-                        </button>
-                    </div>
+
                 </div>
             </div>
 
@@ -290,9 +286,14 @@ const SubscriberManagement = () => {
                 <div className="bg-white rounded-lg shadow-sm">
                     <div className="p-6 border-b border-gray-200">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-semibold text-gray-900">
-                                Subscribers ({filteredSubscribers.length})
-                            </h2>
+                            <div className="flex items-center gap-3">
+                                <h2 className="text-lg font-semibold text-gray-900">
+                                    Subscribers ({filteredSubscribers.length})
+                                </h2>
+                                <span className="text-xs text-gray-500">
+                                    Auto-updates every 30s
+                                </span>
+                            </div>
                             <div className="text-sm text-gray-600">
                                 {selectedSubscribers.length > 0 && (
                                     <span>

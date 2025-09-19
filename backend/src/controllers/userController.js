@@ -92,9 +92,23 @@ export const getUserById = asyncHandler(async (req, res) => {
 
 // @desc    Update user
 // @route   PUT /api/users/:id
-// @access  Private (Admin only)
+// @access  Private (Own profile or Admin)
 export const updateUser = asyncHandler(async (req, res) => {
-    const { name, email, phone, role, permissions, password } = req.body;
+    const { name, email, phone, role, permissions, password, emailNotifications } = req.body;
+    const currentUser = req.user;
+    const targetUserId = req.params.id;
+    
+    // Check if user is updating their own profile or is admin
+    const isOwnProfile = currentUser._id.toString() === targetUserId;
+    const isAdmin = ['admin', 'super_admin'].includes(currentUser.role) || 
+                   (currentUser.permissions && currentUser.permissions.userManagement);
+    
+    if (!isOwnProfile && !isAdmin) {
+        return res.status(403).json({
+            success: false,
+            message: "Access denied"
+        });
+    }
     
     const user = await User.findById(req.params.id);
     
@@ -105,18 +119,26 @@ export const updateUser = asyncHandler(async (req, res) => {
         });
     }
     
-    // Update fields
+    // Update basic fields
     user.name = name || user.name;
     user.email = email || user.email;
     user.phone = phone || user.phone;
     
-    // Update admin-specific fields if provided
-    if (role) {
-        user.role = role;
+    // Update email notification preference
+    if (typeof emailNotifications === 'boolean') {
+        user.emailNotifications = emailNotifications;
     }
-    if (permissions) {
-        user.permissions = permissions;
+    
+    // Only admins can update role and permissions
+    if (isAdmin) {
+        if (role) {
+            user.role = role;
+        }
+        if (permissions) {
+            user.permissions = permissions;
+        }
     }
+    
     if (password && password.trim() !== '') {
         user.password = password;
     }
@@ -133,6 +155,7 @@ export const updateUser = asyncHandler(async (req, res) => {
             phone: user.phone,
             role: user.role,
             permissions: user.permissions,
+            emailNotifications: user.emailNotifications,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt
         }
