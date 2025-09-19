@@ -95,6 +95,46 @@ export const PersonalInfoForm = ({
                     </div>
                 )}
             </div>
+
+            {/* Email Notifications Toggle */}
+            <div className="mt-6">
+                <div className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-lg">
+                    <div className="flex flex-col">
+                        <span className="text-sm text-gray-700 font-medium">
+                            Email Notifications
+                        </span>
+                        <span className="text-xs text-gray-500">
+                            Receive updates and notifications via email
+                        </span>
+                        {formData.emailNotifications && (
+                            <span className="text-xs text-blue-600 font-medium mt-1">
+                                ✓ Notifications enabled
+                            </span>
+                        )}
+                    </div>
+
+                    <button
+                        type="button"
+                        disabled={!isEditing}
+                        onClick={() => handleChange({
+                            target: {
+                                name: 'emailNotifications',
+                                type: 'checkbox',
+                                checked: !formData.emailNotifications
+                            }
+                        })}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                            formData.emailNotifications ? "bg-blue-600" : "bg-gray-300"
+                        } ${!isEditing ? "opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                        <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
+                                formData.emailNotifications ? "translate-x-6" : "translate-x-1"
+                            }`}
+                        />
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

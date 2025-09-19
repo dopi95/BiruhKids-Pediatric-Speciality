@@ -15,6 +15,7 @@ export default function Profile() {
         name: "",
         email: "",
         phone: "",
+        emailNotifications: false,
     });
     const [originalData, setOriginalData] = useState({});
 
@@ -33,6 +34,7 @@ export default function Profile() {
                 name: userData.name || "",
                 email: userData.email || "",
                 phone: userData.phone || "",
+                emailNotifications: userData.emailNotifications || false,
             };
             setFormData(profileData);
             setOriginalData(profileData);
@@ -44,7 +46,11 @@ export default function Profile() {
     };
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value, type, checked } = e.target;
+        setFormData({ 
+            ...formData, 
+            [name]: type === 'checkbox' ? checked : value 
+        });
     };
 
     const handleCancel = () => {

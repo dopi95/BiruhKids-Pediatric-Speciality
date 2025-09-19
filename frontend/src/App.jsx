@@ -34,6 +34,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 export default function App() {
     return (
@@ -97,25 +98,31 @@ export default function App() {
                     <Route
                         path="/login"
                         element={
-                            <MainLayout>
-                                <SignIn />
-                            </MainLayout>
+                            <PublicRoute>
+                                <MainLayout>
+                                    <SignIn />
+                                </MainLayout>
+                            </PublicRoute>
                         }
                     />
                     <Route
                         path="/register"
                         element={
-                            <MainLayout>
-                                <SignUp />
-                            </MainLayout>
+                            <PublicRoute>
+                                <MainLayout>
+                                    <SignUp />
+                                </MainLayout>
+                            </PublicRoute>
                         }
                     />
                     <Route
                         path="/forgot-password"
                         element={
-                            <MainLayout>
-                                <ForgotPassword />
-                            </MainLayout>
+                            <PublicRoute>
+                                <MainLayout>
+                                    <ForgotPassword />
+                                </MainLayout>
+                            </PublicRoute>
                         }
                     />
                     <Route
