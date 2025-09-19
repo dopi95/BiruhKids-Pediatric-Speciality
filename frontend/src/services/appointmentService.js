@@ -1,34 +1,55 @@
-// src/services/appointmentService.js
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import axios from "axios";
 
-export const appointmentService = {
-  // Create new appointment
-  createAppointment: async (appointmentData) => {
-    const response = await fetch(`${API_BASE_URL}/appointments`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(appointmentData),
-    });
-    return response.json();
-  },
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/appointments`;
 
-  // Get all appointments
-  getAllAppointments: async () => {
-    const response = await fetch(`${API_BASE_URL}/appointments`);
-    return response.json();
-  },
-
-  // Update appointment status
-  updateAppointmentStatus: async (id, status) => {
-    const response = await fetch(`${API_BASE_URL}/appointments/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status }),
-    });
-    return response.json();
-  },
+// Get auth token from localStorage
+const getAuthToken = () => {
+  return localStorage.getItem('token');
 };
+
+// Create axios instance with default config
+const apiClient = axios.create({
+  baseURL: API_URL,
+});
+
+// Add auth token to requests
+apiClient.interceptors.request.use((config) => {
+  const token = getAuthToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Get all appointments
+const getAllAppointments = async () => {
+  const response = await apiClient.get('/');
+  return response.data;
+};
+
+// Create new appointment (public)
+const createAppointment = async (appointmentData) => {
+  const response = await axios.post(API_URL, appointmentData);
+  return response.data;
+};
+
+// Confirm appointment
+const confirmAppointment = async (appointmentId) => {
+  const response = await apiClient.put(`/${appointmentId}/confirm`);
+  return response.data;
+};
+
+// Cancel appointment
+const cancelAppointment = async (appointmentId, reason = "Doctor not available") => {
+  const response = await apiClient.put(`/${appointmentId}/cancel`, { reason });
+  return response.data;
+};
+
+const appointmentService = {
+  getAllAppointments,
+  createAppointment,
+  confirmAppointment,
+  cancelAppointment,
+};
+
+export default appointmentService;
