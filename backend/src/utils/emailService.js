@@ -135,6 +135,13 @@ export const sendResultNotification = async (email, name, resultFiles = []) => {
 
 // Newsletter: New Doctor Added
 export const sendNewDoctorNewsletter = async (doctor) => {
+    console.log('Sending newsletter for doctor:', {
+        name: doctor.name,
+        field: doctor.field,
+        experience: doctor.experience,
+        photo: doctor.photo
+    });
+    
     const activeSubscribers = await Subscriber.find({ status: "active" });
     const notificationUsers = await User.find({ emailNotifications: true });
     
@@ -163,12 +170,12 @@ export const sendNewDoctorNewsletter = async (doctor) => {
                     <div style="background: white; padding: 30px; border-radius: 10px;">
                         <h2 style="color: #007799; text-align: center;">🩺 New Doctor Alert!</h2>
                         <div style="text-align: center; margin: 20px 0;">
-                            ${doctor.photo ? `<img src="${doctor.photo}" alt="Dr. ${doctor.name}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">` : ''}
+                            ${doctor.photo ? `<img src="${doctor.photo}" alt="Dr. ${doctor.name}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #007799; display: block; margin: 0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><div style="width: 150px; height: 150px; border-radius: 50%; background: #f0f0f0; display: none; align-items: center; justify-content: center; margin: 0 auto; border: 3px solid #007799;"><span style="color: #666; font-size: 14px;">Photo</span></div>` : `<div style="width: 150px; height: 150px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 3px solid #007799;"><span style="color: #666; font-size: 14px;">No Photo</span></div>`}
                         </div>
                         <h3 style="color: #333; text-align: center;">Dr. ${doctor.name}</h3>
                         <div style="background: #e8f4f8; padding: 15px; border-radius: 5px; margin: 15px 0;">
-                            <p><strong>Specialty:</strong> ${doctor.field}</p>
-                            <p><strong>Experience:</strong> ${doctor.experience}</p>
+                            <p><strong>Specialty:</strong> ${doctor.field || 'Not specified'}</p>
+                            <p><strong>Experience:</strong> ${doctor.experience || 'Not specified'}</p>
                         </div>
                         <p style="text-align: center; color: #666;">We're excited to welcome Dr. ${doctor.name} to our team of pediatric specialists!</p>
                         <div style="text-align: center; margin: 25px 0;">
