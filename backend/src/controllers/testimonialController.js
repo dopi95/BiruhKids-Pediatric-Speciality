@@ -1,6 +1,7 @@
 import Testimonial from "../models/Testimonial.js";
 import fs from "fs";
 import path from "path";
+import { cloudinary } from "../config/cloudinary.js";
 
 // Get all testimonials (for admin)
 export const getTestimonials = async (req, res) => {
@@ -83,8 +84,15 @@ export const createTestimonial = async (req, res) => {
 
     let imageUrl = null;
     if (req.file) {
-      imageUrl = req.file.filename;
-      console.log('Image saved:', imageUrl);
+      // Use Cloudinary URL if available, otherwise use local filename
+      imageUrl = req.file.secure_url || req.file.filename;
+      console.log('Testimonial image upload details:', {
+        hasSecureUrl: !!req.file.secure_url,
+        hasPublicId: !!req.file.public_id,
+        filename: req.file.filename,
+        finalUrl: imageUrl,
+        isCloudinary: imageUrl.includes('cloudinary.com')
+      });
     }
 
     const testimonial = new Testimonial({
@@ -127,18 +135,36 @@ export const updateTestimonial = async (req, res) => {
 
     // Handle image update
     if (req.file) {
-      // Delete old image file if exists
-      if (testimonial.image) {
+      // Delete old image if it's from Cloudinary
+      if (testimonial.image && testimonial.image.includes('cloudinary.com')) {
+        try {
+          const urlParts = testimonial.image.split('/');
+          const publicIdWithExt = urlParts[urlParts.length - 1];
+          const publicId = publicIdWithExt.split('.')[0];
+          await cloudinary.uploader.destroy(`biruh-kids/testimonials/${publicId}`);
+          console.log('Old testimonial image deleted from Cloudinary');
+        } catch (deleteError) {
+          console.warn("Error deleting old Cloudinary image:", deleteError.message);
+        }
+      } else if (testimonial.image) {
+        // Delete local file if exists
         try {
           const oldImagePath = path.join(process.cwd(), 'uploads', 'testimonials', testimonial.image);
           if (fs.existsSync(oldImagePath)) {
             fs.unlinkSync(oldImagePath);
           }
         } catch (deleteError) {
-          console.warn("Error deleting old image:", deleteError.message);
+          console.warn("Error deleting old local image:", deleteError.message);
         }
       }
-      testimonial.image = req.file.filename;
+      
+      // Set new image URL
+      testimonial.image = req.file.secure_url || req.file.filename;
+      console.log('Testimonial image updated:', {
+        filename: req.file.filename,
+        url: testimonial.image,
+        publicId: req.file.public_id
+      });
     }
 
     // Update other fields with validation
@@ -198,13 +224,27 @@ export const deleteTestimonial = async (req, res) => {
 
     // Delete associated image file
     if (testimonial.image) {
-      try {
-        const imagePath = path.join(process.cwd(), 'uploads', 'testimonials', testimonial.image);
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
+      if (testimonial.image.includes('cloudinary.com')) {
+        // Delete from Cloudinary
+        try {
+          const urlParts = testimonial.image.split('/');
+          const publicIdWithExt = urlParts[urlParts.length - 1];
+          const publicId = publicIdWithExt.split('.')[0];
+          await cloudinary.uploader.destroy(`biruh-kids/testimonials/${publicId}`);
+          console.log('Testimonial image deleted from Cloudinary');
+        } catch (deleteError) {
+          console.warn("Error deleting Cloudinary image:", deleteError.message);
         }
-      } catch (deleteError) {
-        console.warn("Error deleting image file:", deleteError.message);
+      } else {
+        // Delete local file
+        try {
+          const imagePath = path.join(process.cwd(), 'uploads', 'testimonials', testimonial.image);
+          if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+          }
+        } catch (deleteError) {
+          console.warn("Error deleting local image file:", deleteError.message);
+        }
       }
     }
 

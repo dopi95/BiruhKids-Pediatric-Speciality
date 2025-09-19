@@ -7,16 +7,41 @@ import {
   deleteDoctor,
   getDoctorStats
 } from "../controllers/doctorController.js";
-import upload from "../middleware/upload.js";
+import { doctorUpload } from "../middleware/upload.js";
 
 const router = express.Router();
 
 // Doctor routes
-router.post("/", upload.single("photo"), createDoctor);
+router.post("/", (req, res, next) => {
+  try {
+    const upload = doctorUpload();
+    upload.single("photo")(req, res, next);
+  } catch (error) {
+    console.error('Doctor upload middleware error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Photo upload service not available"
+    });
+  }
+}, createDoctor);
+
 router.get("/", getDoctors);
 router.get("/stats", getDoctorStats);
 router.get("/:id", getDoctor);
-router.put("/:id", upload.single("photo"), updateDoctor);
+
+router.put("/:id", (req, res, next) => {
+  try {
+    const upload = doctorUpload();
+    upload.single("photo")(req, res, next);
+  } catch (error) {
+    console.error('Doctor upload middleware error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Photo upload service not available"
+    });
+  }
+}, updateDoctor);
+
 router.delete("/:id", deleteDoctor);
 
 export default router;

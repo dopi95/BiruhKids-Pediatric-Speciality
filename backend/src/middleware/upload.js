@@ -1,7 +1,10 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { resultCloudinaryStorage } from "../config/cloudinary.js";
+import { resultCloudinaryStorage, cloudinary, ensureCloudinaryConfigured } from "../config/cloudinary.js";
+
+
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 // Ensure upload directories exist
 const doctorUploadDir = "uploads/doctors";
@@ -18,7 +21,37 @@ if (!fs.existsSync(testimonialUploadDir)) {
   fs.mkdirSync(testimonialUploadDir, { recursive: true });
 }
 
-// Configure multer for doctor photos
+// Configure Cloudinary storage for doctor photos
+const getDoctorCloudinaryStorage = () => {
+    // Ensure Cloudinary is configured
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+        throw new Error('Cloudinary configuration missing');
+    }
+    
+    console.log('Creating Cloudinary storage for doctors with config:', {
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY ? 'Set' : 'Missing'
+    });
+    
+    return new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: async (req, file) => {
+            const timestamp = Date.now();
+            const random = Math.round(Math.random() * 1e9);
+            
+            return {
+                folder: "biruh-kids/doctors",
+                resource_type: "image",
+                public_id: `doctor-${timestamp}-${random}`,
+                transformation: [
+                    { width: 400, height: 400, crop: "fit", quality: "auto" }
+                ]
+            };
+        },
+    });
+};
+
+// Fallback local storage for doctor photos
 const doctorStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, doctorUploadDir);
@@ -42,7 +75,31 @@ const getResultStorage = () => {
     }
 };
 
-// Configure multer for testimonial images
+// Configure Cloudinary storage for testimonial images
+const getTestimonialCloudinaryStorage = () => {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+        throw new Error('Cloudinary configuration missing');
+    }
+    
+    return new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: async (req, file) => {
+            const timestamp = Date.now();
+            const random = Math.round(Math.random() * 1e9);
+            
+            return {
+                folder: "biruh-kids/testimonials",
+                resource_type: "image",
+                public_id: `testimonial-${timestamp}-${random}`,
+                transformation: [
+                    { width: 300, height: 300, crop: "fit", quality: "auto" }
+                ]
+            };
+        },
+    });
+};
+
+// Fallback local storage for testimonial images
 const testimonialStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, testimonialUploadDir);
@@ -101,14 +158,38 @@ const resultFileFilter = (req, file, cb) => {
   }
 };
 
-// Doctor photo upload
-const doctorUpload = multer({
-  storage: doctorStorage,
-  fileFilter: imageFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+// Doctor photo upload with Cloudinary
+const createDoctorUpload = () => {
+  try {
+    // Ensure Cloudinary is configured first
+    ensureCloudinaryConfigured();
+    
+    const storage = getDoctorCloudinaryStorage();
+    console.log('Using Cloudinary storage for doctors');
+    
+    return multer({
+      storage: storage,
+      fileFilter: imageFilter,
+      limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+      }
+    });
+  } catch (error) {
+    console.warn('Cloudinary not available for doctors, using local storage:', error.message);
+    return multer({
+      storage: doctorStorage,
+      fileFilter: imageFilter,
+      limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+      }
+    });
   }
-});
+};
+
+const getDoctorUpload = () => {
+  console.log('Creating doctor upload instance...');
+  return createDoctorUpload();
+};
 
 // Result file upload (lazy initialization)
 const createResultUpload = () => {
@@ -130,17 +211,36 @@ const getResultUpload = () => {
   return resultUpload;
 };
 
-// Testimonial image upload
-const testimonialUpload = multer({
-  storage: testimonialStorage,
-  fileFilter: imageFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+// Testimonial image upload with Cloudinary
+const createTestimonialUpload = () => {
+  try {
+    ensureCloudinaryConfigured();
+    const storage = getTestimonialCloudinaryStorage();
+    console.log('Using Cloudinary storage for testimonials');
+    
+    return multer({
+      storage: storage,
+      fileFilter: imageFilter,
+      limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+      }
+    });
+  } catch (error) {
+    console.warn('Cloudinary not available for testimonials, using local storage:', error.message);
+    return multer({
+      storage: testimonialStorage,
+      fileFilter: imageFilter,
+      limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+      }
+    });
   }
-});
+};
 
-// Default export for backward compatibility (doctor upload)
-export default doctorUpload;
+const getTestimonialUpload = () => {
+  console.log('Creating testimonial upload instance...');
+  return createTestimonialUpload();
+};
 
 // Named exports
-export { doctorUpload, getResultUpload as resultUpload, testimonialUpload };
+export { getDoctorUpload as doctorUpload, getResultUpload as resultUpload, getTestimonialUpload as testimonialUpload };

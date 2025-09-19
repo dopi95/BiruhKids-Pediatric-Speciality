@@ -33,6 +33,8 @@ const resultSchema = new mongoose.Schema(
             path: String,
             cloudinaryUrl: String,
             cloudinaryPublicId: String,
+            cloudinaryFormat: String,
+            cloudinaryVersion: String,
             mimetype: String,
             size: Number,
         }],
