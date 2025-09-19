@@ -30,7 +30,6 @@ const AdminDashboard = () => {
         { title: "Upload Results", link: "/admin/results", icon: FileText, color: "green" },
         { title: "Add Video", link: "/admin/videos/form", icon: Play, color: "red" },
         { title: "Review Testimonials", link: "/admin/testimonials", icon: MessageSquare, color: "yellow" },
-        { title: "Send Newsletter", link: "/admin/subscribers", icon: Mail, color: "purple" },
         { title: "Manage Admins", link: "/admin/admins", icon: UserCheck, color: "pink" },
         { title: "Manage Appointments", link: "/admin/appointments", icon: CalendarDays, color: "indigo" },
         { title: "Manage Services", link: "/admin/services", icon: FileText, color: "teal" }, // <- New
