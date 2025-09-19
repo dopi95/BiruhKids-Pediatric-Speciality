@@ -50,12 +50,34 @@ router.get("/debug", asyncHandler(async (req, res) => {
   const testimonials = await Testimonial.find().limit(5);
   res.json({ testimonials: testimonials.map(t => ({ name: t.name, image: t.image, status: t.status })) });
 }));
-router.post("/", testimonialUpload.single("image"), handleMulterError, asyncHandler(createTestimonial));
+router.post("/", (req, res, next) => {
+  try {
+    const upload = testimonialUpload();
+    upload.single("image")(req, res, next);
+  } catch (error) {
+    console.error('Testimonial upload middleware error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Image upload service not available"
+    });
+  }
+}, handleMulterError, asyncHandler(createTestimonial));
 
 // Admin routes
 router.get("/", asyncHandler(getTestimonials));
 router.get("/:id", asyncHandler(getTestimonialById));
-router.put("/:id", testimonialUpload.single("image"), handleMulterError, asyncHandler(updateTestimonial));
+router.put("/:id", (req, res, next) => {
+  try {
+    const upload = testimonialUpload();
+    upload.single("image")(req, res, next);
+  } catch (error) {
+    console.error('Testimonial upload middleware error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Image upload service not available"
+    });
+  }
+}, handleMulterError, asyncHandler(updateTestimonial));
 router.delete("/:id", asyncHandler(deleteTestimonial));
 router.patch("/:id/approve", asyncHandler(approveTestimonial));
 router.patch("/:id/reject", asyncHandler(rejectTestimonial));

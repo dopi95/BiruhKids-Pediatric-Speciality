@@ -75,7 +75,31 @@ const getResultStorage = () => {
     }
 };
 
-// Configure multer for testimonial images
+// Configure Cloudinary storage for testimonial images
+const getTestimonialCloudinaryStorage = () => {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+        throw new Error('Cloudinary configuration missing');
+    }
+    
+    return new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: async (req, file) => {
+            const timestamp = Date.now();
+            const random = Math.round(Math.random() * 1e9);
+            
+            return {
+                folder: "biruh-kids/testimonials",
+                resource_type: "image",
+                public_id: `testimonial-${timestamp}-${random}`,
+                transformation: [
+                    { width: 300, height: 300, crop: "fit", quality: "auto" }
+                ]
+            };
+        },
+    });
+};
+
+// Fallback local storage for testimonial images
 const testimonialStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, testimonialUploadDir);
@@ -187,14 +211,36 @@ const getResultUpload = () => {
   return resultUpload;
 };
 
-// Testimonial image upload
-const testimonialUpload = multer({
-  storage: testimonialStorage,
-  fileFilter: imageFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+// Testimonial image upload with Cloudinary
+const createTestimonialUpload = () => {
+  try {
+    ensureCloudinaryConfigured();
+    const storage = getTestimonialCloudinaryStorage();
+    console.log('Using Cloudinary storage for testimonials');
+    
+    return multer({
+      storage: storage,
+      fileFilter: imageFilter,
+      limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+      }
+    });
+  } catch (error) {
+    console.warn('Cloudinary not available for testimonials, using local storage:', error.message);
+    return multer({
+      storage: testimonialStorage,
+      fileFilter: imageFilter,
+      limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+      }
+    });
   }
-});
+};
+
+const getTestimonialUpload = () => {
+  console.log('Creating testimonial upload instance...');
+  return createTestimonialUpload();
+};
 
 // Named exports
-export { getDoctorUpload as doctorUpload, getResultUpload as resultUpload, testimonialUpload };
+export { getDoctorUpload as doctorUpload, getResultUpload as resultUpload, getTestimonialUpload as testimonialUpload };

@@ -114,9 +114,15 @@ const renderUserAvatar = (testimonial) => {
     return (
       <div className="relative w-12 h-12 rounded-full overflow-hidden flex items-center justify-center mr-4 border border-gray-200">
         <img
-          src={`http://localhost:5000/uploads/testimonials/${testimonial.image}`}
+          src={
+            testimonial.image.includes('cloudinary.com') 
+              ? testimonial.image 
+              : testimonial.image.includes('biruh-kids/') 
+                ? `https://res.cloudinary.com/door11ovj/image/upload/${testimonial.image}` 
+                : `http://localhost:5000/uploads/testimonials/${testimonial.image}`
+          }
           alt={testimonial.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain bg-gray-100"
           onError={(e) => {
             e.target.style.display = "none";
             const fallback = document.getElementById(`fallback-${testimonial._id}`);
