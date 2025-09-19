@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import ServiceModal from "./ServiceModal";
 import ServiceCard from "../../../components/ServiceCard";
-import { Plus, AlertTriangle, Settings, Search } from "lucide-react";
+import { Plus, Settings, Search } from "lucide-react";
 import StatsCard from "../../../components/StatsCard";
+import ConfirmationModal from "../../../components/ConfirmationModal";
 import serviceService from "../../../services/serviceService";
 
 export default function ServiceManagement() {
     const [services, setServices] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [serviceToDelete, setServiceToDelete] = useState(null);
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, service: null });
     const [editingService, setEditingService] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(true);
@@ -86,17 +86,14 @@ export default function ServiceManagement() {
     };
 
     const confirmDelete = (service) => {
-        setServiceToDelete(service);
-        setIsDeleteModalOpen(true);
+        setDeleteModal({ isOpen: true, service });
     };
 
     const handleDelete = async () => {
         try {
-            await serviceService.deleteService(serviceToDelete._id);
+            await serviceService.deleteService(deleteModal.service._id);
             // Refresh the services list
             fetchServices();
-            setServiceToDelete(null);
-            setIsDeleteModalOpen(false);
         } catch (error) {
             console.error("Error deleting service:", error);
         }
@@ -195,38 +192,17 @@ export default function ServiceManagement() {
                 editingService={editingService}
             />
             
-            {/* Delete Modal */}
-            {isDeleteModalOpen && serviceToDelete && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50 p-4">
-                    <div className="bg-white rounded-lg p-4 sm:p-6 max-w-md w-full text-center shadow-lg">
-                        <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                        <h3 className="text-lg font-semibold mb-2">
-                            Are you sure?
-                        </h3>
-                        <p className="text-gray-600 mb-6">
-                            Do you really want to delete{" "}
-                            <span className="font-semibold">
-                                {serviceToDelete.title_en}
-                            </span>
-                            ?
-                        </p>
-                        <div className="flex flex-col sm:flex-row justify-center gap-2">
-                            <button
-                                onClick={() => setIsDeleteModalOpen(false)}
-                                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-                            >
-                                No
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                            >
-                                Yes, Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <ConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ isOpen: false, service: null })}
+                onConfirm={handleDelete}
+                title="Delete Service"
+                message="Are you sure you want to delete this service:"
+                confirmText="Delete"
+                requireTextConfirmation={true}
+                confirmationText={deleteModal.service?.title_en || ""}
+                isLoading={loading}
+            />
         </div>
     );
 }

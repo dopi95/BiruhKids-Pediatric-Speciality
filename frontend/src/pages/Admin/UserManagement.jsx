@@ -3,11 +3,11 @@ import {
   Search,
   Trash2,
   Users,
-  AlertTriangle,
   Edit,
   Loader,
 } from "lucide-react";
 import StatsCard from "../../components/StatsCard";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import userService from "../../services/userService";
 
 const UserManagement = () => {
@@ -15,8 +15,7 @@ const UserManagement = () => {
   const [userList, setUserList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, user: null });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [updating, setUpdating] = useState(false);
@@ -66,17 +65,16 @@ const UserManagement = () => {
 
   // Open delete modal
   const confirmDelete = (user) => {
-    setUserToDelete(user);
-    setIsDeleteModalOpen(true);
+    setDeleteModal({ isOpen: true, user });
   };
 
   // Handle actual delete
   const handleDelete = async () => {
-    if (!userToDelete) return;
+    if (!deleteModal.user) return;
 
     try {
       setDeleting(true);
-      const response = await userService.deleteUser(userToDelete._id);
+      const response = await userService.deleteUser(deleteModal.user._id);
       if (response.success) {
         await fetchUsers(); // Refresh the list
         setError("");
@@ -85,8 +83,6 @@ const UserManagement = () => {
       setError(err.response?.data?.message || "Failed to delete user");
     } finally {
       setDeleting(false);
-      setIsDeleteModalOpen(false);
-      setUserToDelete(null);
     }
   };
 
@@ -261,35 +257,17 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {isDeleteModalOpen && userToDelete && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50 p-4">
-          <div className="bg-white rounded-lg p-4 sm:p-6 max-w-md w-full text-center shadow-lg">
-            <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Are you sure?</h3>
-            <p className="text-gray-600 mb-6">
-              Do you really want to delete{" "}
-              <span className="font-semibold">{userToDelete.name}</span>?
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-2">
-              <button
-                onClick={() => setIsDeleteModalOpen(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-              >
-                No
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={deleting}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center justify-center"
-              >
-                {deleting && <Loader className="h-4 w-4 animate-spin mr-2" />}
-                {deleting ? "Deleting..." : "Yes, Delete"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, user: null })}
+        onConfirm={handleDelete}
+        title="Delete User"
+        message="Are you sure you want to delete this user:"
+        confirmText="Delete"
+        requireTextConfirmation={true}
+        confirmationText={deleteModal.user?.email || ""}
+        isLoading={deleting}
+      />
 
       {/* Edit User Modal */}
       {isEditModalOpen && userToEdit && (

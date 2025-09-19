@@ -3,13 +3,13 @@ import {
     Plus,
     Edit,
     Trash2,
-    AlertTriangle,
     Upload,
     Search,
     Stethoscope,
     RefreshCw
 } from "lucide-react";
 import StatsCard from "../../components/StatsCard";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import { doctorAPI } from "../../services/doctorApi";
 
 export default function DoctorManagement() {
@@ -28,8 +28,7 @@ export default function DoctorManagement() {
     ]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [doctorToDelete, setDoctorToDelete] = useState(null);
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, doctor: null });
     const [editingDoctor, setEditingDoctor] = useState(null);
     const [step, setStep] = useState(1);
 
@@ -189,17 +188,14 @@ export default function DoctorManagement() {
     };
 
     const confirmDelete = (doctor) => {
-        setDoctorToDelete(doctor);
-        setIsDeleteModalOpen(true);
+        setDeleteModal({ isOpen: true, doctor });
     };
 
     const handleDelete = async () => {
         try {
             setLoading(true);
-            await doctorAPI.deleteDoctor(doctorToDelete._id);
+            await doctorAPI.deleteDoctor(deleteModal.doctor._id);
             await fetchDoctors();
-            setDoctorToDelete(null);
-            setIsDeleteModalOpen(false);
             setError(null);
         } catch (err) {
             setError("Failed to delete doctor: " + err.message);
@@ -592,35 +588,17 @@ export default function DoctorManagement() {
                     </div>
                 )}
 
-                {/* Delete Modal */}
-                {isDeleteModalOpen && doctorToDelete && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50 p-4">
-                        <div className="bg-white rounded-lg p-4 sm:p-6 max-w-md w-full text-center shadow-lg">
-                            <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                            <h3 className="text-lg font-semibold mb-2">Are you sure?</h3>
-                            <p className="text-gray-600 mb-6">
-                                Do you really want to delete{" "}
-                                <span className="font-semibold">{doctorToDelete.name}</span>?
-                            </p>
-                            <div className="flex flex-col sm:flex-row justify-center gap-2">
-                                <button
-                                    onClick={() => setIsDeleteModalOpen(false)}
-                                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-                                    disabled={loading}
-                                >
-                                    No
-                                </button>
-                                <button
-                                    onClick={handleDelete}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
-                                    disabled={loading}
-                                >
-                                    {loading ? 'Deleting...' : 'Yes, Delete'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                <ConfirmationModal
+                    isOpen={deleteModal.isOpen}
+                    onClose={() => setDeleteModal({ isOpen: false, doctor: null })}
+                    onConfirm={handleDelete}
+                    title="Delete Doctor"
+                    message="Are you sure you want to delete this doctor:"
+                    confirmText="Delete"
+                    requireTextConfirmation={true}
+                    confirmationText={deleteModal.doctor?.name || ""}
+                    isLoading={loading}
+                />
             </div>
         </div>
     );
