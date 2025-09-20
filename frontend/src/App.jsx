@@ -35,6 +35,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
     return (
@@ -312,6 +313,9 @@ export default function App() {
                             </ProtectedRoute>
                         }
                     />
+                    
+                    {/* 404 Catch-all route */}
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
                 </div>
                 <ToastContainer
