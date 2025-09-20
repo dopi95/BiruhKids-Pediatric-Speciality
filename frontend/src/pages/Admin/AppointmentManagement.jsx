@@ -195,7 +195,7 @@ const AppointmentManagement = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Main Content */}
-      <div className="flex-1 bg-gray-50 ml-0 md:ml-80 mt-14 md:mt-0 p-4">
+      <div className="flex-1 bg-gray-50 ml-0 md:ml-0 mt-16 md:mt-0 p-4 md:p-6">
         {/* Header */}
         <div className="bg-white shadow-sm border-b rounded-lg p-4 mb-6">
           <div className="flex flex-col sm:flex-row gap-5 justify-between sm:items-center">
@@ -236,13 +236,10 @@ const AppointmentManagement = () => {
 
         {/* Stats Grid */}
         <div className="mb-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
-            {stats.slice(0, 3).map((stat, i) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {stats.map((stat, i) => (
               <StatsCard key={i} {...stat} icon={stat.icon} />
             ))}
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            <StatsCard key={3} {...stats[3]} icon={stats[3].icon} />
             <StatsCard
               label="Cancelled"
               value={
@@ -251,7 +248,6 @@ const AppointmentManagement = () => {
               color="red"
               icon={XCircle}
             />
-            <div></div>
           </div>
         </div>
 
@@ -264,21 +260,21 @@ const AppointmentManagement = () => {
             </h2>
 
             {/* Search and Filter */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <div className="flex items-center border rounded-lg overflow-hidden w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full sm:w-64">
                 <input
                   type="text"
                   placeholder="Search appointments..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="px-3 py-2 outline-none flex-1 min-w-0"
+                  className="px-3 py-2 outline-none flex-1 min-w-0 focus:ring-2 focus:ring-blue-500"
                 />
-                <Search className="h-5 w-5 text-gray-400 mx-2" />
+                <Search className="h-5 w-5 text-gray-400 mx-2 flex-shrink-0" />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -292,38 +288,38 @@ const AppointmentManagement = () => {
             <table className="min-w-full divide-y divide-gray-200 text-sm">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-4 py-2">
+                  <th className="px-3 py-3 w-10">
                     <span className="sr-only">Select</span>
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700"></th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-24">Date</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 min-w-[120px]">
                     Name
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 min-w-[150px]">
                     Email
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-24">
                     Phone
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-16">
                     Age
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-20">
                     Gender
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 min-w-[100px]">
                     Doctor
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-28">
                     Preferred Date
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-24">
                     Preferred Time
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-24">
                     Status
                   </th>
-                  <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 min-w-[140px]">
                     Actions
                   </th>
                 </tr>
@@ -333,7 +329,7 @@ const AppointmentManagement = () => {
                   <tr>
                     <td
                       colSpan="12"
-                      className="px-4 py-8 text-center text-gray-500"
+                      className="px-3 py-8 text-center text-gray-500"
                     >
                       No appointments found.
                     </td>
@@ -341,36 +337,36 @@ const AppointmentManagement = () => {
                 ) : (
                   filteredAppointments.map((appt) => (
                     <tr key={appt._id} className="hover:bg-gray-50">
-                      <td className="px-4 py-2">
+                      <td className="px-3 py-3">
                         <input
                           type="checkbox"
                           checked={selectedAppointments.includes(appt._id)}
                           onChange={() => handleCheckboxChange(appt._id)}
-                          className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                          className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-3 py-3 text-xs text-gray-600">
                         {appt.createdAt
-                          ? new Date(appt.createdAt).toLocaleDateString()
+                          ? new Date(appt.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                           : "N/A"}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-3 py-3 font-medium text-gray-900">
                         {appt.firstName} {appt.lastName}
                       </td>
-                      <td className="px-4 py-2">{appt.email}</td>
-                      <td className="px-4 py-2">{appt.phone}</td>
-                      <td className="px-4 py-2">{appt.age}</td>
-                      <td className="px-4 py-2">{appt.gender}</td>
-                      <td className="px-4 py-2">{appt.doctor}</td>
-                      <td className="px-4 py-2">
+                      <td className="px-3 py-3 text-gray-600 truncate max-w-[150px]" title={appt.email}>{appt.email}</td>
+                      <td className="px-3 py-3 text-gray-600">{appt.phone}</td>
+                      <td className="px-3 py-3 text-gray-600">{appt.age}</td>
+                      <td className="px-3 py-3 text-gray-600 capitalize">{appt.gender}</td>
+                      <td className="px-3 py-3 text-gray-600">{appt.doctor}</td>
+                      <td className="px-3 py-3 text-gray-600 text-xs">
                         {appt.date
-                          ? new Date(appt.date).toLocaleDateString()
+                          ? new Date(appt.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                           : "N/A"}
                       </td>
-                      <td className="px-4 py-2">{appt.time || "N/A"}</td>
-                      <td className="px-4 py-2">
+                      <td className="px-3 py-3 text-gray-600 text-xs">{appt.time || "N/A"}</td>
+                      <td className="px-3 py-3">
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                             appt.status === "confirmed"
                               ? "bg-green-100 text-green-800"
                               : appt.status === "cancelled"
@@ -381,29 +377,31 @@ const AppointmentManagement = () => {
                           {appt.status || "pending"}
                         </span>
                       </td>
-                      <td className="px-4 py-2 space-x-2">
-                        {appt.status !== "confirmed" && (
-                          <button
-                            onClick={() => handleConfirmAppointment(appt._id)}
-                            disabled={updating}
-                            className="bg-green-500 text-white px-2 py-1 rounded text-xs disabled:opacity-50 flex items-center"
-                            title="Confirm Appointment"
-                          >
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                            Confirm
-                          </button>
-                        )}
-                        {appt.status !== "cancelled" && (
-                          <button
-                            onClick={() => openCancelModal(appt)}
-                            disabled={updating}
-                            className="bg-red-500 text-white px-2 py-1 rounded text-xs disabled:opacity-50 flex items-center"
-                            title="Cancel Appointment"
-                          >
-                            <XCircle className="w-3 h-3 mr-1" />
-                            Cancel
-                          </button>
-                        )}
+                      <td className="px-3 py-3">
+                        <div className="flex gap-1">
+                          {appt.status !== "confirmed" && (
+                            <button
+                              onClick={() => handleConfirmAppointment(appt._id)}
+                              disabled={updating}
+                              className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs disabled:opacity-50 flex items-center whitespace-nowrap"
+                              title="Confirm Appointment"
+                            >
+                              <CheckCircle className="w-3 h-3 mr-1" />
+                              Confirm
+                            </button>
+                          )}
+                          {appt.status !== "cancelled" && (
+                            <button
+                              onClick={() => openCancelModal(appt)}
+                              disabled={updating}
+                              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs disabled:opacity-50 flex items-center whitespace-nowrap"
+                              title="Cancel Appointment"
+                            >
+                              <XCircle className="w-3 h-3 mr-1" />
+                              Cancel
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
