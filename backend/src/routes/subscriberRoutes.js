@@ -170,6 +170,34 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Check if email is subscribed
+router.get("/check/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid email address"
+      });
+    }
+    
+    const subscriber = await Subscriber.findOne({ email });
+    const isSubscribed = subscriber && subscriber.status === "active";
+    
+    res.json({
+      success: true,
+      isSubscribed
+    });
+  } catch (error) {
+    console.error("Check subscription error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to check subscription status"
+    });
+  }
+});
+
 // Get subscriber statistics (including users with email notifications)
 router.get("/stats", async (req, res) => {
   try {
