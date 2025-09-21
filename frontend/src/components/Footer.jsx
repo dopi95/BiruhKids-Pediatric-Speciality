@@ -103,7 +103,7 @@ export default function Footer({ lang }) {
     en: {
       name:"BiruhKids",
       description:
-        '" Where childrens become bright and healthy! "',
+        "Where childrens become bright and healthy!",
       quickLinks: "Quick Links",
       home: "Home",
       about: "About Us",
@@ -125,7 +125,7 @@ export default function Footer({ lang }) {
     am: {
       name:"ብሩህኪድስ",
       description:
-        '" ልጆች ብሩህ እና ጤናማ የሚሆኑበት! "',
+        'ልጆች ብሩህ እና ጤናማ የሚሆኑበት!',
       quickLinks: "ፈጣን አገናኞች",
       home: "መነሻ",
       about: "ስለ እኛ",
@@ -134,8 +134,8 @@ export default function Footer({ lang }) {
       contact: "አግኙን",
       contactInfo: "የእውቂያ መረጃ",
       address:
-        "ቶርሃይሎች ከአውጉስታ ድልድይ 100 ሜትር ርቀት፣ አዲስ አበባ፣ ኢትዮጵያ",
-      newsletter: "ኒውዝሌተር",
+        "ጦርሃይሎች አውጉስታ ድልድይ 100 ከሕብር አካዳሚ ት/ቤት ፊትለፊት ያገኙናል አዲስ አበባ፣ ኢትዮጵያ",
+      newsletter: "ኒውስሌተር",
       subscribeText:
         "የጤና ምክሮችንና የክሊኒክ ዜናዎችን ለማወቅ ይመዝገቡ።",
       placeholder: "ኢሜይልዎን ያስገቡ",

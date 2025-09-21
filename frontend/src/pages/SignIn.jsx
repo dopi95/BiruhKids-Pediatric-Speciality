@@ -8,7 +8,7 @@ import { getUserRoleRedirect } from "../utils/authHelpers";
 const translations = {
   En: {
     title: "Sign in to your account",
-    subtitle: "Access your healthcare dashboard and manage your appointments",
+    subtitle: "Access your healthcare dashboard and see your results",
     emailLabel: "Email Address:",
     emailPlaceholder: "Enter your email address",
     passwordLabel: "Password:",
@@ -30,7 +30,7 @@ const translations = {
   },
   Am: {
     title: "ወደ መለያዎ ይግቡ",
-    subtitle: "የጤና ዳሽቦርድዎን ይጠቀሙ እና ቀጠሮዎችዎን ያቀናብሩ",
+    subtitle: "የጤና ዳሽቦርድዎን ይጠቀሙ እና ውጤጦችዎን ይመልከቱ",
     emailLabel: "ኢሜይል አድራሻ:",
     emailPlaceholder: "ኢሜይል አድራሻዎን ያስገቡ",
     passwordLabel: "የይለፍ ቃል:",

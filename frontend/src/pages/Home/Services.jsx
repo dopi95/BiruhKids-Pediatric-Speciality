@@ -48,15 +48,15 @@ export default function Services({ lang = "En" }) {
     En: {
       ourServices: "Our Services",
       description:
-        "Comprehensive healthcare services designed to meet all your medical needs with state-of-the-art technology and expert care.",
+        "Trusted services to keep children healthy and happy.",
       viewAllServices: "View All Services",
       learnMore: "Learn More",
       loading: "Loading services...",
     },
     Am: {
-      ourServices: "አገልግሎታችን",
+      ourServices: "የምንሰጣቸው አገልግሎቶች",
       description:
-        "በዘመናዊ ቴክኖሎጂ እና በባለሙያ እንክብካቤ የተዘጋጀ የጤና አገልግሎት ለሁሉም የጤና ፍላጎቶችዎ ማሟላት።",
+        "ልጆች ጤናማ እና ደስተኛ እንዲሆኑ የታመኑ አገልግሎቶች",
       viewAllServices: "ሁሉንም አገልግሎቶች ይመልከቱ",
       learnMore: "ተጨማሪ ይመልከቱ",
       loading: "አገልግሎቶች በመጫን ላይ...",

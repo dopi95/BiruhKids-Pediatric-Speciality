@@ -13,7 +13,7 @@ export default function OnlineConsultation({ lang }) {
       telegram: "Telegram",
     },
     am: {
-      title: "በመስመር ላይ ምክር ይገኛል",
+      title: "ኦንላይ አገልግሎት እንሰጣለን",
       description: `በቀጥታ መምጣት ካልቻሉ፣ ከቤትዎ በቀላሉ ከሐኪሞቻችን ጋር በቪዲዮ ጥሪ ሊገናኙ ይችላሉ።`,
       highlight: "ቪዲዮ ጥሪ ምክር",
       connect: "ለተጨማሪ መረጃ ከእኛ ጋር ይገናኙ በ",

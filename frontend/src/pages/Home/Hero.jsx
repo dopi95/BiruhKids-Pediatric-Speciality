@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import re from '../../assets/re.jpg';
+import building from '../../assets/building.jpg';
+import off from '../../assets/off.jpg';
+import laboratory from '../../assets/labratory.jpg';
+
+
 
 const Hero = ({ lang = "En" }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -15,20 +21,20 @@ const Hero = ({ lang = "En" }) => {
     {
       id: 1,
       backgroundImage:
-        "https://images.pexels.com/photos/1266810/pexels-photo-1266810.jpeg?auto=compress&cs=tinysrgb&w=1920",
+       re,
       title: {
         en: "Pediatric healthcare services",
         am: "የህፃናት ጤና አገልግሎቶች",
       },
       tagline: {
         en: "designed to meet the unique needs of children, ensuring their health, growth, and development are supported every step of the way.",
-        am: "ልዩ የህፃናት ፍላጎት ለማሟላት የተነደፈ፣ ጤናቸው፣ እድገታቸው እና እድሳታቸው በእያንዳንዱ እርምጃ እንዲደገፉ የተዘጋጀ።",
+        am: "ልዩ የህፃናት ፍላጎት ለማሟላት የተነደፈ፣ ጤንነታቸውን እና እድገታቸውን በእያንዳንዱ እርምጃ እንዲደገፉ የተዘጋጀ።",
       },
     },
     {
       id: 2,
       backgroundImage:
-        "https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=1920",
+       building,
       title: {
         en: "Outpatient care (OPD)",
         am: "የውጭ ሕክምና አገልግሎት (OPD)",
@@ -41,7 +47,7 @@ const Hero = ({ lang = "En" }) => {
     {
       id: 3,
       backgroundImage:
-        "https://images.pexels.com/photos/326501/pexels-photo-326501.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        off,
       title: {
         en: "Emergency care",
         am: "አደጋ ጊዜ አገልግሎት",
@@ -54,14 +60,14 @@ const Hero = ({ lang = "En" }) => {
     {
       id: 4,
       backgroundImage:
-        "https://images.pexels.com/photos/1181676/pexels-photo-1181676.jpeg?auto=compress&cs=tinysrgb&w=1920",
+        laboratory,
       title: {
         en: "Laboratory and Imaging Services",
         am: "የላቦራቶሪ እና ምስል አገልግሎቶች",
       },
       tagline: {
         en: "Our clinic is equipped with state-of-the-art laboratory machines and advanced imaging technology using the latest ultrasound (US) systems.",
-        am: "ክሊኒካችን በዘመናዊ የላቦራቶሪ መሳሪያዎች እና በላቀ የምስል ቴክኖሎጂ ከአዳዲስ የአልትራሳውንድ (US) ስርዓቶች ጋር ተዘጋጅታለች።",
+        am: "ክሊኒካችን በዘመናዊ የላቦራቶሪ መሳሪያዎች እና በላቀ የምስል ቴክኖሎጂ ከአዳዲስ የአልትራሳውንድ (US) ስርዓቶች ጋር የተዘጋጀ ነው።",
       },
     },
   ];
@@ -230,7 +236,7 @@ const Hero = ({ lang = "En" }) => {
                   </button>
                   <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                     <Link to="/register">
-                      {currentLang === "am" ? "መጀመር" : "Get Started"}
+                      {currentLang === "am" ? "ይጀምሩ" : "Get Started"}
                     </Link>
                   </button>
                 </div>

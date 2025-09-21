@@ -37,7 +37,7 @@ const VisionMissionSection = ({ lang }) => {
         </div>
         <p className="text-gray-700 text-justify leading-relaxed [hyphens:auto] [word-spacing:0.05em]">
           {isAmh
-            ? "የእኛ ራዕይ በልጆች ልዩ አገልግሎት ዘርፍ ውስጥ የታላቅ ብርታት ማዕከል መሆን ነው። ልጅ ሁሉ ከማንኛውም ባህላዊ ወይም ማህበራዊ ቅድሚያ እንኳ በማይተወው ሁኔታ የሙያ ያለው፣ ርኅራኄ ያለው እና የግል ተመጣጣኝ እንክብካቤ በሚቀበሉበት እና በሚያገለግል አካባቢ ውስጥ። ልጆችና ቤተሰቦቻቸው የሚጠናከሩ፣ ጤና በማንኛውም ሰው የሚደረስበት፣ አካባቢው የሚያካትት እና ዘመናዊነትና ርኅራኄ በአንድነት የሚሰሩበት ወደ በለጠ ብሩህ እና ጤናማ ህይወት እንዲመሩ እናያለን።"
+            ? "በእንክብካቤ ልህቀት የሚታወቅ፣ እያንዳንዱ ልጅ ደህንነት የሚሰማው፣ የሚከበርበት እና እንዲበለጽግ የሚደገፍ ግንባር ቀደም የህፃናት ህክምና እና የቀዶ ጥገና ማዕከል ለመሆን።"
             : "To be the leading pediatric medical and surgical center known for excellence in care, where every child feels safe, valued, and supported to thrive."}
         </p>
       </motion.div>
@@ -56,7 +56,7 @@ const VisionMissionSection = ({ lang }) => {
         </div>
         <p className="text-gray-700 text-justify leading-relaxed [hyphens:auto] [word-spacing:0.05em]">
           {isAmh
-            ? "የእኛ ተልዕኮ በቤተሰብ ማዕከላዊነት የተመሠረተ የልጆች ልዩ እንክብካቤን በተባባሪነት እና በብዙ ዘርፍ ባለሙያዎች በመሳተፍ ማቅረብ ነው። በማስረጃ የተመሠረቱ ሕክምናዎችን በሙቀት፣ በክብር እና በአክብሮት ለመስጠት ተግባራዊ ነን። በዘመናዊ የሕክምና እውቀት ላይ በመተካት፣ ከቤተሰቦች ጋር ግንኙነትን በማዳበር እና ልጆች የሚወዱትን አካባቢ በማቋቋም ብቻ የህመምተኞቻችንን ጤና ሳይሆን የእነርሱን እድገት፣ ጽናት እና ስነ-ልቦናዊ ደህንነት እንደገና እንደምንደግ። በእኛ እንክብካቤ ውስጥ ያሉ ልጆች ሁሉ እንደ የራሳችን ልጆች በተመሳሳይ ርኅራኄ እና ትኩረት ይቀበላሉ።"
+            ? "እያንዳንዱን ልጅ ጤና እና እድገት የሚደግፍ ሩህሩህ፣ ደህንነቱ የተጠበቀ እና ከፍተኛ ጥራት ያለው የህፃናት ህክምና ለመስጠት፣ ከቤተሰቦች ጋር በአክብሮት፣ በፈጠራ እና በቡድን ስራ ታማኝ ሽርክና መገንባት።"
             : "To provide compassionate, safe, and high-quality pediatric care that supports every child’s health and development, while building trusted partnerships with families through respect, innovation, and teamwork."}
         </p>
       </motion.div>

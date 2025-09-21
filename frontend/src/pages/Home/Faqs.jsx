@@ -71,7 +71,7 @@ export default function Faqs({ lang }) {
           </h2>
           <p className="text-xl text-gray-600">
             {lang === "am"
-              ? "ስለ አገልግሎቶቻችን እና ሂደቶቻችን የተደጋጋሚ ጥያቄዎችን ያግኙ።"
+              ? "ስለ አገልግሎቶቻችን እና ሂደቶቻችን ተደጋጋሚ የሚጠየቁ ጥያቄዎችን ያግኙ።"
               : "Find answers to common questions about our services and procedures."}
           </p>
         </div>
