@@ -19,7 +19,7 @@ import DoctorManagement from "./pages/Admin/DoctorManagement";
 import UserManagement from "./pages/Admin/UserManagement";
 import AdminManagement from "./pages/Admin/admin-management/AdminManagement";
 import AdminProfile from "./pages/Admin/AdminProfile";
-import ServiceManagement from "./pages/Admin/service-management/ServiceManagement";
+import DepartmentServiceManagement from "./pages/Admin/service-management/DepartmentServiceManagement";
 import ChangePassword from "./pages/ChangePassword";
 import UserDashboard from "./pages/userDashboard";
 import Profile from "./pages/profile";
@@ -229,7 +229,7 @@ export default function App() {
                         element={
                             <ProtectedRoute requiredPermission="serviceManagement">
                                 <AdminLayout>
-                                    <ServiceManagement />
+                                    <DepartmentServiceManagement />
                                 </AdminLayout>
                             </ProtectedRoute>
                         }
