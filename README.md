@@ -22,7 +22,7 @@
 - 🔐 **Multi-Role Authentication** - Secure access for Patients, Admins, and Super Admins
 - 👶 **Pediatric-Focused Care** - Specialized features designed for children's healthcare
 - 📅 **Online Appointment Booking** - Easy scheduling with doctor selection
-- 👨‍⚕️ **Doctor Management** - Comprehensive doctor profiles with bilingual support
+- 👨⚕️ **Doctor Management** - Comprehensive doctor profiles with bilingual support
 - 🏥 **Service Management** - Complete medical services catalog
 - 💬 **AI-Powered Chatbot** - Intelligent assistant using Puter.js for healthcare queries
 - 📝 **Patient Testimonials** - Review and approval system for patient feedback
@@ -37,7 +37,6 @@
 ## 🛠️ Technology Stack
 
 ### Frontend
-
 - **Framework:** React 19 with Vite
 - **Language:** JavaScript (ES6+)
 - **Styling:** Tailwind CSS
@@ -49,7 +48,6 @@
 - **Notifications:** React Toastify
 
 ### Backend
-
 - **Framework:** Express.js
 - **Language:** JavaScript (ES Modules)
 - **Database:** MongoDB with Mongoose ODM
@@ -59,7 +57,6 @@
 - **Security:** CORS, Rate limiting, Input validation
 
 ### AI Integration
-
 - **AI Service:** Puter.js API
 - **Chatbot:** Context-aware healthcare assistant
 - **Fallback System:** Predefined responses for reliability
@@ -83,42 +80,17 @@
 BiruhKids-Pediatric-Speciality/
 ├── 📁 backend/                    # Express.js Backend API
 │   ├── 📁 src/
-│   │   ├── 📁 config/            # Database & Cloudinary config
 │   │   ├── 📁 controllers/       # API Controllers
-│   │   │   ├── authController.js
-│   │   │   ├── doctorController.js
-│   │   │   ├── serviceController.js
-│   │   │   ├── testimonialController.js
-│   │   │   └── userController.js
-│   │   ├── 📁 middleware/        # Authentication & Upload middleware
 │   │   ├── 📁 models/            # MongoDB Models
-│   │   │   ├── User.js
-│   │   │   ├── Doctor.js
-│   │   │   ├── Appointment.js
-│   │   │   ├── ServiceModel.js
-│   │   │   ├── Testimonial.js
-│   │   │   └── Video.js
 │   │   ├── 📁 routes/            # API Routes
-│   │   └── 📁 utils/             # Email & Token utilities
-│   ├── 📁 uploads/               # File uploads storage
+│   │   └── 📁 utils/             # Utilities
 │   └── server.js                 # Main server file
 ├── 📁 frontend/                  # React Frontend Application
-│   ├── 📁 public/                # Static assets
 │   ├── 📁 src/
-│   │   ├── 📁 assets/            # Images and logos
-│   │   ├── 📁 components/        # Reusable UI Components
-│   │   │   ├── 📁 profile/       # Profile management components
-│   │   │   ├── Chatbot.jsx       # AI-powered chatbot
-│   │   │   ├── Header.jsx
-│   │   │   └── Footer.jsx
-│   │   ├── 📁 context/           # React Context providers
-│   │   ├── 📁 layouts/           # Layout components
+│   │   ├── 📁 components/        # UI Components
 │   │   ├── 📁 pages/             # Application pages
-│   │   │   ├── 📁 Admin/         # Admin panel pages
-│   │   │   ├── 📁 Home/          # Public pages
-│   │   │   └── NotFound.jsx      # Custom 404 page
-│   │   ├── 📁 services/          # API service functions
-│   │   └── 📁 utils/             # Utilities and helpers
+│   │   ├── 📁 services/          # API services
+│   │   └── 📁 utils/             # Utilities
 │   └── vite.config.js            # Vite configuration
 └── README.md                     # Project documentation
 ```
@@ -130,7 +102,6 @@ BiruhKids-Pediatric-Speciality/
 ### Prerequisites
 
 Ensure you have the following installed:
-
 - **Node.js** (v18 or higher)
 - **npm** (v8 or higher)
 - **MongoDB** (Atlas or local instance)
@@ -139,21 +110,18 @@ Ensure you have the following installed:
 ### 📥 Installation
 
 1. **Clone the repository:**
-
    ```bash
    git clone https://github.com/your-username/BiruhKids-Pediatric-Speciality.git
    cd BiruhKids-Pediatric-Speciality
    ```
 
 2. **Install Backend Dependencies:**
-
    ```bash
    cd backend
    npm install
    ```
 
 3. **Install Frontend Dependencies:**
-
    ```bash
    cd ../frontend
    npm install
@@ -162,7 +130,6 @@ Ensure you have the following installed:
 4. **Set up Environment Variables:**
 
    **Backend (.env):**
-
    ```env
    PORT=5000
    MONGO_URI=your-mongodb-connection-string
@@ -179,7 +146,6 @@ Ensure you have the following installed:
    ```
 
    **Frontend (.env):**
-
    ```env
    VITE_API_URL=http://localhost:5000/api
    ```
@@ -187,14 +153,12 @@ Ensure you have the following installed:
 5. **Start Development Servers:**
 
    **Backend:**
-
    ```bash
    cd backend
    npm run dev
    ```
 
    **Frontend (in new terminal):**
-
    ```bash
    cd frontend
    npm run dev
@@ -208,149 +172,57 @@ Ensure you have the following installed:
 ## 📜 Available Scripts
 
 ### Backend Scripts
-
-| Command       | Description              |
-| ------------- | ------------------------ |
-| `npm start`   | Start production server  |
-| `npm run dev` | Start development server |
+| Command       | Description                    |
+| ------------- | ------------------------------ |
+| `npm start`   | Start production server        |
+| `npm run dev` | Start development server       |
 
 ### Frontend Scripts
-
-| Command           | Description              |
-| ----------------- | ------------------------ |
-| `npm run dev`     | Start development server |
-| `npm run build`   | Build for production     |
-| `npm run preview` | Preview production build |
-| `npm run lint`    | Lint code                |
-
----
-
-## 🏗️ Key Features Overview
-
-### 🔐 Authentication System
-
-- JWT-based authentication with refresh tokens
-- Role-based access control (User, Admin, Super Admin)
-- OTP verification for password reset
-- Granular permissions system
-
-### 👨‍⚕️ Doctor Management
-
-- Bilingual doctor profiles (English/Amharic)
-- Photo upload with Cloudinary integration
-- Search and filter functionality
-- Experience and specialization tracking
-
-### 📅 Appointment System
-
-- Online booking with doctor selection
-- Status tracking (pending, confirmed, cancelled)
-- Email notifications
-- Admin management interface
-
-### 🤖 AI Chatbot
-
-- Puter.js integration for intelligent responses
-- Pediatric healthcare context awareness
-- Fallback system for reliability
-- Professional medical guidance
-
-### 🎥 Content Management
-
-- YouTube and TikTok video integration
-- Bilingual content support
-- Admin approval workflow
-- Educational resource organization
-
-### 📝 Testimonial System
-
-- Patient review submission
-- Admin approval workflow
-- Rating system (1-5 stars)
-- Image upload support
+| Command         | Description                    |
+| --------------- | ------------------------------ |
+| `npm run dev`   | Start development server       |
+| `npm run build` | Build for production           |
+| `npm run preview` | Preview production build     |
+| `npm run lint`  | Lint code                      |
 
 ---
 
-## 🔐 Security Features
+## 🏗️ Key Features
 
-- **JWT Authentication:** Secure token-based authentication
-- **Password Hashing:** bcryptjs with salt rounds
-- **Rate Limiting:** API protection against abuse
-- **Input Validation:** Comprehensive data validation
-- **CORS Configuration:** Secure cross-origin requests
-- **File Upload Security:** Cloudinary integration with validation
-- **Environment Variables:** Sensitive data protection
-
----
-
-## 🌐 API Endpoints
-
-### Authentication
-
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/profile` - Get user profile
-- `PUT /api/auth/profile` - Update user profile
-- `POST /api/auth/forgot-password` - Request password reset
-- `POST /api/auth/verify-reset-otp` - Verify OTP
-- `POST /api/auth/reset-password` - Reset password
-
-### Doctors
-
-- `GET /api/doctors` - Get all doctors
-- `POST /api/doctors` - Create doctor (Admin)
-- `PUT /api/doctors/:id` - Update doctor (Admin)
-- `DELETE /api/doctors/:id` - Delete doctor (Admin)
-
-### Appointments
-
-- `GET /api/appointments` - Get appointments
-- `POST /api/appointments` - Book appointment
-- `PUT /api/appointments/:id` - Update appointment status
-
-### Services
-
-- `GET /api/services` - Get all services
-- `POST /api/services` - Create service (Admin)
-- `PUT /api/services/:id` - Update service (Admin)
-- `DELETE /api/services/:id` - Delete service (Admin)
+- **Authentication System** - JWT-based with role-based access control
+- **Doctor Management** - Bilingual profiles with photo uploads
+- **Appointment Booking** - Online scheduling with email notifications
+- **AI Chatbot** - Puter.js integration for healthcare queries
+- **Content Management** - Video integration and testimonials
+- **Admin Panel** - Complete management dashboard
 
 ---
 
-## 🚀 Deployment
+## 🔐 Security
 
-### Frontend (Vercel)
+- JWT Authentication with refresh tokens
+- Password hashing with bcryptjs
+- Rate limiting and input validation
+- Secure file uploads via Cloudinary
 
-1. Connect GitHub repository to Vercel
-2. Configure environment variables
-3. Deploy automatically on push
+---
 
-### Backend (Railway/Render)
+## 🌐 Main API Endpoints
 
-1. Connect GitHub repository
-2. Configure environment variables
-3. Set build and start commands
-4. Deploy automatically on push
+- **Auth:** `/api/auth/*` - Authentication & user management
+- **Doctors:** `/api/doctors/*` - Doctor profiles & management
+- **Appointments:** `/api/appointments/*` - Booking & scheduling
+- **Services:** `/api/services/*` - Medical services catalog
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Please follow these steps:
-
-1. **Fork the repository**
-2. **Create a feature branch:** `git checkout -b feature/amazing-feature`
-3. **Commit your changes:** `git commit -m 'Add amazing feature'`
-4. **Push to the branch:** `git push origin feature/amazing-feature`
-5. **Open a Pull Request**
-
-### Development Guidelines
-
-- Follow JavaScript ES6+ best practices
-- Use meaningful commit messages
-- Test your changes thoroughly
-- Update documentation as needed
-- Follow the existing code style
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
 ---
 
@@ -371,13 +243,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-For questions, suggestions, or support, please contact our development team <a
-              href="https://t.me/ChainTech_6/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 font-semibold hover:underline hover:text-blue-800 transition"
-            >
-Chain Tech
-</a> or create an issue in this repository.
+For questions, suggestions, or support, please contact our development team or create an issue in this repository.
 
-**BiruhKids Pediatric Specialty Clinic** - _Your child's health is our priority_ 👶💙
+**BiruhKids Pediatric Specialty Clinic** - *Your child's health is our priority* 👶💙
