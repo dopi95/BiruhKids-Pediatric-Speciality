@@ -154,9 +154,10 @@ export default function Services({ lang = "En" }) {
         >
           <Link
             to="/services"
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-2xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 inline-flex items-center"
+            className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
-            {t.viewAllServices} <ArrowRight className="h-5 w-5 ml-2" />
+            <span>{t.viewAllServices}</span>
+            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>
       </div>

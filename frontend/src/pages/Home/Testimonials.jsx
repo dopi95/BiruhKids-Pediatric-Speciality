@@ -627,10 +627,10 @@ const renderUserAvatar = (testimonial) => {
         <div className="text-center mt-12 relative z-20">
           <button
             onClick={() => setIsOpen(true)}
-            className="bg-orange-500 text-white px-8 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-200 inline-flex items-center"
+            className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
-            {t.shareButton}
-            <ArrowRight className="h-4 w-4 ml-2" />
+            <span>{t.shareButton}</span>
+            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
         </div>
       </div>
