@@ -93,7 +93,8 @@ export const sendResultNotification = async (email, name, resultFiles = []) => {
     
     // Generate download links for files
     const fileLinks = resultFiles.map(file => {
-        const downloadUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/fl_attachment/${file.cloudinaryPublicId}`;
+        const resourceType = file.mimetype === "application/pdf" ? "raw" : "image";
+        const downloadUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${resourceType}/upload/fl_attachment/${file.cloudinaryPublicId}`;
         return `<li><a href="${downloadUrl}" style="color: #007799; text-decoration: none;">${file.originalName}</a></li>`;
     }).join('');
 
