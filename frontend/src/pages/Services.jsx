@@ -9,6 +9,7 @@ const Services = ({ lang = "En" }) => {
     const [departments, setDepartments] = useState([]);
     const [loading, setLoading] = useState(true);
     const servicesPerPage = 6;
+    const [desktopSlide, setDesktopSlide] = useState(0);
 
     // Translations
     const translations = {
@@ -186,48 +187,135 @@ const Services = ({ lang = "En" }) => {
             {/* Departments Slider */}
             <section className="py-20">
                 <div className="max-w-7xl mx-auto px-4">
-                    {/* Desktop View - 4 cards */}
-                    <div className="hidden lg:grid lg:grid-cols-4 gap-8">
-                        {departments.map((dept) => {
-                            const IconComponent = dept.icon;
-                            return (
-                                <div
-                                    key={dept.id}
-                                    className={`bg-white rounded-2xl p-8 border-l-4 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl ${
-                                        selectedDepartment?.id === dept.id 
-                                            ? 'border-l-8 bg-gradient-to-r from-blue-50 to-white ring-2 ring-blue-400 shadow-2xl scale-105' 
-                                            : 'border-blue-500'
-                                    }`}
-                                >
-                                    <div className="text-center">
-                                        <div className={`bg-gradient-to-br ${dept.gradient} w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6`}>
-                                            <IconComponent className="h-10 w-10 text-white" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                                            {lang === "En" ? dept.name : dept.nameAm}
-                                        </h3>
-                                        <p className="text-gray-600 mb-6 leading-relaxed">
-                                            {lang === "En" ? dept.description : dept.descriptionAm}
-                                        </p>
-                                        <button
-                                            onClick={() => handleSeeServices(dept)}
-                                            className="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition-colors duration-200 flex items-center mx-auto"
-                                        >
-                                            <Eye className="h-5 w-5 mr-2" />
-                                            {translations[lang].seeServices}
-                                        </button>
-                                        <div className="mt-4 flex justify-center">
-                                            {selectedDepartment?.id === dept.id ? (
-                                                <ChevronUp className="h-6 w-6 text-blue-500" />
-                                            ) : (
-                                                <ChevronDown className="h-6 w-6 text-gray-400" />
-                                            )}
+                    {/* Desktop View */}
+                    {departments.length <= 4 ? (
+                        /* Static Grid for 4 or fewer departments */
+                        <div className="hidden lg:grid lg:grid-cols-4 gap-8">
+                            {departments.map((dept) => {
+                                const IconComponent = dept.icon;
+                                return (
+                                    <div
+                                        key={dept.id}
+                                        className={`bg-white rounded-2xl p-8 border-l-4 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl ${
+                                            selectedDepartment?.id === dept.id 
+                                                ? 'border-l-8 bg-gradient-to-r from-blue-50 to-white ring-2 ring-blue-400 shadow-2xl scale-105' 
+                                                : 'border-blue-500'
+                                        }`}
+                                    >
+                                        <div className="text-center">
+                                            <div className={`bg-gradient-to-br ${dept.gradient} w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6`}>
+                                                <IconComponent className="h-10 w-10 text-white" />
+                                            </div>
+                                            <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                                                {lang === "En" ? dept.name : dept.nameAm}
+                                            </h3>
+                                            <p className="text-gray-600 mb-6 leading-relaxed">
+                                                {lang === "En" ? dept.description : dept.descriptionAm}
+                                            </p>
+                                            <button
+                                                onClick={() => handleSeeServices(dept)}
+                                                className="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition-colors duration-200 flex items-center mx-auto"
+                                            >
+                                                <Eye className="h-5 w-5 mr-2" />
+                                                {translations[lang].seeServices}
+                                            </button>
+                                            <div className="mt-4 flex justify-center">
+                                                {selectedDepartment?.id === dept.id ? (
+                                                    <ChevronUp className="h-6 w-6 text-blue-500" />
+                                                ) : (
+                                                    <ChevronDown className="h-6 w-6 text-gray-400" />
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        /* Slider for more than 4 departments */
+                        <div className="hidden lg:block relative">
+                            {/* Navigation Arrows */}
+                            <button
+                                onClick={() => setDesktopSlide(Math.max(0, desktopSlide - 1))}
+                                disabled={desktopSlide === 0}
+                                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <ChevronLeft className="h-6 w-6 text-gray-600" />
+                            </button>
+                            <button
+                                onClick={() => setDesktopSlide(Math.min(Math.ceil(departments.length / 4) - 1, desktopSlide + 1))}
+                                disabled={desktopSlide >= Math.ceil(departments.length / 4) - 1}
+                                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <ChevronRight className="h-6 w-6 text-gray-600" />
+                            </button>
+                            
+                            {/* Slider Container */}
+                            <div className="overflow-hidden mx-12">
+                                <div 
+                                    className="flex transition-transform duration-500 ease-in-out"
+                                    style={{ transform: `translateX(-${desktopSlide * 100}%)` }}
+                                >
+                                    {Array.from({ length: Math.ceil(departments.length / 4) }).map((_, slideIndex) => (
+                                        <div key={slideIndex} className="w-full flex-shrink-0 grid grid-cols-4 gap-8">
+                                            {departments.slice(slideIndex * 4, (slideIndex + 1) * 4).map((dept) => {
+                                                const IconComponent = dept.icon;
+                                                return (
+                                                    <div
+                                                        key={dept.id}
+                                                        className={`bg-white rounded-2xl p-8 border-l-4 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl ${
+                                                            selectedDepartment?.id === dept.id 
+                                                                ? 'border-l-8 bg-gradient-to-r from-blue-50 to-white ring-2 ring-blue-400 shadow-2xl scale-105' 
+                                                                : 'border-blue-500'
+                                                        }`}
+                                                    >
+                                                        <div className="text-center">
+                                                            <div className={`bg-gradient-to-br ${dept.gradient} w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6`}>
+                                                                <IconComponent className="h-10 w-10 text-white" />
+                                                            </div>
+                                                            <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                                                                {lang === "En" ? dept.name : dept.nameAm}
+                                                            </h3>
+                                                            <p className="text-gray-600 mb-6 leading-relaxed">
+                                                                {lang === "En" ? dept.description : dept.descriptionAm}
+                                                            </p>
+                                                            <button
+                                                                onClick={() => handleSeeServices(dept)}
+                                                                className="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition-colors duration-200 flex items-center mx-auto"
+                                                            >
+                                                                <Eye className="h-5 w-5 mr-2" />
+                                                                {translations[lang].seeServices}
+                                                            </button>
+                                                            <div className="mt-4 flex justify-center">
+                                                                {selectedDepartment?.id === dept.id ? (
+                                                                    <ChevronUp className="h-6 w-6 text-blue-500" />
+                                                                ) : (
+                                                                    <ChevronDown className="h-6 w-6 text-gray-400" />
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    ))}
                                 </div>
-                            );
-                        })}
-                    </div>
+                            </div>
+                            
+                            {/* Dots Indicator */}
+                            <div className="flex justify-center mt-6 space-x-3">
+                                {Array.from({ length: Math.ceil(departments.length / 4) }).map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setDesktopSlide(index)}
+                                        className={`w-8 h-3 rounded-full transition-all duration-200 ${
+                                            desktopSlide === index ? 'bg-blue-600' : 'bg-gray-300'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Mobile/Tablet View - Slider */}
                     <div className="lg:hidden relative">
