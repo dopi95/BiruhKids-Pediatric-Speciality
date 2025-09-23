@@ -184,7 +184,7 @@ const Hero = ({ lang = "En" }) => {
 	const currentLang = lang === "En" ? "en" : "am";
 
 	return (
-		<div className="relative h-[92vh] overflow-hidden">
+		<div className="relative h-[92vh] overflow-hidden z-10">
 			<video
 				autoPlay
 				muted
