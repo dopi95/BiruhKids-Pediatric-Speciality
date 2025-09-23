@@ -456,7 +456,8 @@ const ResultManagement = () => {
                                                         <button
                                                             onClick={() => {
                                                                 const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
-                                                                const fileUrl = `${baseUrl}/results/file/${file.filename}?token=${localStorage.getItem('token')}`;
+                                                                const publicId = file.cloudinaryPublicId || file.filename;
+                                                                const fileUrl = `${baseUrl}/results/file/${encodeURIComponent(publicId)}?token=${localStorage.getItem('token')}`;
                                                                 window.open(fileUrl, '_blank');
                                                             }}
                                                             className="text-blue-600 hover:text-blue-800 p-1"

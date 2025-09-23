@@ -253,10 +253,16 @@ export const deleteResult = asyncHandler(async (req, res) => {
 export const serveResultFile = asyncHandler(async (req, res) => {
     const { publicId } = req.params;
 
-    const result = await Result.findOne({
+    // Allow admin to view any file, patients can only view their own files
+    const query = {
         "resultFiles.cloudinaryPublicId": publicId,
-        patientId: req.user._id,
-    });
+    };
+    
+    if (req.user.role !== 'admin' && req.user.role !== 'super_admin') {
+        query.patientId = req.user._id;
+    }
+
+    const result = await Result.findOne(query);
 
     if (!result) {
         return res.status(404).json({
@@ -310,10 +316,16 @@ export const serveResultFile = asyncHandler(async (req, res) => {
 export const downloadResultFile = asyncHandler(async (req, res) => {
     const { publicId } = req.params;
 
-    const result = await Result.findOne({
+    // Allow admin to download any file, patients can only download their own files
+    const query = {
         "resultFiles.cloudinaryPublicId": publicId,
-        patientId: req.user._id,
-    });
+    };
+    
+    if (req.user.role !== 'admin' && req.user.role !== 'super_admin') {
+        query.patientId = req.user._id;
+    }
+
+    const result = await Result.findOne(query);
 
     if (!result)
         return res
