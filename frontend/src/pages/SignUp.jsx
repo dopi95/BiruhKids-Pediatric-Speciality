@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 const translations = {
   En: {
     title: "Create your account",
-    subtitle: "Sign up to manage your appointments",
+    subtitle: "Sign up to manage your result",
     fullNameLabel: "Full Name:",
     fullNamePlaceholder: "Enter your full name",
     emailLabel: "Email Address:",
@@ -41,7 +41,7 @@ const translations = {
   },
   Am: {
     title: "መለያዎን ይፍጠሩ",
-    subtitle: "ቀጠሮዎትን ለመቆጣጠር ይመዝገቡ",
+    subtitle: "ውጤጦዎን  ለመቆጣጠር ይመዝገቡ",
     fullNameLabel: "ሙሉ ስም:",
     fullNamePlaceholder: "ሙሉ ስምዎን ያስገቡ",
     emailLabel: "ኢሜይል አድራሻ:",
@@ -53,7 +53,7 @@ const translations = {
     confirmPasswordLabel: "የይለፍ ቃል ያረጋግጡ:",
     confirmPasswordPlaceholder: "የይለፍ ቃልዎን እንደገና ያስገቡ",
     notifyTitle: "ማሳወቂያ ይፍቀዱ",
-    notifyDesc: "(ማንኛውም አዳዲስ ማስታወቂያ በኢሜይል ይደርስብኝ)",
+    notifyDesc: "(ማንኛውም አዳዲስ ማስታወቂያ በኢሜይል ይድረሰኝ)",
     signUp: "ይመዝገቡ",
     haveAccount: "መለያ አለዎ?",
     signIn: "ይግቡ",

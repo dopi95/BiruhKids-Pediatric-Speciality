@@ -20,7 +20,7 @@ export default function ForgotPassword({ lang = "En" }) {
       back: "Back to Sign In",
     },
     Am: {
-      title: "ፓስዎርድዎን ረሱአት?",
+      title: "ፓስዎርድዎን ረሱ?",
       desc: "ኢሜል አድራሻዎን ያስገቡ፣ የይለፍ ቃልዎን ለማደስ 6-አሃዝ የማረጋገጫ ኮድ እንልክልዎታለን።",
       email: "የኢሜል አድራሻ:",
       placeholder: "ኢሜል አድራሻዎን ያስገቡ",

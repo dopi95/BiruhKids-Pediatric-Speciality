@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import heroVideo from '../../assets/hero-bg.mp4';
+
+
 
 const Hero = ({ lang = "En" }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -14,21 +17,17 @@ const Hero = ({ lang = "En" }) => {
   const slides = [
     {
       id: 1,
-      backgroundImage:
-        "https://images.pexels.com/photos/1266810/pexels-photo-1266810.jpeg?auto=compress&cs=tinysrgb&w=1920",
       title: {
         en: "Pediatric healthcare services",
         am: "የህፃናት ጤና አገልግሎቶች",
       },
       tagline: {
         en: "designed to meet the unique needs of children, ensuring their health, growth, and development are supported every step of the way.",
-        am: "ልዩ የህፃናት ፍላጎት ለማሟላት የተነደፈ፣ ጤናቸው፣ እድገታቸው እና እድሳታቸው በእያንዳንዱ እርምጃ እንዲደገፉ የተዘጋጀ።",
+        am: "ልዩ የህፃናት ፍላጎት ለማሟላት የተነደፈ፣ ጤንነታቸውን እና እድገታቸውን በእያንዳንዱ እርምጃ እንዲደገፉ የተዘጋጀ።",
       },
     },
     {
       id: 2,
-      backgroundImage:
-        "https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=1920",
       title: {
         en: "Outpatient care (OPD)",
         am: "የውጭ ሕክምና አገልግሎት (OPD)",
@@ -40,8 +39,6 @@ const Hero = ({ lang = "En" }) => {
     },
     {
       id: 3,
-      backgroundImage:
-        "https://images.pexels.com/photos/326501/pexels-photo-326501.jpeg?auto=compress&cs=tinysrgb&w=1920",
       title: {
         en: "Emergency care",
         am: "አደጋ ጊዜ አገልግሎት",
@@ -53,15 +50,13 @@ const Hero = ({ lang = "En" }) => {
     },
     {
       id: 4,
-      backgroundImage:
-        "https://images.pexels.com/photos/1181676/pexels-photo-1181676.jpeg?auto=compress&cs=tinysrgb&w=1920",
       title: {
         en: "Laboratory and Imaging Services",
         am: "የላቦራቶሪ እና ምስል አገልግሎቶች",
       },
       tagline: {
         en: "Our clinic is equipped with state-of-the-art laboratory machines and advanced imaging technology using the latest ultrasound (US) systems.",
-        am: "ክሊኒካችን በዘመናዊ የላቦራቶሪ መሳሪያዎች እና በላቀ የምስል ቴክኖሎጂ ከአዳዲስ የአልትራሳውንድ (US) ስርዓቶች ጋር ተዘጋጅታለች።",
+        am: "ክሊኒካችን በዘመናዊ የላቦራቶሪ መሳሪያዎች እና በላቀ የምስል ቴክኖሎጂ ከአዳዲስ የአልትራሳውንድ (US) ስርዓቶች ጋር የተዘጋጀ ነው።",
       },
     },
   ];
@@ -166,13 +161,13 @@ const Hero = ({ lang = "En" }) => {
 
   useEffect(() => {
     let timeout;
-    const typeSpeed = 50;
-    const pauseTime = 3000;
+    const typeSpeed = 100;
+    const pauseTime = 6000;
 
     if (!isDeleting && typedText === fullText) {
       timeout = setTimeout(() => setIsDeleting(true), pauseTime);
     } else if (isDeleting && typedText === "") {
-      timeout = setTimeout(() => setIsDeleting(false), 500);
+      timeout = setTimeout(() => setIsDeleting(false), 1000);
     } else {
       timeout = setTimeout(() => {
         setTypedText((prev) =>
@@ -190,9 +185,33 @@ const Hero = ({ lang = "En" }) => {
 
   return (
     <div className="relative h-[92vh] overflow-hidden">
+      {/* Video Background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        style={{ 
+          minHeight: '100vh', 
+          minWidth: '100vw',
+          objectFit: 'cover',
+          objectPosition: 'center'
+        }}
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
+      
+      {/* Blue to White Mirror Overlay */}
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-600/40 via-blue-400/25 to-white/15 backdrop-blur-[1px] z-10" />
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-blue-900/30 via-transparent to-white/10 z-20" />
+      
+      {/* Glass Effect Overlay */}
+      <div className="absolute top-0 left-0 w-full h-full bg-white/5 backdrop-blur-[0.5px] z-30" />
+      
       <div
         ref={carouselRef}
-        className="flex transition-transform duration-700 ease-in-out h-full"
+        className="flex transition-transform duration-700 ease-in-out h-full relative z-40"
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -201,36 +220,36 @@ const Hero = ({ lang = "En" }) => {
         {extendedSlides.map((slide, index) => (
           <div
             key={`${slide.id}-${index}`}
-            className="min-w-full h-full relative bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url(${slide.backgroundImage})`,
-            }}
+            className="min-w-full h-full relative flex items-center justify-center"
           >
-            <div className="absolute inset-0 bg-black bg-opacity-40" />
-            <div className="absolute inset-0 flex items-center justify-center text-center text-white px-4 sm:px-6 lg:px-8">
-              <div>
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                  <span className="bg-gradient-to-r from-orange-500 to-blue-700 bg-clip-text text-transparent">
+            <div className="text-center text-white px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+              <div className="backdrop-blur-sm bg-white/5 rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl">
+                <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-8 leading-tight">
+                  <span className="bg-gradient-to-r from-blue-500 via-orange-500 to-blue-500 bg-clip-text text-transparent drop-shadow-2xl">
                     {typedText}
                   </span>
                 </h2>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6 leading-tight">
-                  <span className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+                <h3 className="text-2xl sm:text-3xl lg:text-5xl font-semibold mb-8 leading-tight">
+                  <span className="text-white drop-shadow-2xl">
                     {slide.title[currentLang]}
                   </span>
                 </h3>
-                <p className="text-lg sm:text-xl lg:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-lg sm:text-xl lg:text-2xl text-white/95 max-w-4xl mx-auto leading-relaxed mb-12 drop-shadow-xl">
                   {slide.tagline[currentLang]}
                 </p>
-                <div className="flex flex-col mt-10 gap-4 sm:flex-row sm:justify-center sm:gap-6">
-                  <button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-700 hover:to-orange-800 text-white p-3 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                    <Link to="/appointment">
-                      {currentLang === "am" ? "ቀጠሮ ያስይዙ" : "Book Appointment"}
+                <div className="flex flex-col mt-10 gap-6 sm:flex-row sm:justify-center sm:gap-8">
+                  <button className="group relative overflow-hidden backdrop-blur-md bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-2xl text-xl font-bold transition-all duration-500 transform hover:scale-110 shadow-2xl hover:shadow-blue-500/30 border border-white/30 hover:border-blue-400/50">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-orange-500/30 to-blue-500/30 opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <Link to="/appointment" className="relative z-10 flex items-center justify-center gap-2">
+                      <span className="drop-shadow-lg">{currentLang === "am" ? "ቀጠሮ ያስይዙ" : "Book Appointment"}</span>
                     </Link>
                   </button>
-                  <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                    <Link to="/register">
-                      {currentLang === "am" ? "መጀመር" : "Get Started"}
+                  <button className="group relative overflow-hidden backdrop-blur-md bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-2xl text-xl font-bold transition-all duration-500 transform hover:scale-110 shadow-2xl hover:shadow-orange-500/30 border border-white/30 hover:border-orange-400/50">
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-500/30 via-blue-500/30 to-orange-500/30 opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <Link to="/register" className="relative z-10 flex items-center justify-center gap-2">
+                      <span className="drop-shadow-lg">{currentLang === "am" ? "ይጀምሩ" : "Get Started"}</span>
                     </Link>
                   </button>
                 </div>
@@ -243,31 +262,31 @@ const Hero = ({ lang = "En" }) => {
       {/* Prev Button */}
       <button
         onClick={goToPrev}
-        className="hidden md:flex absolute left-6 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
+        className="hidden md:flex absolute left-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 hover:from-blue-400/50 hover:to-cyan-400/50 backdrop-blur-md text-white p-4 rounded-full transition-all duration-500 hover:scale-125 z-50 border border-white/20 shadow-2xl hover:shadow-blue-500/25"
         aria-label="Previous slide"
       >
-        <ChevronLeft size={24} />
+        <ChevronLeft size={28} className="drop-shadow-lg" />
       </button>
 
       {/* Next Button */}
       <button
         onClick={goToNext}
-        className="hidden md:flex absolute right-6 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
+        className="hidden md:flex absolute right-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 hover:from-cyan-400/50 hover:to-blue-400/50 backdrop-blur-md text-white p-4 rounded-full transition-all duration-500 hover:scale-125 z-50 border border-white/20 shadow-2xl hover:shadow-cyan-500/25"
         aria-label="Next slide"
       >
-        <ChevronRight size={24} />
+        <ChevronRight size={28} className="drop-shadow-lg" />
       </button>
 
-      {/* Dots */}
-      <div className="flex absolute bottom-8 left-1/2 transform -translate-x-1/2 space-x-3 z-10">
+      {/* Dots - Positioned below header */}
+      <div className="flex absolute bottom-8 left-1/2 transform -translate-x-1/2 space-x-4 z-10">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+            className={`transition-all duration-500 rounded-full border border-white/30 backdrop-blur-sm ${
               index === getActualSlideIndex()
-                ? "bg-white scale-125"
-                : "bg-white bg-opacity-50 hover:bg-opacity-75"
+                ? "w-12 h-4 bg-gradient-to-r from-cyan-400 to-blue-500 scale-110 shadow-lg shadow-blue-500/50"
+                : "w-4 h-4 bg-white/40 hover:bg-white/60 hover:scale-110"
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

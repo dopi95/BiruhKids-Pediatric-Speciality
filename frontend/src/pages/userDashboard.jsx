@@ -94,7 +94,7 @@ const UserDashboard = ({ lang = "En" }) => {
     },
     Am: {
       totalResults: "ጠቅላላ ውጤቶች",
-      recentResults: "የቅርብ የሙከራ ውጤቶች",
+      recentResults: "የቅርብ ውጤቶች",
       viewAll: "ሁሉንም አሳይ",
       showLess: "በትንሽ አሳይ",
       quickActions: "ፈጣን እርምጃዎች",

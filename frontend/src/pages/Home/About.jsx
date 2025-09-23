@@ -1,6 +1,7 @@
 import {
   Users,
   Award,
+  Video,
   Clock,
   Stethoscope,
   Facebook,
@@ -35,13 +36,15 @@ export default function About({ lang }) {
       color: "text-blue-600",
       bg: "bg-blue-100",
     },
-    {
-      icon: Award,
-      value: "15+",
-      label: isAmh ? "የሥራ ልምድ ዓመታት" : "Years Experience",
-      color: "text-orange-600",
-      bg: "bg-orange-100",
-    },
+    
+ {
+  icon: Video,
+  value: "Live",
+  label: isAmh ? "የኦንላይ አገልግሎት" : "Online Consultation",
+  color: "text-green-600",
+  bg: "bg-green-100",
+},
+
     {
       icon: Stethoscope,
       value: "50+",
@@ -78,47 +81,42 @@ export default function About({ lang }) {
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify mb-4">
             {isAmh ? (
               <>
-                ብሩህ ኪድስ በ <span className="font-semibold">ኖቬምበር 2024</span>{" "}
-                በአዲስ አበባ እንደ ዋና የህጻናት ልዩ ክሊኒክ ተቋቋመ። ባለፉት ስምንት ወራት
-                ውስጥ ለህጻናት አጠቃላይ የጤና አገልግሎት ማቅረብ እና የተቋም ሁኔታ
-                ለማግኘት ጥረት አድርጎናል።
-              </>
+      
+                ብሩህ ኪድስ በ <span className="font-semibold">ህዳር 2017</span>{" "} በአዲስ አበባ፣ ኢትዮጵያ ውስጥ እንደ ፕሪሚየር የህፃናት ስፔሻሊቲ ክሊኒክ ተቋቋመ። ባለፉት ስምንት ወራት ውስጥ ለህጻናት ሁሉን አቀፍ የጤና እንክብካቤ አገልግሎት ለመስጠት ቆርጠን ተነስተናል፣ ተቋማዊ ደረጃ ለማግኘት ደከመኝ ሰለቸኝ ሳንል እየሰራን ነው።
+
+በብሩህ ኪድስ በአሁኑ ወቅት እያንዳንዱ ህጻን ከፍተኛውን የህክምና ክትትል እንዲያገኝ ለማድረግ የተመላላሽ ታካሚ ዲፓርትመንት (OPD)፣ የድንገተኛ ህክምና፣ የላብራቶሪ አገልግሎት እና የአልትራሳውንድ ምርመራዎችን ጨምሮ ልዩ ልዩ አገልግሎቶችን እንሰጣለን።              </>
             ) : (
               <>
-                Biruh Kids was established in{" "}
-                <span className="font-semibold">November 2024</span> as a
-                premier pediatric specialty clinic in Addis Ababa, Ethiopia.
-                Over the last eight months, we have been dedicated to providing
-                comprehensive healthcare services for children, working
-                tirelessly towards obtaining institutional status.
+
+                Biruh Kids was established in {" "}
+                <span className="font-semibold">November 2024</span> as a premier pediatric specialty clinic 
+                in Addis Ababa, Ethiopia. Over the last eight months, we have been dedicated to 
+                providing comprehensive healthcare services for children, working tirelessly towards obtaining 
+                institutional status. At Biruh Kids, we currently offer a range of specialized 
+                services including Outpatient Department (OPD), emergency care, laboratory services,
+                 and ultrasound diagnostics to ensure that every child receives the highest standard of medical attention.
               </>
             )}
           </p>
 
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed text-justify">
-            {isAmh ? (
-              <>
-                በብሩህ ኪድስ በአሁኑ ጊዜ{" "}
-                <span className="font-medium text-gray-800">
-                  የውጭ ታካሚ ክፍል (OPD)፣ አደጋ ጊዜ እንክብካቤ፣ የላቦራቶሪ አገልግሎቶች
-                  እና የአልትራሳውንድ ምርመራ
-                </span>{" "}
-                እየቀረቡ ናቸው። ህጻናት በደህና እና በርኅራኄ ሁኔታ የጤና እንክብካቤ
-                እንዲያገኙ እንረዳቸዋለን።
-              </>
-            ) : (
-              <>
-                At Biruh Kids, we currently offer a range of specialized
-                services including{" "}
-                <span className="font-medium text-gray-800">
-                  Outpatient Department (OPD), emergency care, laboratory
-                  services, and ultrasound diagnostics
-                </span>{" "}
-                to ensure that every child receives the highest standard of
-                medical attention in a safe and compassionate environment.
-              </>
-            )}
-          </p>
+          {/* Read More Button */}
+          <div className="flex justify-center">
+            <a
+              href="/about"
+              className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              <span>{isAmh ? "ተጨማሪ ያንብቡ" : "Read More"}</span>
+              <svg 
+                className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </div>
+         
         </motion.div>
 
         {/* Vision & Mission Section */}

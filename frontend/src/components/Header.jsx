@@ -104,11 +104,9 @@ function Header({ lang, setLang }) {
         <div className="hidden md:flex space-x-4 items-center md:gap-4">
           <Link
             to="/appointment"
-            className="bg-orange-500 text-white px-4 py-2 rounded-lg shadow-md 
-                           hover:bg-orange-600 hover:scale-105 hover:shadow-lg 
-                           transition-transform duration-300 ease-in-out"
+            className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
-            {translations[lang].book}
+            <span>{translations[lang].book}</span>
           </Link>
 
           {user ? (
@@ -221,9 +219,9 @@ function Header({ lang, setLang }) {
               <Link
                 to="/appointment"
                 onClick={handleCloseMenu}
-                className="block bg-orange-500 text-white px-4 py-2 rounded-lg text-center mt-2 hover:bg-orange-600 transition"
+                className="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
-                {translations[lang].book}
+                <span>{translations[lang].book}</span>
               </Link>
             </motion.div>
 
@@ -236,7 +234,7 @@ function Header({ lang, setLang }) {
                   <Link
                     to={user.role === "user" ? "/profile" : "/admin/profile"}
                     onClick={handleCloseMenu}
-                    className="block text-gray-600 font-medium hover:text-gray-800 transition flex items-center"
+                    className=" text-gray-600 font-medium hover:text-gray-800 transition flex items-center"
                   >
                     <User className="w-4 h-4 mr-2" />
                     {getUserDisplayName(user)}
@@ -246,7 +244,7 @@ function Header({ lang, setLang }) {
                   <Link
                     to={user.role === "user" ? "/user-dashboard" : "/admin"}
                     onClick={handleCloseMenu}
-                    className="block text-blue-500 font-semibold hover:text-blue-600 transition flex items-center"
+                    className=" text-blue-500 font-semibold hover:text-blue-600 transition flex items-center"
                   >
                     <User className="w-4 h-4 mr-2" />
                     {translations[lang].dashboard}{" "}
@@ -259,7 +257,7 @@ function Header({ lang, setLang }) {
                       logout();
                       handleCloseMenu();
                     }}
-                    className="block text-red-500 font-semibold hover:text-red-600 transition flex items-center"
+                    className=" text-red-500 font-semibold hover:text-red-600 transition flex items-center"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     {translations[lang].logout}

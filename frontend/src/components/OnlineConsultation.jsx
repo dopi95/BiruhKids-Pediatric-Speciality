@@ -1,6 +1,6 @@
 // components/OnlineConsultation.jsx
 import { motion } from "framer-motion";
-import { FaVideo, FaWhatsapp, FaTelegramPlane } from "react-icons/fa";
+import { FaVideo, FaTelegramPlane, FaPhone } from "react-icons/fa";
 
 export default function OnlineConsultation({ lang }) {
   const translations = {
@@ -9,15 +9,15 @@ export default function OnlineConsultation({ lang }) {
       description: `Can’t visit us in person? We now offer video call consultations so you can connect with our doctors from the comfort of your home.`,
       highlight: "video call consultations",
       connect: "For More Information Connect with us on",
-      whatsapp: "WhatsApp",
+      call: "Call Us",
       telegram: "Telegram",
     },
     am: {
-      title: "በመስመር ላይ ምክር ይገኛል",
+      title: "ኦንላይ አገልግሎት እንሰጣለን",
       description: `በቀጥታ መምጣት ካልቻሉ፣ ከቤትዎ በቀላሉ ከሐኪሞቻችን ጋር በቪዲዮ ጥሪ ሊገናኙ ይችላሉ።`,
       highlight: "ቪዲዮ ጥሪ ምክር",
       connect: "ለተጨማሪ መረጃ ከእኛ ጋር ይገናኙ በ",
-      whatsapp: "ዋትሳፕ",
+      call: "ይደውሉልን",
       telegram: "ቴሌግራም",
     },
   };
@@ -64,18 +64,16 @@ export default function OnlineConsultation({ lang }) {
           }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          {/* WhatsApp */}
+          {/* Call */}
           <motion.a
             variants={{
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="tel:+251963555552"
             className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full shadow-lg transition-all w-full sm:w-auto justify-center"
           >
-            <FaWhatsapp size={22} /> <span>{t.whatsapp}</span>
+            <FaPhone size={22} /> <span>{t.call}</span>
           </motion.a>
 
           {/* Telegram */}

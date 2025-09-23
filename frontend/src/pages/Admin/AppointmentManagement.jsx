@@ -14,7 +14,6 @@ import { debugToken } from "../../utils/tokenDebug";
 
 const AppointmentManagement = () => {
   const [appointments, setAppointments] = useState([]);
-  const [selectedAppointments, setSelectedAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -38,7 +37,17 @@ const AppointmentManagement = () => {
       const result = await appointmentService.getAllAppointments();
 
       if (result.success) {
-        setAppointments(result.data || []);
+        // Sort appointments by newest first (createdAt descending) with millisecond precision
+        const sortedAppointments = (result.data || []).sort((a, b) => {
+          const dateA = new Date(a.createdAt || 0).getTime();
+          const dateB = new Date(b.createdAt || 0).getTime();
+          // If same timestamp, sort by _id (MongoDB ObjectId contains timestamp)
+          if (dateB === dateA) {
+            return b._id.localeCompare(a._id);
+          }
+          return dateB - dateA;
+        });
+        setAppointments(sortedAppointments);
       } else {
         setError(result.message || "Failed to fetch appointments");
       }
@@ -53,13 +62,16 @@ const AppointmentManagement = () => {
 
   useEffect(() => {
     fetchAppointments();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchAppointments();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
-  const handleCheckboxChange = (id) => {
-    setSelectedAppointments((prev) =>
-      prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
-    );
-  };
+
 
   const handleConfirmAppointment = async (id) => {
     setUpdating(true);
@@ -133,7 +145,7 @@ const AppointmentManagement = () => {
     fetchAppointments();
   };
 
-  // Filtered appointments based on search and status
+  // Filtered appointments with additional sorting to ensure latest is always on top
   const filteredAppointments = appointments
     .filter((appointment) => {
       const matchesSearch =
@@ -151,9 +163,12 @@ const AppointmentManagement = () => {
       return matchesSearch && matchesStatus;
     })
     .sort((a, b) => {
-      // Sort by createdAt in descending order (newest first)
-      const dateA = new Date(a.createdAt || 0);
-      const dateB = new Date(b.createdAt || 0);
+      // Ensure latest appointments are always on top with precise sorting
+      const dateA = new Date(a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt || 0).getTime();
+      if (dateB === dateA) {
+        return b._id.localeCompare(a._id);
+      }
       return dateB - dateA;
     });
 
@@ -165,22 +180,22 @@ const AppointmentManagement = () => {
       icon: CalendarDays,
     },
     {
-      label: "Selected",
-      value: selectedAppointments.length,
-      color: "green",
-      icon: CheckSquare,
-    },
-    {
       label: "Pending",
       value: appointments.filter((a) => a.status === "pending").length,
       color: "yellow",
-      icon: RefreshCw,
+      icon: Clock,
     },
     {
       label: "Confirmed",
       value: appointments.filter((a) => a.status === "confirmed").length,
       color: "green",
       icon: CheckCircle,
+    },
+    {
+      label: "Cancelled",
+      value: appointments.filter((a) => a.status === "cancelled").length,
+      color: "red",
+      icon: XCircle,
     },
   ];
 
@@ -195,10 +210,10 @@ const AppointmentManagement = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Main Content */}
-      <div className="flex-1 bg-gray-50 ml-0 md:ml-0 mt-16 md:mt-0 p-4 md:p-6">
+      <div className="flex-1 bg-gray-50 ml-0 md:ml-0 mt-16 md:mt-0 p-4 md:p-6 mr-4">
         {/* Header */}
         <div className="bg-white shadow-sm border-b rounded-lg p-4 mb-6">
-          <div className="flex flex-col sm:flex-row gap-5 justify-between sm:items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center">
             <div>
               <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                 Appointment Management
@@ -207,16 +222,18 @@ const AppointmentManagement = () => {
                 Manage and review patient appointments
               </p>
             </div>
-            <button
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex items-center"
-            >
-              <RefreshCw
-                className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
+            
+            {/* Search */}
+            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full sm:w-64 flex-shrink-0">
+              <input
+                type="text"
+                placeholder="Search appointments..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-3 py-2 outline-none flex-1 min-w-0 focus:ring-2 focus:ring-blue-500"
               />
-              Refresh
-            </button>
+              <Search className="h-5 w-5 text-gray-400 mx-2 flex-shrink-0" />
+            </div>
           </div>
         </div>
 
@@ -236,18 +253,10 @@ const AppointmentManagement = () => {
 
         {/* Stats Grid */}
         <div className="mb-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {stats.map((stat, i) => (
               <StatsCard key={i} {...stat} icon={stat.icon} />
             ))}
-            <StatsCard
-              label="Cancelled"
-              value={
-                appointments.filter((a) => a.status === "cancelled").length
-              }
-              color="red"
-              icon={XCircle}
-            />
           </div>
         </div>
 
@@ -256,42 +265,27 @@ const AppointmentManagement = () => {
           <div className="p-4 lg:p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <h2 className="text-lg font-semibold text-gray-900">
               <span className="text-2xl">📅 </span>
-              All Appointments
+              All Appointments ({filteredAppointments.length})
             </h2>
-
-            {/* Search and Filter */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full sm:w-64">
-                <input
-                  type="text"
-                  placeholder="Search appointments..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="px-3 py-2 outline-none flex-1 min-w-0 focus:ring-2 focus:ring-blue-500"
-                />
-                <Search className="h-5 w-5 text-gray-400 mx-2 flex-shrink-0" />
-              </div>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-              >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
-            </div>
+            
+            {/* Filter */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto flex-shrink-0"
+            >
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
           </div>
 
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-3 py-3 w-10">
-                    <span className="sr-only">Select</span>
-                  </th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-24">Date</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-24">Submitted</th>
                   <th className="px-3 py-3 text-left font-semibold text-gray-700 min-w-[120px]">
                     Name
                   </th>
@@ -328,7 +322,7 @@ const AppointmentManagement = () => {
                 {filteredAppointments.length === 0 ? (
                   <tr>
                     <td
-                      colSpan="12"
+                      colSpan="11"
                       className="px-3 py-8 text-center text-gray-500"
                     >
                       No appointments found.
@@ -337,14 +331,6 @@ const AppointmentManagement = () => {
                 ) : (
                   filteredAppointments.map((appt) => (
                     <tr key={appt._id} className="hover:bg-gray-50">
-                      <td className="px-3 py-3">
-                        <input
-                          type="checkbox"
-                          checked={selectedAppointments.includes(appt._id)}
-                          onChange={() => handleCheckboxChange(appt._id)}
-                          className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                      </td>
                       <td className="px-3 py-3 text-xs text-gray-600">
                         {appt.createdAt
                           ? new Date(appt.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -378,12 +364,12 @@ const AppointmentManagement = () => {
                         </span>
                       </td>
                       <td className="px-3 py-3">
-                        <div className="flex gap-1">
+                        <div className="flex flex-col gap-1">
                           {appt.status !== "confirmed" && (
                             <button
                               onClick={() => handleConfirmAppointment(appt._id)}
                               disabled={updating}
-                              className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs disabled:opacity-50 flex items-center whitespace-nowrap"
+                              className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs disabled:opacity-50 flex items-center justify-center whitespace-nowrap"
                               title="Confirm Appointment"
                             >
                               <CheckCircle className="w-3 h-3 mr-1" />
@@ -394,7 +380,7 @@ const AppointmentManagement = () => {
                             <button
                               onClick={() => openCancelModal(appt)}
                               disabled={updating}
-                              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs disabled:opacity-50 flex items-center whitespace-nowrap"
+                              className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs disabled:opacity-50 flex items-center justify-center whitespace-nowrap"
                               title="Cancel Appointment"
                             >
                               <XCircle className="w-3 h-3 mr-1" />
