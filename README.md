@@ -37,6 +37,7 @@
 ## 🛠️ Technology Stack
 
 ### Frontend
+
 - **Framework:** React 19 with Vite
 - **Language:** JavaScript (ES6+)
 - **Styling:** Tailwind CSS
@@ -48,6 +49,7 @@
 - **Notifications:** React Toastify
 
 ### Backend
+
 - **Framework:** Express.js
 - **Language:** JavaScript (ES Modules)
 - **Database:** MongoDB with Mongoose ODM
@@ -57,6 +59,7 @@
 - **Security:** CORS, Rate limiting, Input validation
 
 ### AI Integration
+
 - **AI Service:** Puter.js API
 - **Chatbot:** Context-aware healthcare assistant
 - **Fallback System:** Predefined responses for reliability
@@ -69,7 +72,7 @@
 | ------------------- | -------------------------- |
 | **Bereket Eshete**  | Backend & AI Developer     |
 | **Dagim Sisay**     | UI/UX & Frontend Developer |
-| **Eliyas Yenealem** | Full Stack Developer       |
+| **Elyas Yenealem**  | Full Stack Developer       |
 | **Tinbite Daniale** | Full Stack Developer       |
 
 ---
@@ -102,6 +105,7 @@ BiruhKids-Pediatric-Speciality/
 ### Prerequisites
 
 Ensure you have the following installed:
+
 - **Node.js** (v18 or higher)
 - **npm** (v8 or higher)
 - **MongoDB** (Atlas or local instance)
@@ -110,18 +114,21 @@ Ensure you have the following installed:
 ### 📥 Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/your-username/BiruhKids-Pediatric-Speciality.git
    cd BiruhKids-Pediatric-Speciality
    ```
 
 2. **Install Backend Dependencies:**
+
    ```bash
    cd backend
    npm install
    ```
 
 3. **Install Frontend Dependencies:**
+
    ```bash
    cd ../frontend
    npm install
@@ -130,6 +137,7 @@ Ensure you have the following installed:
 4. **Set up Environment Variables:**
 
    **Backend (.env):**
+
    ```env
    PORT=5000
    MONGO_URI=your-mongodb-connection-string
@@ -146,6 +154,7 @@ Ensure you have the following installed:
    ```
 
    **Frontend (.env):**
+
    ```env
    VITE_API_URL=http://localhost:5000/api
    ```
@@ -153,12 +162,14 @@ Ensure you have the following installed:
 5. **Start Development Servers:**
 
    **Backend:**
+
    ```bash
    cd backend
    npm run dev
    ```
 
    **Frontend (in new terminal):**
+
    ```bash
    cd frontend
    npm run dev
@@ -172,18 +183,20 @@ Ensure you have the following installed:
 ## 📜 Available Scripts
 
 ### Backend Scripts
-| Command       | Description                    |
-| ------------- | ------------------------------ |
-| `npm start`   | Start production server        |
-| `npm run dev` | Start development server       |
+
+| Command       | Description              |
+| ------------- | ------------------------ |
+| `npm start`   | Start production server  |
+| `npm run dev` | Start development server |
 
 ### Frontend Scripts
-| Command         | Description                    |
-| --------------- | ------------------------------ |
-| `npm run dev`   | Start development server       |
-| `npm run build` | Build for production           |
-| `npm run preview` | Preview production build     |
-| `npm run lint`  | Lint code                      |
+
+| Command           | Description              |
+| ----------------- | ------------------------ |
+| `npm run dev`     | Start development server |
+| `npm run build`   | Build for production     |
+| `npm run preview` | Preview production build |
+| `npm run lint`    | Lint code                |
 
 ---
 
@@ -243,6 +256,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-For questions, suggestions, or support, please contact our development team or create an issue in this repository.
+For questions, suggestions, or support, please contact our development team <a
+              href="https://t.me/ChainTech_6/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 font-semibold hover:underline hover:text-blue-800 transition"
+            >
+Chain Tech
+</a> or create an issue in this repository.
 
-**BiruhKids Pediatric Specialty Clinic** - *Your child's health is our priority* 👶💙
+**BiruhKids Pediatric Specialty Clinic** - _Your child's health is our priority_ 👶💙
