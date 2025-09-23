@@ -1,6 +1,7 @@
 import {
   Users,
   Award,
+  Video,
   Clock,
   Stethoscope,
   Facebook,
@@ -35,13 +36,15 @@ export default function About({ lang }) {
       color: "text-blue-600",
       bg: "bg-blue-100",
     },
-    {
-      icon: Award,
-      value: "15+",
-      label: isAmh ? "የሥራ ልምድ ዓመታት" : "Years Experience",
-      color: "text-orange-600",
-      bg: "bg-orange-100",
-    },
+    
+ {
+  icon: Video,
+  value: "Live",
+  label: isAmh ? "የኦንላይ አገልግሎት" : "Online Consultation",
+  color: "text-green-600",
+  bg: "bg-green-100",
+},
+
     {
       icon: Stethoscope,
       value: "50+",

@@ -134,7 +134,7 @@ export default function Footer({ lang }) {
       contact: "አግኙን",
       contactInfo: "የእውቂያ መረጃ",
       address:
-        "ጦርሃይሎች አውጉስታ ድልድይ 100 ከሕብር አካዳሚ ት/ቤት ፊትለፊት ያገኙናል አዲስ አበባ፣ ኢትዮጵያ",
+        "ጦርሃይሎች አውጉስታ ድልድይ ከሕብር አካዳሚ ት/ቤት ፊትለፊት ያገኙናል አዲስ አበባ፣ ኢትዮጵያ",
       newsletter: "ኒውስሌተር",
       subscribeText:
         "የጤና ምክሮችንና የክሊኒክ ዜናዎችን ለማወቅ ይመዝገቡ።",
@@ -247,7 +247,7 @@ export default function Footer({ lang }) {
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-blue-400" />
                 <span className="text-gray-300 text-sm">
-                  +251996505319 / +251939602927
+                  +251963555552 / +251939602927
                 </span>
               </div>
 

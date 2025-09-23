@@ -236,7 +236,7 @@ function Header({ lang, setLang }) {
                   <Link
                     to={user.role === "user" ? "/profile" : "/admin/profile"}
                     onClick={handleCloseMenu}
-                    className="block text-gray-600 font-medium hover:text-gray-800 transition flex items-center"
+                    className=" text-gray-600 font-medium hover:text-gray-800 transition flex items-center"
                   >
                     <User className="w-4 h-4 mr-2" />
                     {getUserDisplayName(user)}
@@ -246,7 +246,7 @@ function Header({ lang, setLang }) {
                   <Link
                     to={user.role === "user" ? "/user-dashboard" : "/admin"}
                     onClick={handleCloseMenu}
-                    className="block text-blue-500 font-semibold hover:text-blue-600 transition flex items-center"
+                    className=" text-blue-500 font-semibold hover:text-blue-600 transition flex items-center"
                   >
                     <User className="w-4 h-4 mr-2" />
                     {translations[lang].dashboard}{" "}
@@ -259,7 +259,7 @@ function Header({ lang, setLang }) {
                       logout();
                       handleCloseMenu();
                     }}
-                    className="block text-red-500 font-semibold hover:text-red-600 transition flex items-center"
+                    className=" text-red-500 font-semibold hover:text-red-600 transition flex items-center"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     {translations[lang].logout}
