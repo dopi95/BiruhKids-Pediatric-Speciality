@@ -62,6 +62,13 @@ const AppointmentManagement = () => {
 
   useEffect(() => {
     fetchAppointments();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchAppointments();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
 
@@ -216,29 +223,16 @@ const AppointmentManagement = () => {
               </p>
             </div>
             
-            {/* Search and Refresh */}
-            <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
-              <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full sm:w-64 flex-shrink-0">
-                <input
-                  type="text"
-                  placeholder="Search appointments..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="px-3 py-2 outline-none flex-1 min-w-0 focus:ring-2 focus:ring-blue-500"
-                />
-                <Search className="h-5 w-5 text-gray-400 mx-2 flex-shrink-0" />
-              </div>
-              
-              <button
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center whitespace-nowrap flex-shrink-0"
-              >
-                <RefreshCw
-                  className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
-                />
-                Refresh
-              </button>
+            {/* Search */}
+            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full sm:w-64 flex-shrink-0">
+              <input
+                type="text"
+                placeholder="Search appointments..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-3 py-2 outline-none flex-1 min-w-0 focus:ring-2 focus:ring-blue-500"
+              />
+              <Search className="h-5 w-5 text-gray-400 mx-2 flex-shrink-0" />
             </div>
           </div>
         </div>
@@ -259,7 +253,7 @@ const AppointmentManagement = () => {
 
         {/* Stats Grid */}
         <div className="mb-6">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {stats.map((stat, i) => (
               <StatsCard key={i} {...stat} icon={stat.icon} />
             ))}

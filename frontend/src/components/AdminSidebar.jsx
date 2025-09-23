@@ -71,20 +71,13 @@ const AdminSidebar = () => {
                     )}
                 </button>
                 <span className="text-lg font-bold">Admin Panel</span>
-                <div className="flex items-center space-x-4">
-                    <div className="text-right">
-                        <p className="text-sm font-medium text-gray-50">
-                            {user?.name || 'Admin'}
-                        </p>
-                        <p className="text-xs text-gray-200">
-                            {user?.role === 'super_admin' ? 'Super Administrator' : 'Administrator'}
-                        </p>
-                    </div>
-                    <img
-                        src={user?.avatar || "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"}
-                        alt="Admin"
-                        className="h-10 w-10 rounded-full"
-                    />
+                <div className="text-right">
+                    <p className="text-sm font-medium text-gray-50">
+                        {user?.name || 'Admin'}
+                    </p>
+                    <p className="text-xs text-gray-200">
+                        {user?.role === 'super_admin' ? 'Super Administrator' : 'Administrator'}
+                    </p>
                 </div>
             </div>
 
@@ -97,20 +90,13 @@ const AdminSidebar = () => {
                 {/* Logo (Desktop only) */}
                 <div className="hidden md:flex md:justify-between md:items-center p-4 border-b border-gray-800">
                     <span className="text-lg font-bold">Admin Panel</span>
-                    <div className="flex items-center space-x-4">
-                        <div className="text-right">
-                            <p className="text-sm font-medium text-gray-50">
-                                {user?.name || 'Admin'}
-                            </p>
-                            <p className="text-xs text-gray-200">
-                                {user?.role === 'super_admin' ? 'Super Administrator' : 'Administrator'}
-                            </p>
-                        </div>
-                        <img
-                            src={user?.avatar || "https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"}
-                            alt="Admin"
-                            className="h-10 w-10 rounded-full"
-                        />
+                    <div className="text-right">
+                        <p className="text-sm font-medium text-gray-50">
+                            {user?.name || 'Admin'}
+                        </p>
+                        <p className="text-xs text-gray-200">
+                            {user?.role === 'super_admin' ? 'Super Administrator' : 'Administrator'}
+                        </p>
                     </div>
                 </div>
 
