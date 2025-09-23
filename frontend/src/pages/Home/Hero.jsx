@@ -202,9 +202,9 @@ const Hero = ({ lang = "En" }) => {
         <source src={heroVideo} type="video/mp4" />
       </video>
       
-      {/* Blue Mirror Overlay */}
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-900/60 via-blue-800/40 to-cyan-600/30 backdrop-blur-[1px] z-10" />
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/50 via-transparent to-black/30 z-20" />
+      {/* Blue to White Mirror Overlay */}
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-600/40 via-blue-400/25 to-white/15 backdrop-blur-[1px] z-10" />
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-blue-900/30 via-transparent to-white/10 z-20" />
       
       {/* Glass Effect Overlay */}
       <div className="absolute top-0 left-0 w-full h-full bg-white/5 backdrop-blur-[0.5px] z-30" />
@@ -230,11 +230,11 @@ const Hero = ({ lang = "En" }) => {
                   </span>
                 </h2>
                 <h3 className="text-2xl sm:text-3xl lg:text-5xl font-semibold mb-8 leading-tight">
-                  <span className="bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent drop-shadow-lg">
+                  <span className="text-white drop-shadow-2xl">
                     {slide.title[currentLang]}
                   </span>
                 </h3>
-                <p className="text-lg sm:text-xl lg:text-2xl text-blue-50/90 max-w-4xl mx-auto leading-relaxed mb-12 drop-shadow-md">
+                <p className="text-lg sm:text-xl lg:text-2xl text-white/95 max-w-4xl mx-auto leading-relaxed mb-12 drop-shadow-xl">
                   {slide.tagline[currentLang]}
                 </p>
                 <div className="flex flex-col mt-10 gap-6 sm:flex-row sm:justify-center sm:gap-8">
@@ -277,8 +277,8 @@ const Hero = ({ lang = "En" }) => {
         <ChevronRight size={28} className="drop-shadow-lg" />
       </button>
 
-      {/* Dots */}
-      <div className="flex absolute bottom-8 left-1/2 transform -translate-x-1/2 space-x-4 z-50">
+      {/* Dots - Positioned below header */}
+      <div className="flex absolute bottom-8 left-1/2 transform -translate-x-1/2 space-x-4 z-10">
         {slides.map((_, index) => (
           <button
             key={index}

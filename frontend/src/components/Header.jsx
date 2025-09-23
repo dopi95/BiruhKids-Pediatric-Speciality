@@ -104,11 +104,9 @@ function Header({ lang, setLang }) {
         <div className="hidden md:flex space-x-4 items-center md:gap-4">
           <Link
             to="/appointment"
-            className="bg-orange-500 text-white px-4 py-2 rounded-lg shadow-md 
-                           hover:bg-orange-600 hover:scale-105 hover:shadow-lg 
-                           transition-transform duration-300 ease-in-out"
+            className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
-            {translations[lang].book}
+            <span>{translations[lang].book}</span>
           </Link>
 
           {user ? (
@@ -221,9 +219,9 @@ function Header({ lang, setLang }) {
               <Link
                 to="/appointment"
                 onClick={handleCloseMenu}
-                className="block bg-orange-500 text-white px-4 py-2 rounded-lg text-center mt-2 hover:bg-orange-600 transition"
+                className="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
-                {translations[lang].book}
+                <span>{translations[lang].book}</span>
               </Link>
             </motion.div>
 
