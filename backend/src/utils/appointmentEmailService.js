@@ -63,7 +63,7 @@ const getConfirmationEmailTemplate = (appointment) => {
                     
                     <div style="text-align: center; margin: 30px 0;">
                         <p style="color: #666; margin: 5px 0;">📍 <strong>Location:</strong> Torhayloch, 100 meters from Augusta Bridge, Addis Ababa</p>
-                        <p style="color: #666; margin: 5px 0;">📞 <strong>Phone:</strong> +251996505319 / +251939602927</p>
+                        <p style="color: #666; margin: 5px 0;">📞 <strong>Phone:</strong> +251963555552 / +251939602927</p>
                         <p style="color: #666; margin: 5px 0;">✉️ <strong>Email:</strong> biruhkidsclinic@gmail.com</p>
                     </div>
                     
@@ -129,14 +129,14 @@ const getCancellationEmailTemplate = (appointment, reason) => {
                         </p>
                         <ul style="color: #1e40af; margin: 10px 0; padding-left: 20px;">
                             <li>Please choose another available date and time</li>
-                            <li>Call us at +251996505319 or +251939602927 to reschedule</li>
+                            <li>Call us at +251963555552 or +251939602927 to reschedule</li>
                             <li>You can also visit our clinic during working hours</li>
                         </ul>
                     </div>
                     
                     <div style="text-align: center; margin: 30px 0;">
                         <p style="color: #666; margin: 5px 0;">📍 <strong>Location:</strong> Torhayloch, 100 meters from Augusta Bridge, Addis Ababa</p>
-                        <p style="color: #666; margin: 5px 0;">📞 <strong>Phone:</strong> +251996505319 / +251939602927</p>
+                        <p style="color: #666; margin: 5px 0;">📞 <strong>Phone:</strong> +251963555552 / +251939602927</p>
                         <p style="color: #666; margin: 5px 0;">✉️ <strong>Email:</strong> biruhkidsclinic@gmail.com</p>
                     </div>
                     
