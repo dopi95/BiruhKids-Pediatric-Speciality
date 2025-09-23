@@ -36,7 +36,7 @@ export default function Faqs({ lang }) {
   // Amharic FAQ
   const faqsAm = [
     {
-      question: "የት ነው የሚገኙት??",
+      question: "የት ነው የሚገኙት?",
       answer:
         "ጦርሃይሎች አውጉስታ ድልድይ ከሕብር አካዳሚ ት/ቤት ፊትለፊት ያገኙናል።",
     },
@@ -71,8 +71,8 @@ export default function Faqs({ lang }) {
           </h2>
           <p className="text-base md:text-xl text-gray-600">
             {lang === "am"
-              ? "ስለ አገልግሎታችን የተደጋጋሚ ጥያቄዎችን ያግኙ።"
-              : "Find answers to common questions about our services."}
+              ? "በተደጋጋሚ ለሚጠየቁ ጥያቄዎች መልሶችን ያግኙ።"
+              : "Find answers to common questions."}
           </p>
         </div>
 
