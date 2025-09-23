@@ -1,4 +1,3 @@
-// src/pages/AppointmentPage.jsx
 import React, { useState } from "react";
 import { User, Calendar, CheckCircle } from "lucide-react";
 import { Listbox } from "@headlessui/react";
@@ -67,7 +66,7 @@ const translations = {
   Am: {
     title: "ቀጠሮ ይያዙ",
     subtitle:
-      "ከልምዱ ያለው የሕክምና ቡድናችን ጋር ቀጠሮዎን ያዘጋጁ። ለምርጥ የጤና አገልግሎት እንዲያገኙ እንዘጋጃለን።",
+      "ልምድ ካለው የሕክምና ቡድናችን ጋር ቀጠሮዎን ይያዙ። ምርጥ የጤና አገልግሎት እንዲያገኙ እኛ እንዘጋጃለን።",
     steps: ["የግል መረጃ", "ቀጠሮ", "እይታ"],
     personalInfo: "የግል መረጃ",
     appointmentDetails: "የቀጠሮ ዝርዝር",
@@ -106,7 +105,7 @@ const translations = {
     },
     confirmedTitle: "ቀጠሮ ተመዝግቧል!",
     confirmedMessage:
-      "ስለ መግዛትዎ እናመሰግናለን። የተጠየቀው ሰዓት ከሚገኝ ከሆነ በኢሜይል እናሳውቅዎታለን። እባክዎን የኢሜይል ሳጥንዎን ያረጋግጡ።",
+      "ስለ መግዛትዎ እናመሰግናለን። የተመዘገበው ሰዓት ነጻ ከሆነ በኢሜይል እናሳውቅዎታለን። እባክዎን የኢሜይል ሳጥንዎን ያረጋግጡ።",
   },
 };
 
@@ -175,17 +174,17 @@ const AppointmentPage = ({ lang = "En" }) => {
     if (validateStep()) setStep((prev) => prev + 1);
   };
   const prevStep = () => setStep((prev) => prev - 1);
-  
+
   // Add this function to handle form submission
   const prepareAppointmentData = () => {
-    const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    const currentDate = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
     return {
       ...formData,
       appointmentDate: formData.date, // preferred date
       appointmentTime: formData.time, // preferred time
       createdAt: currentDate, // current date when appointment was made
-      // Keep the original date field for backward compatibility
-      date: formData.date
+      // To keep the original date field for backward compatibility
+      date: formData.date,
     };
   };
 
@@ -194,8 +193,10 @@ const AppointmentPage = ({ lang = "En" }) => {
       setIsSubmitting(true);
       try {
         const appointmentData = prepareAppointmentData();
-        const result = await appointmentService.createAppointment(appointmentData);
-        
+        const result = await appointmentService.createAppointment(
+          appointmentData
+        );
+
         if (result.success) {
           setConfirmed(true);
         } else {
@@ -209,7 +210,7 @@ const AppointmentPage = ({ lang = "En" }) => {
       }
     }
   };
-  
+
   const resetForm = () => {
     setFormData({
       firstName: "",
