@@ -94,14 +94,14 @@ const AdminDashboard = () => {
                     subscribersResponse,
                     videosResponse,
                     appointmentsResponse,
-                    servicesResponse
+                    departmentsResponse
                 ] = await Promise.allSettled([
                     fetch(`${baseUrl}/doctors`, { headers }),
                     fetch(`${baseUrl}/testimonials`, { headers }),
                     fetch(`${baseUrl}/subscribers/stats`, { headers }),
                     fetch(`${baseUrl}/videos`, { headers }),
                     fetch(`${baseUrl}/appointments`, { headers }),
-                    fetch(`${baseUrl}/services`, { headers })
+                    fetch(`${baseUrl}/departments`, { headers })
                 ]);
 
                 // Doctors count
@@ -142,10 +142,15 @@ const AdminDashboard = () => {
                     }
                 }
 
-                // Services count
-                if (servicesResponse.status === "fulfilled" && servicesResponse.value.ok) {
-                    const data = await servicesResponse.value.json();
-                    if (data.success) newStats[7].value = data.data.length.toString();
+                // Departments and Services count
+                if (departmentsResponse.status === "fulfilled" && departmentsResponse.value.ok) {
+                    const data = await departmentsResponse.value.json();
+                    if (data.success) {
+                        const totalServices = data.data.reduce((sum, dept) => sum + (dept.services?.length || 0), 0);
+                        newStats[7].value = totalServices.toString();
+                        // Update departments count if you want to add it
+                        // newStats[8] = { label: "Total Departments", value: data.data.length.toString(), color: "indigo" };
+                    }
                 }
 
                 setStats(newStats);

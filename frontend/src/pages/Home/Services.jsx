@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Stethoscope, FlaskConical, Monitor, Scissors } from "lucide-react";
 import { motion } from "framer-motion";
+import departmentService from "../../services/departmentService";
 
 // Animation Variants
 const fadeUp = {
@@ -19,45 +20,83 @@ const fadeUp = {
 };
 
 export default function Services({ lang = "En" }) {
-  // Department data
-  const departments = [
-    {
-      id: 1,
-      name: "General Services",
-      nameAm: "አጠቃላይ አገልግሎቶች",
-      description: "Comprehensive pediatric care for all your child's health needs",
-      descriptionAm: "ለልጅዎ ሁሉም የጤና ፍላጎቶች አጠቃላይ የህፃናት እንክብካቤ",
-      icon: Stethoscope,
-      gradient: "from-blue-500 to-blue-700",
-    },
-    {
-      id: 2,
-      name: "Laboratory Services",
-      nameAm: "የላቦራቶሪ አገልግሎቶች",
-      description: "Advanced diagnostic testing and analysis services",
-      descriptionAm: "የላቀ የምርመራ ፈተና እና የትንተና አገልግሎቶች",
-      icon: FlaskConical,
-      gradient: "from-blue-600 to-blue-800",
-    },
-    {
-      id: 3,
-      name: "Ultrasound Services",
-      nameAm: "የአልትራሳውንድ አገልግሎቶች",
-      description: "Non-invasive imaging for accurate diagnosis",
-      descriptionAm: "ለትክክለኛ ምርመራ ወራሪ ያልሆነ ምስል",
-      icon: Monitor,
-      gradient: "from-blue-400 to-blue-600",
-    },
-    {
-      id: 4,
-      name: "Minor Surgery Services",
-      nameAm: "የትንሽ ቀዶ ጥገና አገልግሎቶች",
-      description: "Safe outpatient surgical procedures for children",
-      descriptionAm: "ለህፃናት ደህንነቱ የተጠበቀ የውጪ ታካሚ የቀዶ ጥገና ሂደቶች",
-      icon: Scissors,
-      gradient: "from-blue-700 to-blue-900",
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Icon mapping for departments
+  const iconMap = {
+    "Cardiology": Stethoscope,
+    "Neurology": Monitor,
+    "Laboratory": FlaskConical,
+    "Surgery": Scissors,
+    "General": Stethoscope
+  };
+
+  const gradientMap = {
+    "Cardiology": "from-red-500 to-red-700",
+    "Neurology": "from-purple-500 to-purple-700",
+    "Laboratory": "from-green-500 to-green-700",
+    "Surgery": "from-blue-500 to-blue-700",
+    "General": "from-indigo-500 to-indigo-700"
+  };
+
+  const getIcon = (title) => {
+    const key = Object.keys(iconMap).find(k => title.toLowerCase().includes(k.toLowerCase()));
+    return iconMap[key] || Stethoscope;
+  };
+
+  const getGradient = (title) => {
+    const key = Object.keys(gradientMap).find(k => title.toLowerCase().includes(k.toLowerCase()));
+    return gradientMap[key] || "from-blue-500 to-blue-700";
+  };
+
+  useEffect(() => {
+    fetchDepartments();
+  }, []);
+
+  const fetchDepartments = async () => {
+    try {
+      setLoading(true);
+      const response = await departmentService.getDepartments();
+      const deptData = response.data.map(dept => ({
+        id: dept._id,
+        name: dept.title_en,
+        nameAm: dept.title_am,
+        description: dept.description_en,
+        descriptionAm: dept.description_am,
+        icon: getIcon(dept.title_en),
+        gradient: getGradient(dept.title_en)
+      }));
+      
+      // Sort: General first, then others by recent date, limit to 4
+      const sortedData = deptData.sort((a, b) => {
+        const aIsGeneral = a.name.toLowerCase().includes('general');
+        const bIsGeneral = b.name.toLowerCase().includes('general');
+        
+        if (aIsGeneral && !bIsGeneral) return -1;
+        if (!aIsGeneral && bIsGeneral) return 1;
+        
+        // Both are general or both are not general, sort by date
+        const aDate = response.data.find(d => d._id === a.id)?.createdAt;
+        const bDate = response.data.find(d => d._id === b.id)?.createdAt;
+        return new Date(bDate) - new Date(aDate);
+      }).slice(0, 4);
+      
+      setDepartments(sortedData);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  if (loading) {
+    return (
+      <div className="py-20 bg-gradient-to-b from-gray-50 to-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   // Translations
   const translations = {

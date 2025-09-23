@@ -1,15 +1,14 @@
-import express from "express";
-import {
-  getServices,
-  getService,
-  createService,
-  updateService,
-  deleteService,
-} from "../controllers/serviceController.js";
+import express from 'express';
 
 const router = express.Router();
 
-router.route("/").get(getServices).post(createService);
-router.route("/:id").get(getService).put(updateService).delete(deleteService);
+// Placeholder route for services (if needed for backward compatibility)
+router.get('/', (req, res) => {
+  res.json({
+    success: true,
+    data: [],
+    message: 'Services are now managed through departments. Use /api/departments endpoint.'
+  });
+});
 
 export default router;
