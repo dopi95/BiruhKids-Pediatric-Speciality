@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Stethoscope, FlaskConical, Monitor, Scissors } from "lucide-react";
 import { motion } from "framer-motion";
-import serviceService from "../../services/serviceService";
 
 // Animation Variants
 const fadeUp = {
@@ -20,60 +19,63 @@ const fadeUp = {
 };
 
 export default function Services({ lang = "En" }) {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const isAmh = lang === "Am";
-
-  useEffect(() => {
-    fetchLatestServices();
-  }, []);
-
-  const fetchLatestServices = async () => {
-    try {
-      const response = await serviceService.getServices();
-      const latestServices = (response.data || [])
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 6);
-      setServices(latestServices);
-    } catch (error) {
-      console.error("Error fetching services:", error);
-      setServices([]);
-    } finally {
-      setLoading(false);
+  // Department data
+  const departments = [
+    {
+      id: 1,
+      name: "General Services",
+      nameAm: "አጠቃላይ አገልግሎቶች",
+      description: "Comprehensive pediatric care for all your child's health needs",
+      descriptionAm: "ለልጅዎ ሁሉም የጤና ፍላጎቶች አጠቃላይ የህፃናት እንክብካቤ",
+      icon: Stethoscope,
+      gradient: "from-blue-500 to-blue-700",
+    },
+    {
+      id: 2,
+      name: "Laboratory Services",
+      nameAm: "የላቦራቶሪ አገልግሎቶች",
+      description: "Advanced diagnostic testing and analysis services",
+      descriptionAm: "የላቀ የምርመራ ፈተና እና የትንተና አገልግሎቶች",
+      icon: FlaskConical,
+      gradient: "from-blue-600 to-blue-800",
+    },
+    {
+      id: 3,
+      name: "Ultrasound Services",
+      nameAm: "የአልትራሳውንድ አገልግሎቶች",
+      description: "Non-invasive imaging for accurate diagnosis",
+      descriptionAm: "ለትክክለኛ ምርመራ ወራሪ ያልሆነ ምስል",
+      icon: Monitor,
+      gradient: "from-blue-400 to-blue-600",
+    },
+    {
+      id: 4,
+      name: "Minor Surgery Services",
+      nameAm: "የትንሽ ቀዶ ጥገና አገልግሎቶች",
+      description: "Safe outpatient surgical procedures for children",
+      descriptionAm: "ለህፃናት ደህንነቱ የተጠበቀ የውጪ ታካሚ የቀዶ ጥገና ሂደቶች",
+      icon: Scissors,
+      gradient: "from-blue-700 to-blue-900",
     }
-  };
+  ];
 
   // Translations
   const translations = {
     En: {
       ourServices: "Our Services",
-      description:
-        "Trusted services to keep children healthy and happy.",
+      description: "Comprehensive pediatric healthcare services across specialized departments",
+      readMore: "Read More",
       viewAllServices: "View All Services",
-      learnMore: "Learn More",
-      loading: "Loading services...",
     },
     Am: {
-      ourServices: "የምንሰጣቸው አገልግሎቶች",
-      description:
-        "ልጆች ጤናማ እና ደስተኛ እንዲሆኑ የታመኑ አገልግሎቶች",
+      ourServices: "የእኛ አገልግሎቶች",
+      description: "በልዩ ክፍሎች ውስጥ አጠቃላይ የህፃናት የጤና አገልግሎቶች",
+      readMore: "ተጨማሪ ያንብቡ",
       viewAllServices: "ሁሉንም አገልግሎቶች ይመልከቱ",
-      learnMore: "ተጨማሪ ይመልከቱ",
-      loading: "አገልግሎቶች በመጫን ላይ...",
     },
   };
 
   const t = translations[lang];
-
-  if (loading) {
-    return (
-      <article className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="text-xl animate-pulse text-gray-500">{t.loading}</div>
-        </div>
-      </article>
-    );
-  }
 
   return (
     <article className="py-20 bg-gradient-to-b from-gray-50 to-white">
@@ -94,63 +96,59 @@ export default function Services({ lang = "En" }) {
           </p>
         </motion.div>
 
-        {/* Service Cards */}
+        {/* Department Cards - 2 per row on desktop, 1 on mobile */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-14"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {services.map((service, index) => (
-            <motion.div
-              key={service._id || index}
-              className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col border border-gray-100"
-              variants={fadeUp}
-              custom={index}
-              whileHover={{ scale: 1.02 }}
-            >
-              {/* Image (optional if exists) */}
-              {service.image && (
-                <div className="h-48 w-full overflow-hidden">
-                  <img
-                    src={service.image}
-                    alt={service.title_en}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+          {departments.map((dept, index) => {
+            const IconComponent = dept.icon;
+            return (
+              <motion.div
+                key={dept.id}
+                className="bg-white rounded-2xl p-8 border-l-4 border-blue-500 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                variants={fadeUp}
+                custom={index}
+              >
+                <div className="flex flex-col h-full text-center">
+                  <div className="mb-6">
+                    <div className={`bg-gradient-to-br ${dept.gradient} w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6`}>
+                      <IconComponent className="h-10 w-10 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                      {lang === "En" ? dept.name : dept.nameAm}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {lang === "En" ? dept.description : dept.descriptionAm}
+                    </p>
+                  </div>
+                  
+                  {/* Read More Link */}
+                  <div className="mt-auto">
+                    <Link
+                      to="/services"
+                      className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800 transition-colors group"
+                    >
+                      {t.readMore}
+                      <ArrowRight className="h-5 w-5 ml-2 transition-transform duration-200 group-hover:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
-              )}
-
-              {/* Content */}
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                  {isAmh && service.title_am ? service.title_am : service.title_en}
-                </h3>
-                <p className="text-gray-600 mb-5 flex-grow leading-relaxed">
-                  {isAmh && service.description_am
-                    ? service.description_am
-                    : service.description_en}
-                </p>
-
-                {/* Learn More button (goes to /services page) */}
-                <Link
-                  to="/services"
-                  className="mt-auto inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
-                >
-                  {t.learnMore} <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         {/* View All Button */}
         <motion.div
-          className="text-center mt-14"
+          className="text-center"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           variants={fadeUp}
-          custom={services.length + 1}
+          custom={departments.length + 1}
         >
           <Link
             to="/services"
