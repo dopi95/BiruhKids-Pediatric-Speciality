@@ -172,13 +172,21 @@ export default function AddAdminModal({
                                         onChange={() =>
                                             onPermissionChange(p.key)
                                         }
-                                        className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                        disabled={p.key === 'dashboard'}
+                                        className={`h-4 w-4 text-blue-600 border-gray-300 rounded ${
+                                            p.key === 'dashboard' ? 'opacity-50 cursor-not-allowed' : ''
+                                        }`}
                                     />
                                     <label
                                         htmlFor={p.key}
-                                        className="ml-2 text-sm text-gray-700"
+                                        className={`ml-2 text-sm ${
+                                            p.key === 'dashboard' ? 'text-gray-500' : 'text-gray-700'
+                                        }`}
                                     >
                                         {p.label}
+                                        {p.key === 'dashboard' && (
+                                            <span className="text-xs text-blue-600 ml-1">(Required)</span>
+                                        )}
                                     </label>
                                 </div>
                             ))}
