@@ -22,7 +22,7 @@ export default function AdminManagement() {
         password: "",
         role: "admin",
         permissions: {
-            dashboard: false,
+            dashboard: true,
             userManagement: false,
             resultManagement: false,
             doctorManagement: false,
@@ -98,7 +98,15 @@ export default function AdminManagement() {
                     },
                 }));
             } else {
-                setFormData((prev) => ({ ...prev, [name]: value }));
+                // For admin role, ensure dashboard is always checked
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: value,
+                    permissions: {
+                        ...prev.permissions,
+                        dashboard: true
+                    }
+                }));
             }
         } else {
             setFormData((prev) => ({ ...prev, [name]: value }));
@@ -106,10 +114,16 @@ export default function AdminManagement() {
     };
 
     const handlePermissionChange = (permission) => {
+        // Prevent unchecking dashboard permission
+        if (permission === 'dashboard') {
+            return;
+        }
+        
         setFormData((prev) => {
             const newPermissions = {
                 ...prev.permissions,
                 [permission]: !prev.permissions[permission],
+                dashboard: true // Always keep dashboard checked
             };
             
             // Check if all permissions are selected
@@ -140,7 +154,7 @@ export default function AdminManagement() {
             password: "",
             role: "admin",
             permissions: {
-                dashboard: false,
+                dashboard: true,
                 userManagement: false,
                 resultManagement: false,
                 doctorManagement: false,
@@ -228,7 +242,10 @@ export default function AdminManagement() {
             email: admin.email,
             password: "", // Don't populate password for editing
             role: admin.role,
-            permissions: admin.permissions || {},
+            permissions: {
+                ...admin.permissions,
+                dashboard: true // Always ensure dashboard is checked
+            },
         });
         setShowEditForm(true);
     };
