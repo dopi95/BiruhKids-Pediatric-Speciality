@@ -19,8 +19,8 @@ const Hero = ({ lang = "En" }) => {
 				am: "የህፃናት ጤና አገልግሎቶች",
 			},
 			tagline: {
-				en: "designed to meet the unique needs of children, ensuring their health, growth, and development are supported every step of the way.",
-				am: "ልዩ የህፃናት ፍላጎት ለማሟላት የተነደፈ፣ ጤንነታቸውን እና እድገታቸውን በእያንዳንዱ እርምጃ እንዲደገፉ የተዘጋጀ።",
+				en: "designed to meet the unique needs of children.",
+				am: "ልዩ የህፃናት ፍላጎት ለማሟላት የተዘጋጀ።",
 			},
 		},
 		{
@@ -52,8 +52,8 @@ const Hero = ({ lang = "En" }) => {
 				am: "የላቦራቶሪ እና ምስል አገልግሎቶች",
 			},
 			tagline: {
-				en: "Our clinic is equipped with state-of-the-art laboratory machines and advanced imaging technology using the latest ultrasound (US) systems.",
-				am: "ክሊኒካችን በዘመናዊ የላቦራቶሪ መሳሪያዎች እና በላቀ የምስል ቴክኖሎጂ ከአዳዲስ የአልትራሳውንድ (US) ስርዓቶች ጋር የተዘጋጀ ነው።",
+				en: "Our clinic is equipped with state-of-the-art laboratory machines and advanced imaging technology.",
+				am: "ክሊኒካችን በዘመናዊ የላቦራቶሪ መሳሪያዎች እና በላቀ የምስል ቴክኖሎጂ የተዘጋጀ ነው።",
 			},
 		},
 	];
@@ -144,42 +144,10 @@ const Hero = ({ lang = "En" }) => {
 		return currentSlide - 1;
 	};
 
-	// --- TYPEWRITER EFFECT ---
 	const clinicName = {
 		en: "BiruhKids Pediatric Specialty Clinic",
 		am: "ብሩህኪድስ የህፃናት ልዩ ክሊኒክ",
 	};
-
-	const fullText = lang === "En" ? clinicName.en : clinicName.am;
-	const [typedText, setTypedText] = useState("");
-	const [isDeleting, setIsDeleting] = useState(false);
-
-	useEffect(() => {
-		setTypedText(""); // reset when lang changes
-		setIsDeleting(false);
-	}, [fullText]);
-
-	useEffect(() => {
-		let timeout;
-		const typeSpeed = 100;
-		const pauseTime = 6000;
-
-		if (!isDeleting && typedText === fullText) {
-			timeout = setTimeout(() => setIsDeleting(true), pauseTime);
-		} else if (isDeleting && typedText === "") {
-			timeout = setTimeout(() => setIsDeleting(false), 1000);
-		} else {
-			timeout = setTimeout(() => {
-				setTypedText((prev) =>
-					isDeleting
-						? fullText.substring(0, prev.length - 1)
-						: fullText.substring(0, prev.length + 1)
-				);
-			}, typeSpeed);
-		}
-
-		return () => clearTimeout(timeout);
-	}, [typedText, isDeleting, fullText]);
 
 	const currentLang = lang === "En" ? "en" : "am";
 
@@ -230,7 +198,7 @@ const Hero = ({ lang = "En" }) => {
 							<div className="backdrop-blur-sm bg-white/5 rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl">
 								<h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-8 leading-tight">
 									<span className="bg-gradient-to-r from-blue-500 via-orange-500 to-blue-500 bg-clip-text text-transparent drop-shadow-2xl">
-										{typedText}
+										{lang === "En" ? clinicName.en : clinicName.am}
 									</span>
 								</h2>
 								<h3 className="text-2xl sm:text-3xl lg:text-5xl font-semibold mb-8 leading-tight">
@@ -277,34 +245,34 @@ const Hero = ({ lang = "En" }) => {
 				))}
 			</div>
 
-			{/* Prev Button */}
+			{/* Prev Button - Desktop only */}
 			<button
 				onClick={goToPrev}
-				className="hidden md:flex absolute left-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 hover:from-blue-400/50 hover:to-cyan-400/50 backdrop-blur-md text-white p-4 rounded-full transition-all duration-500 hover:scale-125 z-60 border border-white/20 shadow-2xl hover:shadow-blue-500/25"
+				className="hidden md:flex absolute left-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 hover:from-blue-400/50 hover:to-cyan-400/50 backdrop-blur-md text-white p-4 rounded-full transition-all duration-500 hover:scale-125 z-[70] border border-white/20 shadow-2xl hover:shadow-blue-500/25"
 				aria-label="Previous slide"
 			>
 				<ChevronLeft size={28} className="drop-shadow-lg" />
 			</button>
 
-			{/* Next Button */}
+			{/* Next Button - Desktop only */}
 			<button
 				onClick={goToNext}
-				className="hidden md:flex absolute right-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 hover:from-cyan-400/50 hover:to-blue-400/50 backdrop-blur-md text-white p-4 rounded-full transition-all duration-500 hover:scale-125 z-50 border border-white/20 shadow-2xl hover:shadow-cyan-500/25"
+				className="hidden md:flex absolute right-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 hover:from-cyan-400/50 hover:to-blue-400/50 backdrop-blur-md text-white p-4 rounded-full transition-all duration-500 hover:scale-125 z-[70] border border-white/20 shadow-2xl hover:shadow-cyan-500/25"
 				aria-label="Next slide"
 			>
 				<ChevronRight size={28} className="drop-shadow-lg" />
 			</button>
 
-			{/* Dots - Positioned below header */}
-			<div className="flex absolute bottom-8 left-1/2 transform -translate-x-1/2 space-x-4 z-10">
+			{/* Dots - Clickable on all devices */}
+			<div className="flex absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 space-x-2 md:space-x-4 z-[70]">
 				{slides.map((_, index) => (
 					<button
 						key={index}
 						onClick={() => goToSlide(index)}
-						className={`transition-all duration-500 rounded-full border border-white/30 backdrop-blur-sm ${
+						className={`transition-all duration-500 rounded-full border border-white/30 backdrop-blur-sm touch-manipulation ${
 							index === getActualSlideIndex()
-								? "w-12 h-4 bg-gradient-to-r from-cyan-400 to-blue-500 scale-110 shadow-lg shadow-blue-500/50"
-								: "w-4 h-4 bg-white/40 hover:bg-white/60 hover:scale-110"
+								? "w-8 md:w-12 h-3 md:h-4 bg-gradient-to-r from-cyan-400 to-blue-500 scale-110 shadow-lg shadow-blue-500/50"
+								: "w-3 md:w-4 h-3 md:h-4 bg-white/40 hover:bg-white/60 hover:scale-110 active:scale-125"
 						}`}
 						aria-label={`Go to slide ${index + 1}`}
 					/>
