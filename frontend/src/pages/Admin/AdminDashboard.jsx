@@ -130,7 +130,7 @@ const AdminDashboard = () => {
                 }
 
                 if (user?.role === 'super_admin' || hasPermission('serviceManagement')) {
-                    fetchPromises.push(fetch(`${baseUrl}/services`, { headers }).catch(() => null));
+                    fetchPromises.push(fetch(`${baseUrl}/departments`, { headers }).catch(() => null));
                     endpointMap.push({ type: 'services', index: 7 });
                 }
 
@@ -178,7 +178,11 @@ const AdminDashboard = () => {
                                             newStats[endpoint.index].subValue = `${todaysAppointments} today`;
                                             break;
                                         case 'services':
-                                            newStats[endpoint.index].value = data.data.length.toString();
+                                            // Count total services across all departments
+                                            const totalServices = data.data.reduce((total, department) => {
+                                                return total + (department.services ? department.services.length : 0);
+                                            }, 0);
+                                            newStats[endpoint.index].value = totalServices.toString();
                                             break;
                                     }
                                 }
