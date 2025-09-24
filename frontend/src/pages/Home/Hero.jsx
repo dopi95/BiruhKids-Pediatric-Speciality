@@ -201,7 +201,7 @@ const Hero = ({ lang = "En" }) => {
 				}}
 			>
 				<source
-					src="https://res.cloudinary.com/door11ovj/video/upload/v1758629721/ASSET-1_t4foak.mp4"
+					src="https://res.cloudinary.com/door11ovj/video/upload/v1758725830/biruhkids-hero-video_sjxcaf.mp4"
 					type="video/mp4"
 				/>
 			</video>
