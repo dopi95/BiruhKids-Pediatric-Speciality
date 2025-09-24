@@ -6,17 +6,19 @@ export default function OnlineConsultation({ lang }) {
   const translations = {
     en: {
       title: "Online Consultation Available",
+      paidNote: "⚠️ Paid Service",
       description: `Can’t visit us in person? We now offer video call consultations so you can connect with our doctors from the comfort of your home.`,
       highlight: "video call consultations",
-      connect: "For More Information Connect with us on",
+      connect: "For more information and to know about payment details, connect with us",
       call: "Call Us",
       telegram: "Telegram",
     },
     am: {
-      title: "ኦንላይ አገልግሎት እንሰጣለን",
+      title: "ኦንላይን አገልግሎት እንሰጣለን",
+      paidNote: "⚠️ በክፍያ የሚሰጥ አገልግሎት",
       description: `በቀጥታ መምጣት ካልቻሉ፣ ከቤትዎ በቀላሉ ከሐኪሞቻችን ጋር በቪዲዮ ጥሪ ሊገናኙ ይችላሉ።`,
       highlight: "ቪዲዮ ጥሪ ምክር",
-      connect: "ለተጨማሪ መረጃ ከእኛ ጋር ይገናኙ በ",
+      connect: "ለተጨማሪ መረጃ እና ስለ ክፍያ ዝርዝር ለማወቅ ከእኛ ጋር ይገናኙ",
       call: "ይደውሉልን",
       telegram: "ቴሌግራም",
     },
@@ -39,7 +41,12 @@ export default function OnlineConsultation({ lang }) {
         </div>
 
         {/* Title */}
-        <h2 className="text-3xl font-bold mb-4">{t.title}</h2>
+        <h2 className="text-3xl font-bold mb-2">{t.title}</h2>
+
+        {/* Paid Note */}
+        <p className="inline-block bg-yellow-400 text-black text-sm font-semibold px-4 py-1 rounded-full mb-6">
+          {t.paidNote}
+        </p>
 
         {/* Description */}
         <p className="text-lg mb-8">

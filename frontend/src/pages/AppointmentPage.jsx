@@ -128,15 +128,13 @@ const AppointmentPage = ({ lang = "En" }) => {
   const [confirmed, setConfirmed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const doctors = ["Dr. Smith", "Dr. Johnson", "Dr. Williams", "Dr. Brown"];
-  const times = [
-    "09:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-  ];
+  const doctors = lang === "Am" 
+    ? ["ዶ/ር ፋሲል መንበረ", "ዶ/ር ክንዱ"] 
+    : ["Dr. Fasil Menbere", "Dr. Kindu"];
+  
+  const times = lang === "Am" 
+    ? ["3:00 ጥዋት", "4:00 ጥዋት", "5:00 ጥዋት", "7:00 ከሰዓት", "8:00 ከሰዓት", "9:00 ከሰዓት"] 
+    : ["09:00 AM", "10:00 AM", "11:00 AM", "01:00 AM", "02:00 AM", "03:00 AM"];
 
   const handleChange = (e) => {
     let value = e.target.value;
