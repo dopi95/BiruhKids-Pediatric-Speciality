@@ -81,33 +81,6 @@ const AdminDashboard = () => {
                 setLoading(true);
                 const newStats = [...statsData];
                 
-                // Fetch users and results stats
-                try {
-                    const [usersResponse, statsResponse] = await Promise.all([
-                        userService.getUsers(),
-                        resultService.getResultStats()
-                    ]);
-                    
-                    // Update registered users count
-                    if (usersResponse) {
-                        let usersData = [];
-                        if (Array.isArray(usersResponse)) {
-                            usersData = usersResponse;
-                        } else if (usersResponse.users) {
-                            usersData = usersResponse.users;
-                        }
-                        const regularUsers = usersData.filter(user => user.role === 'user' || !user.role);
-                        newStats[0].value = regularUsers.length.toString();
-                    }
-                    
-                    // Update results count
-                    if (statsResponse && statsResponse.stats) {
-                        newStats[2].value = statsResponse.stats.totalResults.toString();
-                    }
-                } catch (err) {
-                    console.error("Error fetching users/results stats:", err);
-                }
-
                 const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
                 const token = localStorage.getItem('token');
                 const headers = {
@@ -115,76 +88,110 @@ const AdminDashboard = () => {
                     'Content-Type': 'application/json'
                 };
 
-                const [
-                    doctorsResponse,
-                    testimonialsResponse,
-                    subscribersResponse,
-                    videosResponse,
-                    appointmentsResponse,
-                    departmentsResponse
-                ] = await Promise.allSettled([
-                    fetch(`${baseUrl}/doctors`, { headers }),
-                    fetch(`${baseUrl}/testimonials`, { headers }),
-                    fetch(`${baseUrl}/subscribers/stats`, { headers }),
-                    fetch(`${baseUrl}/videos`, { headers }),
-                    fetch(`${baseUrl}/appointments`, { headers }),
-                    fetch(`${baseUrl}/departments`, { headers })
-                ]);
+                // Only fetch data for endpoints the user has permission to access
+                const fetchPromises = [];
+                const endpointMap = [];
 
-                // Doctors count
-                if (doctorsResponse.status === "fulfilled" && doctorsResponse.value.ok) {
-                    const data = await doctorsResponse.value.json();
-                    if (data.success) newStats[1].value = data.data.length.toString();
+                // Users and results stats (if has userManagement or resultManagement)
+                if (user?.role === 'super_admin' || hasPermission('userManagement')) {
+                    fetchPromises.push(userService.getUsers().catch(() => null));
+                    endpointMap.push({ type: 'users', index: 0 });
+                }
+                
+                if (user?.role === 'super_admin' || hasPermission('resultManagement')) {
+                    fetchPromises.push(resultService.getResultStats().catch(() => null));
+                    endpointMap.push({ type: 'results', index: 2 });
                 }
 
-                // Testimonials count
-                if (testimonialsResponse.status === "fulfilled" && testimonialsResponse.value.ok) {
-                    const data = await testimonialsResponse.value.json();
-                    if (data.success) {
-                        const todaysTestimonials = data.data.filter(t => t.createdAt && isToday(t.createdAt)).length;
-                        newStats[3].value = data.data.length.toString();
-                        newStats[3].subValue = `${todaysTestimonials} today`;
-                    }
+                // API endpoints with permission checks
+                if (user?.role === 'super_admin' || hasPermission('doctorManagement')) {
+                    fetchPromises.push(fetch(`${baseUrl}/doctors`, { headers }).catch(() => null));
+                    endpointMap.push({ type: 'doctors', index: 1 });
                 }
 
-                // Subscribers count
-                if (subscribersResponse.status === "fulfilled" && subscribersResponse.value.ok) {
-                    const data = await subscribersResponse.value.json();
-                    if (data.success) newStats[4].value = data.data.active.toString();
+                if (user?.role === 'super_admin' || hasPermission('testimonialManagement')) {
+                    fetchPromises.push(fetch(`${baseUrl}/testimonials`, { headers }).catch(() => null));
+                    endpointMap.push({ type: 'testimonials', index: 3 });
                 }
 
-                // Videos count
-                if (videosResponse.status === "fulfilled" && videosResponse.value.ok) {
-                    const data = await videosResponse.value.json();
-                    if (data.success) newStats[5].value = data.data.length.toString();
+                if (user?.role === 'super_admin' || hasPermission('subscriberManagement')) {
+                    fetchPromises.push(fetch(`${baseUrl}/subscribers/stats`, { headers }).catch(() => null));
+                    endpointMap.push({ type: 'subscribers', index: 4 });
                 }
 
-                // Appointments count
-                if (appointmentsResponse.status === "fulfilled" && appointmentsResponse.value.ok) {
-                    const data = await appointmentsResponse.value.json();
-                    if (data.success) {
-                        const todaysAppointments = data.data.filter(a => a.createdAt && isToday(a.createdAt)).length;
-                        newStats[6].value = data.data.length.toString();
-                        newStats[6].subValue = `${todaysAppointments} today`;
-                    }
+                if (user?.role === 'super_admin' || hasPermission('videoManagement')) {
+                    fetchPromises.push(fetch(`${baseUrl}/videos`, { headers }).catch(() => null));
+                    endpointMap.push({ type: 'videos', index: 5 });
                 }
 
-                // Departments and Services count
-                if (departmentsResponse.status === "fulfilled" && departmentsResponse.value.ok) {
-                    const data = await departmentsResponse.value.json();
-                    if (data.success) {
-                        const totalServices = data.data.reduce((sum, dept) => sum + (dept.services?.length || 0), 0);
-                        newStats[7].value = totalServices.toString();
-                        // Update departments count if you want to add it
-                        // newStats[8] = { label: "Total Departments", value: data.data.length.toString(), color: "indigo" };
+                if (user?.role === 'super_admin' || hasPermission('appointmentManagement')) {
+                    fetchPromises.push(fetch(`${baseUrl}/appointments`, { headers }).catch(() => null));
+                    endpointMap.push({ type: 'appointments', index: 6 });
+                }
+
+                if (user?.role === 'super_admin' || hasPermission('serviceManagement')) {
+                    fetchPromises.push(fetch(`${baseUrl}/services`, { headers }).catch(() => null));
+                    endpointMap.push({ type: 'services', index: 7 });
+                }
+
+                const responses = await Promise.allSettled(fetchPromises);
+
+                // Process responses
+                for (let i = 0; i < responses.length; i++) {
+                    const response = responses[i];
+                    const endpoint = endpointMap[i];
+                    
+                    if (response.status === 'fulfilled' && response.value) {
+                        try {
+                            if (endpoint.type === 'users' && response.value) {
+                                let usersData = [];
+                                if (Array.isArray(response.value)) {
+                                    usersData = response.value;
+                                } else if (response.value.users) {
+                                    usersData = response.value.users;
+                                }
+                                const regularUsers = usersData.filter(user => user.role === 'user' || !user.role);
+                                newStats[endpoint.index].value = regularUsers.length.toString();
+                            } else if (endpoint.type === 'results' && response.value?.stats) {
+                                newStats[endpoint.index].value = response.value.stats.totalResults.toString();
+                            } else if (response.value.ok) {
+                                const data = await response.value.json();
+                                if (data.success) {
+                                    switch (endpoint.type) {
+                                        case 'doctors':
+                                            newStats[endpoint.index].value = data.data.length.toString();
+                                            break;
+                                        case 'testimonials':
+                                            const todaysTestimonials = data.data.filter(t => t.createdAt && isToday(t.createdAt)).length;
+                                            newStats[endpoint.index].value = data.data.length.toString();
+                                            newStats[endpoint.index].subValue = `${todaysTestimonials} today`;
+                                            break;
+                                        case 'subscribers':
+                                            newStats[endpoint.index].value = data.data.active.toString();
+                                            break;
+                                        case 'videos':
+                                            newStats[endpoint.index].value = data.data.length.toString();
+                                            break;
+                                        case 'appointments':
+                                            const todaysAppointments = data.data.filter(a => a.createdAt && isToday(a.createdAt)).length;
+                                            newStats[endpoint.index].value = data.data.length.toString();
+                                            newStats[endpoint.index].subValue = `${todaysAppointments} today`;
+                                            break;
+                                        case 'services':
+                                            newStats[endpoint.index].value = data.data.length.toString();
+                                            break;
+                                    }
+                                }
+                            }
+                        } catch (err) {
+                            console.error(`Error processing ${endpoint.type} data:`, err);
+                        }
                     }
                 }
 
                 setStatsData(newStats);
-                setError(null);
             } catch (err) {
                 console.error("Error fetching dashboard data:", err);
-                setError("Failed to load some dashboard data. Showing cached values.");
             } finally {
                 setLoading(false);
             }
@@ -217,11 +224,7 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-            {error && (
-                <div className="mx-6 mt-6 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
-                    {error}
-                </div>
-            )}
+
 
             {/* Show message for admins without permissions */}
             {user?.role === 'admin' && !hasAnyPermissions && (
