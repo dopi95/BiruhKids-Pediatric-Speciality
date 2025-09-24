@@ -326,3 +326,119 @@ export const sendNewVideoNewsletter = async (video) => {
 
     return { success: true, sent: sentCount, total: uniqueRecipients.length };
 };
+
+// Newsletter: New Department Added
+export const sendNewDepartmentNewsletter = async (department) => {
+    const activeSubscribers = await Subscriber.find({ status: "active" });
+    const notificationUsers = await User.find({ emailNotifications: true });
+    
+    const allRecipients = [
+        ...activeSubscribers.map(sub => ({ email: sub.email })),
+        ...notificationUsers.map(user => ({ email: user.email }))
+    ];
+    
+    const uniqueRecipients = allRecipients.filter((recipient, index, self) => 
+        index === self.findIndex(r => r.email === recipient.email)
+    );
+    
+    if (uniqueRecipients.length === 0) return { success: true, sent: 0 };
+
+    const transporter = createTransporter();
+    let sentCount = 0;
+
+    for (const recipient of uniqueRecipients) {
+        const mailOptions = {
+            from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+            to: recipient.email,
+            subject: "New Department Available! - Biruh Kids Clinic",
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px;">
+                        <h2 style="color: #007799; text-align: center;">🏥 New Department Available!</h2>
+                        <h3 style="color: #333; text-align: center;">${department.title_en}</h3>
+                        <div style="background: #e8f4f8; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                            <p>${department.description_en}</p>
+                            ${department.services && department.services.length > 0 ? `
+                                <h4>Available Services:</h4>
+                                <ul>
+                                    ${department.services.map(service => `<li>${service.name_en}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                        </div>
+                        <p style="text-align: center; color: #666;">We're excited to offer this new department to better serve your child's health needs!</p>
+                        <div style="text-align: center; margin: 25px 0;">
+                            <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/services" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">View All Departments</a>
+                        </div>
+                        <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+                        <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
+                    </div>
+                </div>
+            `
+        };
+
+        try {
+            await transporter.sendMail(mailOptions);
+            sentCount++;
+        } catch (error) {
+            console.error(`Failed to send newsletter to ${recipient.email}:`, error);
+        }
+    }
+
+    return { success: true, sent: sentCount, total: uniqueRecipients.length };
+};
+
+// Newsletter: New Service Added to Department
+export const sendNewDepartmentServiceNewsletter = async (department, service) => {
+    const activeSubscribers = await Subscriber.find({ status: "active" });
+    const notificationUsers = await User.find({ emailNotifications: true });
+    
+    const allRecipients = [
+        ...activeSubscribers.map(sub => ({ email: sub.email })),
+        ...notificationUsers.map(user => ({ email: user.email }))
+    ];
+    
+    const uniqueRecipients = allRecipients.filter((recipient, index, self) => 
+        index === self.findIndex(r => r.email === recipient.email)
+    );
+    
+    if (uniqueRecipients.length === 0) return { success: true, sent: 0 };
+
+    const transporter = createTransporter();
+    let sentCount = 0;
+
+    for (const recipient of uniqueRecipients) {
+        const mailOptions = {
+            from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+            to: recipient.email,
+            subject: "New Service Added! - Biruh Kids Clinic",
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
+                    <div style="background: white; padding: 30px; border-radius: 10px;">
+                        <h2 style="color: #007799; text-align: center;">🩺 New Service Added!</h2>
+                        <h3 style="color: #333; text-align: center;">${service.name_en}</h3>
+                        <div style="background: #e8f4f8; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                            <p><strong>Department:</strong> ${department.title_en}</p>
+                            <p><strong>Service:</strong> ${service.name_en}</p>
+                            ${service.name_am ? `<p><strong>አማርኛ:</strong> ${service.name_am}</p>` : ''}
+                        </div>
+                        <p style="text-align: center; color: #666;">We've added a new service to our ${department.title_en} department!</p>
+                        <div style="text-align: center; margin: 25px 0;">
+                            <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/services" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">View All Services</a>
+                        </div>
+                        <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+                        <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
+                    </div>
+                </div>
+            `
+        };
+
+        try {
+            await transporter.sendMail(mailOptions);
+            sentCount++;
+        } catch (error) {
+            console.error(`Failed to send newsletter to ${recipient.email}:`, error);
+        }
+    }
+
+    return { success: true, sent: sentCount, total: uniqueRecipients.length };
+};

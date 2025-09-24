@@ -1,4 +1,5 @@
 import Department from '../models/Department.js';
+import { sendNewDepartmentNewsletter, sendNewDepartmentServiceNewsletter } from '../utils/emailService.js';
 
 // Get all departments
 export const getDepartments = async (req, res) => {
@@ -31,6 +32,13 @@ export const createDepartment = async (req, res) => {
     });
     
     await department.save();
+    
+    // Send newsletter to subscribers
+    try {
+      await sendNewDepartmentNewsletter(department);
+    } catch (emailError) {
+      console.error('Failed to send department newsletter:', emailError);
+    }
     
     res.status(201).json({
       success: true,
@@ -121,8 +129,16 @@ export const addService = async (req, res) => {
       });
     }
     
-    department.services.push({ name_en, name_am });
+    const newService = { name_en, name_am };
+    department.services.push(newService);
     await department.save();
+    
+    // Send newsletter to subscribers
+    try {
+      await sendNewDepartmentServiceNewsletter(department, newService);
+    } catch (emailError) {
+      console.error('Failed to send service newsletter:', emailError);
+    }
     
     res.status(201).json({
       success: true,
