@@ -205,16 +205,17 @@ export default function AdminManagement() {
             setSubmitting(true);
             if (editingAdmin) {
                 await userService.updateAdmin(editingAdmin._id, formData);
-                toast.success('Admin updated successfully!');
                 setShowEditForm(false);
                 setEditingAdmin(null);
             } else {
                 await userService.createAdmin(formData);
-                toast.success('Admin created successfully!');
                 setShowAddForm(false);
             }
             resetForm();
-            fetchAdmins();
+            await fetchAdmins();
+            
+            // Show success toast after everything is complete
+            toast.success(editingAdmin ? 'Admin updated successfully!' : 'Admin created successfully!');
         } catch (error) {
             console.error('Admin operation error:', error);
             if (error.response?.status === 400) {
@@ -258,8 +259,8 @@ export default function AdminManagement() {
     const confirmDeleteAdmin = async (adminId) => {
         try {
             await userService.deleteAdmin(adminId);
+            await fetchAdmins();
             toast.success('Admin deleted successfully!');
-            fetchAdmins();
         } catch (error) {
             console.error('Delete admin error:', error);
             if (error.response?.status === 403) {
