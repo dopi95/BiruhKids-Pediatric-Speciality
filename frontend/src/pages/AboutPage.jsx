@@ -13,7 +13,7 @@ import {
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import VisionMissionSection from "../components/VisionMissionSection";
-import clinicImage from "../assets/clinicImage.jpg";
+const clinicImage = "https://i.postimg.cc/bJ6GYR11/clinic-Image.jpg"
 
 const ceoImage = "https://imgur.com/Jvnc3F4.jpg";
 
