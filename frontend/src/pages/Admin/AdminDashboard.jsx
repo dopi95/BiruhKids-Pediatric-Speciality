@@ -10,30 +10,57 @@ import {
 } from "lucide-react";
 import resultService from "../../services/resultService";
 import userService from "../../services/userService";
+import { useAuth } from "../../context/AuthContext";
 
 const AdminDashboard = () => {
-    const [stats, setStats] = useState([
-        { icon: Users, label: "Registered Users", value: "0", color: "blue" },
-        { icon: UserCheck, label: "Doctors", value: "0", color: "green" },
-        { icon: FileText, label: "Results Submitted", value: "0", color: "orange" },
-        { icon: MessageSquare, label: "Testimonials", value: "0", subValue: "0 today", color: "purple" },
-        { icon: Mail, label: "Active Subscribers", value: "0", color: "pink" },
-        { icon: Play, label: "Total Videos", value: "0", color: "red" },
-        { icon: CalendarDays, label: "Appointments", value: "0", subValue: "0 today", color: "indigo" },
-        { icon: FileText, label: "Total Services", value: "0", color: "teal" }, // <- New
-    ]);
+    const { user, hasPermission } = useAuth();
+    
+    const allStats = [
+        { icon: Users, label: "Registered Users", value: "0", color: "blue", permission: "userManagement" },
+        { icon: UserCheck, label: "Doctors", value: "0", color: "green", permission: "doctorManagement" },
+        { icon: FileText, label: "Results Submitted", value: "0", color: "orange", permission: "resultManagement" },
+        { icon: MessageSquare, label: "Testimonials", value: "0", subValue: "0 today", color: "purple", permission: "testimonialManagement" },
+        { icon: Mail, label: "Active Subscribers", value: "0", color: "pink", permission: "subscriberManagement" },
+        { icon: Play, label: "Total Videos", value: "0", color: "red", permission: "videoManagement" },
+        { icon: CalendarDays, label: "Appointments", value: "0", subValue: "0 today", color: "indigo", permission: "appointmentManagement" },
+        { icon: FileText, label: "Total Services", value: "0", color: "teal", permission: "serviceManagement" },
+    ];
 
+    const allQuickActions = [
+        { title: "Upload Results", link: "/admin/results", icon: FileText, color: "green", permission: "resultManagement" },
+        { title: "Add Video", link: "/admin/videos/form", icon: Play, color: "red", permission: "videoManagement" },
+        { title: "Review Testimonials", link: "/admin/testimonials", icon: MessageSquare, color: "yellow", permission: "testimonialManagement" },
+        { title: "Manage Admins", link: "/admin/admins", icon: UserCheck, color: "pink", permission: "adminManagement" },
+        { title: "Manage Appointments", link: "/admin/appointments", icon: CalendarDays, color: "indigo", permission: "appointmentManagement" },
+        { title: "Manage Services", link: "/admin/services", icon: FileText, color: "teal", permission: "serviceManagement" },
+    ];
+
+    // Filter stats and actions based on user permissions
+    const stats = user?.role === 'super_admin' 
+        ? allStats 
+        : user?.role === 'admin'
+            ? allStats.filter(stat => hasPermission(stat.permission))
+            : [];
+    
+    const quickActions = user?.role === 'super_admin'
+        ? allQuickActions
+        : user?.role === 'admin'
+            ? allQuickActions.filter(action => hasPermission(action.permission))
+            : [];
+    
+    // If admin has no permissions set, show basic dashboard items
+    const hasAnyPermissions = user?.permissions && Object.values(user.permissions).some(p => p === true);
+    const finalStats = (user?.role === 'admin' && !hasAnyPermissions) 
+        ? allStats.slice(0, 4) // Show first 4 basic stats
+        : stats;
+    
+    const finalQuickActions = (user?.role === 'admin' && !hasAnyPermissions)
+        ? allQuickActions.slice(0, 3) // Show first 3 basic actions
+        : quickActions;
+
+    const [statsData, setStatsData] = useState(finalStats);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    const quickActions = [
-        { title: "Upload Results", link: "/admin/results", icon: FileText, color: "green" },
-        { title: "Add Video", link: "/admin/videos/form", icon: Play, color: "red" },
-        { title: "Review Testimonials", link: "/admin/testimonials", icon: MessageSquare, color: "yellow" },
-        { title: "Manage Admins", link: "/admin/admins", icon: UserCheck, color: "pink" },
-        { title: "Manage Appointments", link: "/admin/appointments", icon: CalendarDays, color: "indigo" },
-        { title: "Manage Services", link: "/admin/services", icon: FileText, color: "teal" }, // <- New
-    ];
 
     // Helper function to check if a date is today
     const isToday = (date) => {
@@ -52,7 +79,7 @@ const AdminDashboard = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const newStats = [...stats];
+                const newStats = [...statsData];
                 
                 // Fetch users and results stats
                 try {
@@ -153,7 +180,7 @@ const AdminDashboard = () => {
                     }
                 }
 
-                setStats(newStats);
+                setStatsData(newStats);
                 setError(null);
             } catch (err) {
                 console.error("Error fetching dashboard data:", err);
@@ -196,9 +223,17 @@ const AdminDashboard = () => {
                 </div>
             )}
 
+            {/* Show message for admins without permissions */}
+            {user?.role === 'admin' && !hasAnyPermissions && (
+                <div className="mx-6 mt-6 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
+                    <p className="font-medium">Limited Access</p>
+                    <p className="text-sm">Your admin account has limited permissions. Contact a Super Admin to grant you additional access rights.</p>
+                </div>
+            )}
+
             {/* Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-8 mx-6">
-                {stats.map((stat, i) => (
+                {statsData.map((stat, i) => (
                     <div key={i} className="bg-white rounded-lg shadow-sm p-6">
                         <div className="flex items-start">
                             <div className={`p-3 rounded-full ${
@@ -236,7 +271,7 @@ const AdminDashboard = () => {
                     </h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {quickActions.map((action, index) => (
+                    {finalQuickActions.map((action, index) => (
                         <a
                             key={index}
                             href={action.link}

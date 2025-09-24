@@ -95,6 +95,32 @@ userSchema.methods.setSuperAdminPermissions = function () {
     }
 };
 
+// Set default admin permissions
+userSchema.methods.setDefaultAdminPermissions = function () {
+    if (this.role === "admin") {
+        this.permissions.dashboard = true;
+        this.permissions.appointmentManagement = true;
+        this.permissions.testimonialManagement = true;
+        this.permissions.videoManagement = true;
+    }
+};
+
+// Pre-save middleware to set permissions based on role
+userSchema.pre('save', function(next) {
+    if (this.isModified('role')) {
+        if (this.role === 'super_admin') {
+            this.setSuperAdminPermissions();
+        } else if (this.role === 'admin') {
+            // Only set default permissions if no permissions are explicitly set
+            const hasExplicitPermissions = Object.values(this.permissions.toObject()).some(p => p === true);
+            if (!hasExplicitPermissions) {
+                this.setDefaultAdminPermissions();
+            }
+        }
+    }
+    next();
+});
+
 // Generate password reset OTP
 userSchema.methods.getResetPasswordOTP = function () {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
