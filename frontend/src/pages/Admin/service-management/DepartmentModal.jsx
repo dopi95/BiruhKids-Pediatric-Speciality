@@ -1,33 +1,39 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
-export default function ServiceModal({ isOpen, onClose, onSave, service }) {
+export default function DepartmentModal({ isOpen, onClose, onSave, department }) {
     const [formData, setFormData] = useState({
-        name_en: "",
-        name_am: ""
+        title_en: "",
+        title_am: "",
+        description_en: "",
+        description_am: ""
     });
 
     useEffect(() => {
-        if (service) {
+        if (department) {
             setFormData({
-                name_en: service.name_en || service.name || "",
-                name_am: service.name_am || ""
+                title_en: department.title_en || department.title || "",
+                title_am: department.title_am || "",
+                description_en: department.description_en || department.description || "",
+                description_am: department.description_am || ""
             });
         } else {
             setFormData({
-                name_en: "",
-                name_am: ""
+                title_en: "",
+                title_am: "",
+                description_en: "",
+                description_am: ""
             });
         }
-    }, [service, isOpen]);
+    }, [department, isOpen]);
 
     if (!isOpen) return null;
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!formData.name_en.trim() || !formData.name_am.trim()) return;
+        if (!formData.title_en.trim() || !formData.title_am.trim()) return;
         onSave(formData);
-        setFormData({ name_en: "", name_am: "" });
+        setFormData({ title_en: "", title_am: "", description_en: "", description_am: "" });
     };
 
     const handleChange = (e) => {
@@ -48,37 +54,63 @@ export default function ServiceModal({ isOpen, onClose, onSave, service }) {
                 </button>
 
                 <h3 className="text-xl font-semibold mb-4">
-                    {service ? "Edit Service" : "Add New Service"}
+                    {department ? "Edit Department" : "Add New Department"}
                 </h3>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Service Name (English) *
+                                Department Title (English) *
                             </label>
                             <input
                                 type="text"
-                                name="name_en"
-                                value={formData.name_en}
+                                name="title_en"
+                                value={formData.title_en}
                                 onChange={handleChange}
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="e.g., ECG Testing, Heart Surgery"
+                                placeholder="e.g., Cardiology, Neurology"
                                 required
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Service Name (Amharic) *
+                                Department Title (Amharic) *
                             </label>
                             <input
                                 type="text"
-                                name="name_am"
-                                value={formData.name_am}
+                                name="title_am"
+                                value={formData.title_am}
                                 onChange={handleChange}
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="e.g., የልብ መመርመሪያ, የልብ ኦፕሬሽን"
+                                placeholder="e.g., የልብ ሕክምና, የነርቭ ሕክምና"
                                 required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Description (English)
+                            </label>
+                            <textarea
+                                name="description_en"
+                                value={formData.description_en}
+                                onChange={handleChange}
+                                rows={3}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Brief description of the department"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Description (Amharic)
+                            </label>
+                            <textarea
+                                name="description_am"
+                                value={formData.description_am}
+                                onChange={handleChange}
+                                rows={3}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="የክፍሉ አጭር መግለጫ"
                             />
                         </div>
                     </div>
@@ -95,7 +127,7 @@ export default function ServiceModal({ isOpen, onClose, onSave, service }) {
                             type="submit"
                             className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                         >
-                            {service ? "Update" : "Add"} Service
+                            {department ? "Update" : "Add"} Department
                         </button>
                     </div>
                 </form>

@@ -22,6 +22,7 @@ import serviceRoutes from "./src/routes/serviceRoutes.js";
 import testimonialRoutes from "./src/routes/testimonialRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import resultRoutes from "./src/routes/resultRoutes.js";
+import departmentRoutes from "./src/routes/departmentRoutes.js";
 
 // Connect to database
 connectDB();
@@ -49,6 +50,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/results", resultRoutes);
+app.use("/api/departments", departmentRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {

@@ -13,9 +13,8 @@ import {
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import VisionMissionSection from "../components/VisionMissionSection";
+const clinicImage = "https://i.postimg.cc/bJ6GYR11/clinic-Image.jpg"
 
-// Placeholder images
-const clinicImage = "https://imgur.com/Jvnc3F4.jpg";
 const ceoImage = "https://imgur.com/Jvnc3F4.jpg";
 
 // ✅ Translations
@@ -23,7 +22,7 @@ const translations = {
   En: {
     aboutTitle: "About Us",
     aboutDesc:
-      "Dedicated to providing exceptional healthcare services with compassion, innovation, and unwavering commitment to our patients' wellbeing.",
+      "Dedicated to providing exceptional healthcare services with compassion, innovation, and unwavering commitment to our patient’s wellbeing.",
     storyTitle: "Our Story",
     storyP1:
       "Biruh Kids was established in November 2024 as a premier pediatric specialty clinic in Addis Ababa, Ethiopia. Over the last eight months, we have been dedicated to providing comprehensive healthcare services for children, working tirelessly towards obtaining institutional status. At Biruh Kids, we currently offer a range of specialized services including Outpatient Department (OPD), emergency care, laboratory services, and ultrasound diagnostics to ensure that every child receives the highest standard of medical attention.",
@@ -31,9 +30,17 @@ const translations = {
       "Our state-of-the-art facilities are equipped with advanced technology to support the diagnosis and treatment of various pediatric conditions. Whether it’s routine consultations or emergency interventions, our team of skilled doctors and specialists is committed to delivering exceptional care in a comfortable and compassionate environment, ensuring that every child’s health and well-being are our top priorities.",
     storyP3:
       "Among our staff are some of the most experienced pediatricians, radiologists, pediatric nurses, and laboratory technicians in Ethiopia. Biruh Kids stands out for its design, which is specifically tailored to meet the unique healthcare needs of children, ensuring that we provide comprehensive care for virtually every pediatric condition. We are proud to have built our reputation by offering the highest quality services and utilizing state-of-the-art medical equipment, all while maintaining affordable pricing.",
-    ceoTitle: "Message from Our CEO",
-    ceoMsg:
-      "At HealthCare Clinic, we believe that exceptional healthcare is not just about treating illness, but about caring for the whole person. At HealthCare Clinic, we believe that exceptional healthcare is not just about treating illness, but about caring for the whole person. At HealthCare Clinic, we believe that exceptional healthcare is not just about treating illness, but about caring for the whole person.",
+    ceoTitle: "Message from the CEO",
+    ceoGreeting: "Dear Parents and Families,",
+    ceoMsg1:
+      "Welcome to Biruhkids Pediatric Clinic. In our center every child is at the heart of what we do. Our team is dedicated to provide not only the best medical and pediatric care but also kindness, comfort, and support for your family.",
+    ceoMsg2:
+      "We believe that healthy and bright children build a brighter tomorrow that is why our name is Biruhkids (Bright children) and we are honored to walk this journey with you.Thank you for trusting us with your child's care. Together, we'll help children grow bright, strong and healthy.",
+    ceoMsgP: "With warm regards",
+    ceoName:
+      "Dr. Fasil Menbere ( MD, Senior Pediatrcian and Childhealth Expert)",
+    officer: "Chief Executive Officer",
+    biruhkids: "Biruhkids Pediatric Speciality Clinic",
     valuesTitle: "Our Core Values",
     valuesDesc:
       "These principles define who we are and guide every decision we make in our mission to serve children and families with integrity and care.",
@@ -46,8 +53,8 @@ const translations = {
     innovation: "Innovation",
     innovationDesc:
       "Our clinic is using up-to-date knowledge and skill on field of Pediatrics and childhealth.",
-      Teamwork :"TeamWork",
-      TeamworkDesc:
+    Teamwork: "TeamWork",
+    TeamworkDesc:
       "We working together with parents in our social media flatforms to build knowledgable families for better care of children",
     differentTitle: "What Makes Us Different?",
     differentDesc:
@@ -70,61 +77,67 @@ const translations = {
     team: "Dedicated Team",
     teamDesc:
       "Compassionate pediatricians, nurses, radiologists, and support staff ensuring seamless, family-friendly care from arrival to departure.",
-      name:"Dr.Fasil Menbere",
-      role: "CEO & Cofounder"
+    name: "Dr.Fasil Menbere",
+    role: "CEO & Cofounder",
   },
   Am: {
     aboutTitle: "ስለ እኛ",
     aboutDesc:
-      "በርሀ ኪድስ ልጆች ለጤናቸው ከፍተኛ ጥራት ያለው እንክብካቤ በርካታ በፍላጎት እና በማህበራዊ አገልግሎት ለመስጠት ተቃውሞ የማይቀር ትኩረት ያቀርባል።",
+      "ልዩ የጤና አጠባበቅ አገልግሎቶችን በርኅራኄ፣ ፈጠራ እና የማያወላውል ለታካሚዎቻችን ደህንነት ለመስጠት የተጋ ነው።",
     storyTitle: "ታሪካችን",
     storyP1:
-      "በርሀ ኪድስ በኖቬምበር 2024 በአዲስ አበባ እንደ ልዩ ልጅ ጤና ክሊኒክ ተቋቋመ። ባለፉት 8 ወራት ልጆች ለማንኛውም የጤና አገልግሎት በጥራት እና በተወላጅ መንገድ እንዲያገኙ በጥረት ተቋቋመናል።",
+      "ብሩህ ኪድስ በ ህዳር 2017 በአዲስ አበባ፣ ኢትዮጵያ ውስጥ እንደ ፕሪሚየር የህፃናት ስፔሻሊቲ ክሊኒክ ተቋቋመ። ባለፉት ስምንት ወራት ውስጥ ለህጻናት ሁሉን አቀፍ የጤና እንክብካቤ አገልግሎት ለመስጠት ቆርጠን ተነስተናል፣ ተቋማዊ ደረጃ ለማግኘት ደከመኝ ሰለቸኝ ሳንል እየሰራን ነው። በብሩህ ኪድስ በአሁኑ ወቅት እያንዳንዱ ህጻን ከፍተኛውን የህክምና ክትትል እንዲያገኝ ለማድረግ የተመላላሽ ታካሚ ዲፓርትመንት (OPD)፣ የድንገተኛ ህክምና፣ የላብራቶሪ አገልግሎት እና የአልትራሳውንድ ምርመራዎችን ጨምሮ ልዩ ልዩ አገልግሎቶችን እንሰጣለን።",
     storyP2:
-      "አዳዲስ ቴክኖሎጂዎችን የያዘ ዘመናዊ መሳሪያ ተዘጋጅቶ ልጆች በሚፈለጉበት ሁኔታ እንክብካቤ እንዲያገኙ ታስቦ ተነድፎበታል።",
+      "የእኛ ዘመናዊ ፋሲሊቲዎች የተለያዩ የሕፃናት ሕክምናን ለመመርመር እና ለማከም የላቀ ቴክኖሎጂ የታጠቁ ናቸው። መደበኛ ምክክርም ሆነ የድንገተኛ ጊዜ ጣልቃገብነቶች፣ የእኛ የተካኑ ዶክተሮች እና ስፔሻሊስቶች ቡድን ምቹ እና ሩህሩህ በሆነ አካባቢ ውስጥ ልዩ እንክብካቤን ለማቅረብ ቁርጠኛ ነው፣ ይህም የእያንዳንዱ ልጅ ጤና እና ደህንነት ቅድሚያ የምንሰጣቸው ጉዳዮች መሆናቸውን በማረጋገጥ ነው።",
     storyP3:
-      "በቡድናችን ውስጥ በኢትዮጵያ ከሚገኙት በጣም የተሞክሮ ያላቸው ህፃናት ሐኪሞች፣ ራዲዮሎጂስቶች፣ ህፃናት ነርሶችና ላቦራቶሪ ቴክኒሻኖች ይገኛሉ።",
-    ceoTitle: "የአስተዳዳሪነት መልዕክት",
-    ceoMsg:
-      "በህክምና ክሊኒክ እኛ ጤና ማስተናገድ ማንኛውንም በሽታ ብቻ ሳይሆን በሰውነት ሙሉ ያለ ትኩረት ነው በምንመኘው። በህክምና ክሊኒክ እኛ ጤና ማስተናገድ ማንኛውንም በሽታ ብቻ ሳይሆን በሰውነት ሙሉ ያለ ትኩረት ነው በምንመኘው። በህክምና ክሊኒክ እኛ ጤና ማስተናገድ ማንኛውንም በሽታ ብቻ ሳይሆን በሰውነት ሙሉ ያለ ትኩረት ነው በምንመኘው።",
+      "ከሰራተኞቻችን መካከል በኢትዮጵያ ውስጥ በጣም ልምድ ካላቸው የሕፃናት ሐኪሞች፣ ራዲዮሎጂስቶች፣ የሕፃናት ነርሶች እና የላብራቶሪ ቴክኒሻኖች መካከል ጥቂቶቹ ናቸው። ብሩህ ኪድስ ለዲዛይኑ ጎልቶ ይታያል፣ይህም በተለይ የህጻናትን ልዩ የጤና እንክብካቤ ፍላጎቶች ለማሟላት የተዘጋጀ ነው፣ይህን ማለት ይቻላል ለእያንዳንዱ የህፃናት ህመም አጠቃላይ እንክብካቤን የምንሰጥ መሆኑን ያረጋግጣል። ከፍተኛ ጥራት ያለው አገልግሎት በመስጠት እና ዘመናዊ የህክምና መሳሪያዎችን በመጠቀም ስማችንን በመገንባታችን ኩራት ይሰማናል።",
+    ceoTitleAmh: "ከዋና ስራ አስኪያጁ የተላከ መልእክት",
+    ceoGreetingAmh: "ውድ ወላጆች እና ቤተሰቦች፣",
+    ceoMsg1Amh:
+      "እንኳን ወደ ብሩህኪድስ የህፃናት ህክምና ክሊኒክ በደህና መጡ። በማዕከላችን ውስጥ ለእያንዳንዱ ልጅ የምናደርገው ነገር ከልብ ነው። ቡድናችን ምርጡን ህክምና እና የህፃናት ህክምና ብቻ ሳይሆን ደግነትን፣ ምቾትን እና ለቤተሰብዎ ድጋፍ ለመስጠት ቆርጦ ተነስቷል።",
+    ceoMsg2Amh:
+      "ጤናማ እና ብሩህ ልጆች ነገን የበለጠ ብሩህ እንደሚገነቡ እናምናለን ለዚህም ነው ስማችን ብሩህኪድስ (ደማቅ ልጆች) ይባላል እናም ይህንን ጉዞ ከእርስዎ ጋር በመጓዝ ታላቅ ክብር ይሰማናል። በልጅዎ እንክብካቤ ስላመኑን እናመሰግናለን። አንድ ላይ፣ ልጆች ብሩህ፣ ጠንካራ እና ጤናማ እንዲሆኑ እንረዳቸዋለን።",
+    ceoMsgPAmh: "ከሠላምታ ጋር",
+    ceoNameAmh: "ፋሲል መንበረ (ዶ/ር፣ ከፍተኛ የሕፃናት ሐኪም እና የሕፃናት ጤና ኤክስፐርት)",
+    officerAmh: "ዋና ሥራ አስፈፃሚ",
+    biruhkidsAmh: "ብሩህኪድስ የሕፃናት ስፔሻሊቲ ክሊኒክ",
     valuesTitle: "ዋና እሴቶቻችን",
     valuesDesc:
       "እነዚህ መርሆዎች እኛን የምንሆነውን ይገልጻሉ እና ልጆችንና ቤተሰቦችን በክብር እና በእውነት ለማገልገል የምንወስድበትን ውሳኔ ያመራሉ።",
     compassion: "ርኅራኄ",
     compassionDesc:
-      "በቅርብ መስማት እና በትክክል መልስ ልጆች በልዩ እንክብካቤ እንዲያገኙ እና ልዩነታቸውን እንዲጠብቁ እንሠራለን።",
-    excellence: "ብልጽግና",
+      "የእያንዳንዱን ልጅ የጤና እንክብካቤ ፍላጎት እና ህክምና ለማሟላት የእያንዳንዱን ልጅ ችግር በመረዳት እና በደግነት እየተንከባከብን ነው።",
+    excellence: "ከፍተኛ ችሎታ",
     excellenceDesc:
-      "በጤና አገልግሎት ከፍተኛ ስኬት ለማድረግ በማሻሻያና በደህንነት እንጥራለን።",
-    innovation: "አዳዲስነት",
+      "በእኛ የተመላላሽ እና የመኝታ ክፍል አገልግሎቶች ከፍተኛ ብቃት ካላቸው የጤና እንክብካቤ ባለሙያዎች ጋር ከፍተኛ ጥራት ያለው የሕፃናት ሕክምና እንሰጣለን።",
+    innovation: "ፈጠራ",
     innovationDesc:
-      "አዳዲስ ቴክኖሎጂዎችን በመቀበል ልጆች ለጤናቸው በተስፋ እንክብካቤ እንሰጣለን።",
-       Teamwork :"አዳዲስነት",
-      TeamworkDesc:
-      "አዳዲስ ቴክኖሎጂዎችን በመቀበል ልጆች ለጤናቸው በተስፋ እንክብካቤ እንሰጣለን።",
-    differentTitle: "ምን እንደምንለየው?",
+      "ክሊኒኩ በሕፃናት ሕክምና እና በልጆች ላይ ባለው መስክ ላይ ወቅታዊ የሆኑ ዕውቀት እና ችሎታን ይጠቀማል።",
+    Teamwork: "የቡድን ስራ",
+    TeamworkDesc: "እኛ ማህበራዊ ሚዲያን በመጠቀም የተሻሉ ቤተሰቦችን ለመገንባት ከወላጆች ጋር አብረን እንሰራለን",
+    differentTitle: "ምን ልዩ ያደርገናል?",
     differentDesc:
-      "በብሩህ ኪድስ የህፃናት እንክብካቤ ብቻ አይደለም፤ አስተዋፅኦ ያለው የልጅ ማእከል እንዲኖር እንሠራለን።",
+      "በብሩህ ኪድስ፣ ደህንነቱ የተጠበቀ፣ ፈጠራ እና ህጻናትን ያማከለ አካባቢ ለመፍጠር ከመደበኛ የህፃናት ህክምና አልፈን እንሄዳለን። ይህ ልዩ ያደርገናል።",
     facilities: "ዘመናዊ ተቋማት",
     facilitiesDesc:
-      "ልጆችና ቤተሰቦች በተስፋ እንዲያገኙ በዓለም ደረጃ የተዘጋጀ የህፃናት ክሊኒክ።",
-    specialized: "ልዩ የህፃናት እንክብካቤ",
+      "ዓለም አቀፍ ደረጃውን የጠበቀ እንክብካቤ በሚሰጥበት ጊዜ ለህጻናት እና ለቤተሰብ ምቾትን የሚያረጋግጥ ለህጻናት ተስማሚ የሆነ ዲዛይን ያለው ዘመናዊ የህጻናት ክሊኒክ።",
+    specialized: "ልዩ የህፃናት ህክምና",
     specializedDesc:
-      "የህፃናት አጠቃላይ እንክብካቤ በተሞክሮ ያላቸው ሐኪሞች እና ነርሶች የሚሰጥ።",
-    diagnostics: "ዘመናዊ ምርመራ",
+      "የተሟላ የሕፃናት አገልግሎቶች የእድገት ግምገማዎች ልምድ ያላቸው የሕክምና እንክብካቤዎች፣ ነርሶች እና ራዲዮሎጂስቶች እንሰጣለን።",
+    diagnostics: "የላቀ ምርመራዎች",
     diagnosticsDesc:
-      "የህፃናት በግልጽ ውጤት የሚሰጥ ላቦራቶሪ እና ኢምጅ አገልግሎት።",
-    emergency: "የአደጋ እንክብካቤ",
+      "ፈጣን እና ትክክለኛ ውጤቶችን ለህጻናት በማረጋገጥ የቅርብ ጊዜውን የአልትራሳውንድ ቴክኖሎጂ በመጠቀም የላብራቶሪ እና ኢሜጂንግ አገልግሎቶች እንሰጣለን።",
+    emergency: "ድንገተኛ የሕፃናት ሕክምና",
     emergencyDesc:
-      "የህፃናት አደጋ ክፍል በተዘጋጀ ባለሙያዎች የተሞላ።",
-    outreach: "ማህበረሰብ አጋር",
+      "ወሳኝ በሆኑ ሁኔታዎች ውስጥ ፈጣን ምላሽ እና ውጤታማ ህክምናን የሚያረጋግጥ የሰለጠኑ ስፔሻሊስቶች የተሰጠ የህፃናት ድንገተኛ ክፍል።",
+    outreach: "ማህበረሰብ ጋር ተደራሽነት",
     outreachDesc:
-      "ለ4+ ዓመታት በማህበራዊ ሚዲያ ቤተሰቦችን በጤና ማስተላለፊያ ማሳያ።",
-    team: "ተዋዳድ ቡድን",
+      "በማህበራዊ ሚዲያ ለ4+ አመታት ቤተሰቦችን በንቃት በማስተማር፣የህፃናት ጤና እውቀትን ማስፋፋት እና ወላጆችን ማብቃት።",
+    team: "የተዋጣለት ቡድን",
     teamDesc:
-      "ልጆችን በቅርብ እንክብካቤ የሚያገኙ በልዩ ተዘጋጅቶ የተሞላ ቡድን።",
-      name:"ዶ/ር ፋሲል መንበረ",
-      role: "መስራች"
+      "ርህሩህ የህፃናት ሐኪሞች፣ ነርሶች፣ ራዲዮሎጂስቶች እና ድጋፍ ሰጪ ሰራተኞች ከመጀመሪያ እስከ መጨረሻ ድረስ እንከን የለሽ፣ ለቤተሰብ ተስማሚ የሆነ እንክብካቤን ያረጋግጣሉ።",
+    name: "ዶ/ር ፋሲል መንበረ",
+    role: "መስራች",
   },
 };
 
@@ -162,23 +175,64 @@ const AboutPage = ({ lang }) => {
             <h2 className="text-3xl font-bold mb-4 text-center lg:text-left">
               {t.storyTitle}
             </h2>
-            <p className="text-gray-700 text-justify leading-relaxed">{t.storyP1}</p>
-            <p className="text-gray-700 text-justify leading-relaxed mt-2">{t.storyP2}</p>
-            <p className="text-gray-700 text-justify leading-relaxed mt-2">{t.storyP3}</p>
+            <p className="text-gray-700 text-justify leading-relaxed">
+              {t.storyP1}
+            </p>
+            <p className="text-gray-700 text-justify leading-relaxed mt-2">
+              {t.storyP2}
+            </p>
+            <p className="text-gray-700 text-justify leading-relaxed mt-2">
+              {t.storyP3}
+            </p>
           </SectionText>
         </div>
       </SectionWrapper>
 
       {/* CEO Section */}
       <SectionWrapper>
-        <div className="py-16 px-4 sm:px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-          <SectionText>
-            <h2 className="text-3xl font-bold mb-6 text-center lg:text-left">
-              {t.ceoTitle}
-            </h2>
-            <p className="text-gray-700 text-justify leading-relaxed">{t.ceoMsg}</p>
-          </SectionText>
-          <SectionImage src={ceoImage} alt="CEO" showName={t.name} showRole={t.role} />
+        <div className="py-16 px-4 sm:px-6 lg:px-12">
+          {/* Mobile Title */}
+          <h1 className="text-3xl font-bold mb-6 text-center lg:hidden">
+            {lang === "Am" ? t.ceoTitleAmh : t.ceoTitle}
+          </h1>
+
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <SectionText>
+              {/* Desktop Title */}
+              <h1 className="hidden lg:block text-3xl font-bold mb-6 text-center lg:text-left">
+                {lang === "Am" ? t.ceoTitleAmh : t.ceoTitle}
+              </h1>
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                {lang === "Am" ? t.ceoGreetingAmh : t.ceoGreeting}
+              </h2>
+              <p className="text-base leading-relaxed text-gray-700 mb-4">
+                {lang === "Am" ? t.ceoMsg1Amh : t.ceoMsg1}
+              </p>
+              <p className="text-base leading-relaxed text-gray-700 mb-4">
+                {lang === "Am" ? t.ceoMsg2Amh : t.ceoMsg2}
+              </p>
+              <p className="text-base leading-relaxed text-gray-600 italic mb-4">
+                {lang === "Am" ? t.ceoMsgPAmh : t.ceoMsgP}
+              </p>
+              <div className="text-base leading-relaxed text-gray-800">
+                <p className="font-bold">
+                  {lang === "Am" ? t.ceoNameAmh : t.ceoName}
+                </p>
+                <p className="text-gray-600">
+                  {lang === "Am" ? t.officerAmh : t.officer}
+                </p>
+                <p className="text-gray-600">
+                  {lang === "Am" ? t.biruhkidsAmh : t.biruhkids}
+                </p>
+              </div>
+            </SectionText>
+            <SectionImage
+              src={ceoImage}
+              alt="CEO"
+              showName={lang === "Am" ? t.ceoNameAmh : t.ceoName}
+              showRole={lang === "Am" ? t.officerAmh : t.officer}
+            />
+          </div>
         </div>
       </SectionWrapper>
 
@@ -191,8 +245,12 @@ const AboutPage = ({ lang }) => {
       <SectionWrapper>
         <div className="py-16 px-4 sm:px-6 lg:px-12">
           <div className="max-w-6xl mx-auto text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t.valuesTitle}</h2>
-            <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">{t.valuesDesc}</p>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              {t.valuesTitle}
+            </h2>
+            <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">
+              {t.valuesDesc}
+            </p>
           </div>
           <motion.div
             className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-left"
@@ -201,38 +259,49 @@ const AboutPage = ({ lang }) => {
             viewport={{ once: true }}
             variants={containerVariants}
           >
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
-  <div className="flex items-center gap-3 mb-4">
-    <FaHandsHelping className="text-[#007799] text-3xl" />
-    <h3 className="text-xl font-bold">{t.compassion}</h3>
-  </div>
-  <p>{t.compassionDesc}</p>
-</motion.div>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <FaHandsHelping className="text-[#007799] text-3xl" />
+                <h3 className="text-xl font-bold">{t.compassion}</h3>
+              </div>
+              <p>{t.compassionDesc}</p>
+            </motion.div>
 
-<motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
-  <div className="flex items-center gap-3 mb-4">
-    <FaMedal className="text-[#FF7A1A] text-3xl" />
-    <h3 className="text-xl font-bold">{t.excellence}</h3>
-  </div>
-  <p>{t.excellenceDesc}</p>
-</motion.div>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <FaMedal className="text-[#FF7A1A] text-3xl" />
+                <h3 className="text-xl font-bold">{t.excellence}</h3>
+              </div>
+              <p>{t.excellenceDesc}</p>
+            </motion.div>
 
-<motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
-  <div className="flex items-center gap-3 mb-4">
-    <FaLightbulb className="text-yellow-400 text-3xl" />
-    <h3 className="text-xl font-bold">{t.innovation}</h3>
-  </div>
-  <p>{t.innovationDesc}</p>
-</motion.div>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <FaLightbulb className="text-yellow-400 text-3xl" />
+                <h3 className="text-xl font-bold">{t.innovation}</h3>
+              </div>
+              <p>{t.innovationDesc}</p>
+            </motion.div>
 
-<motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
-  <div className="flex items-center gap-3 mb-4">
-    <FaUsers className="text-green-500 text-3xl" />
-    <h3 className="text-xl font-bold">{t.Teamwork}</h3>
-  </div>
-  <p>{t.TeamworkDesc}</p>
-</motion.div>
-
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <FaUsers className="text-green-500 text-3xl" />
+                <h3 className="text-xl font-bold">{t.Teamwork}</h3>
+              </div>
+              <p>{t.TeamworkDesc}</p>
+            </motion.div>
           </motion.div>
         </div>
       </SectionWrapper>
@@ -241,8 +310,12 @@ const AboutPage = ({ lang }) => {
       <SectionWrapper>
         <div className="py-16 px-4 sm:px-6 lg:px-12">
           <div className="max-w-6xl mx-auto text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t.differentTitle}</h2>
-            <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">{t.differentDesc}</p>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              {t.differentTitle}
+            </h2>
+            <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed">
+              {t.differentDesc}
+            </p>
           </div>
           <motion.div
             className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-left"
@@ -251,42 +324,60 @@ const AboutPage = ({ lang }) => {
             viewport={{ once: true }}
             variants={containerVariants}
           >
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
               <div className="flex items-center gap-3 mb-4">
                 <FaHospital className="text-[#007799] text-3xl" />
                 <h3 className="text-xl font-bold">{t.facilities}</h3>
               </div>
               <p>{t.facilitiesDesc}</p>
             </motion.div>
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
               <div className="flex items-center gap-3 mb-4">
                 <FaStethoscope className="text-[#FF7A1A] text-3xl" />
                 <h3 className="text-xl font-bold">{t.specialized}</h3>
               </div>
               <p>{t.specializedDesc}</p>
             </motion.div>
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
               <div className="flex items-center gap-3 mb-4">
                 <FaMicroscope className="text-yellow-500 text-3xl" />
                 <h3 className="text-xl font-bold">{t.diagnostics}</h3>
               </div>
               <p>{t.diagnosticsDesc}</p>
             </motion.div>
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
               <div className="flex items-center gap-3 mb-4">
                 <FaAmbulance className="text-red-500 text-3xl" />
                 <h3 className="text-xl font-bold">{t.emergency}</h3>
               </div>
               <p>{t.emergencyDesc}</p>
             </motion.div>
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
               <div className="flex items-center gap-3 mb-4">
                 <FaUsers className="text-green-600 text-3xl" />
                 <h3 className="text-xl font-bold">{t.outreach}</h3>
               </div>
               <p>{t.outreachDesc}</p>
             </motion.div>
-            <motion.div className="bg-white rounded-xl shadow-xl p-6" variants={cardVariants}>
+            <motion.div
+              className="bg-white rounded-xl shadow-xl p-6"
+              variants={cardVariants}
+            >
               <div className="flex items-center gap-3 mb-4">
                 <FaUserMd className="text-purple-600 text-3xl" />
                 <h3 className="text-xl font-bold">{t.team}</h3>
