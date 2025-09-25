@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MessageSquare, Filter, Check, X, Trash2, Star, Users } from "lucide-react";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { getTestimonials, approveTestimonial, rejectTestimonial, deleteTestimonial } from "../../services/testimonialService";
+import { toast } from "react-toastify";
 
 const TestimonialManagement = () => {
     const [filterStatus, setFilterStatus] = useState("all");
@@ -63,9 +64,12 @@ const TestimonialManagement = () => {
             const response = await getTestimonials(filterStatus);
             setTestimonials(response.data);
             updateStats(response.data);
+            toast.success("Testimonial approved successfully!");
         } catch (error) {
             console.error("Error approving testimonial:", error);
-            setError("Failed to approve testimonial. Please try again.");
+            const errorMessage = "Failed to approve testimonial. Please try again.";
+            setError(errorMessage);
+            toast.error(errorMessage);
         }
     };
 
@@ -75,9 +79,12 @@ const TestimonialManagement = () => {
             const response = await getTestimonials(filterStatus);
             setTestimonials(response.data);
             updateStats(response.data);
+            toast.success("Testimonial rejected successfully!");
         } catch (error) {
             console.error("Error rejecting testimonial:", error);
-            setError("Failed to reject testimonial. Please try again.");
+            const errorMessage = "Failed to reject testimonial. Please try again.";
+            setError(errorMessage);
+            toast.error(errorMessage);
         }
     };
 
@@ -91,9 +98,12 @@ const TestimonialManagement = () => {
             const response = await getTestimonials(filterStatus);
             setTestimonials(response.data);
             updateStats(response.data);
+            toast.success("Testimonial deleted successfully!");
         } catch (error) {
             console.error("Error deleting testimonial:", error);
-            setError("Failed to delete testimonial. Please try again.");
+            const errorMessage = "Failed to delete testimonial. Please try again.";
+            setError(errorMessage);
+            toast.error(errorMessage);
         }
     };
 

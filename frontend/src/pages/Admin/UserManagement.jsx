@@ -9,6 +9,7 @@ import {
 import StatsCard from "../../components/StatsCard";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import userService from "../../services/userService";
+import { toast } from "react-toastify";
 
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,9 +79,13 @@ const UserManagement = () => {
       if (response.success) {
         await fetchUsers(); // Refresh the list
         setError("");
+        setDeleteModal({ isOpen: false, user: null });
+        toast.success("User deleted successfully!");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete user");
+      const errorMessage = err.response?.data?.message || "Failed to delete user";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setDeleting(false);
     }
@@ -107,13 +112,16 @@ const UserManagement = () => {
       if (response.success) {
         await fetchUsers(); // Refresh the list
         setError("");
+        setIsEditModalOpen(false);
+        setUserToEdit(null);
+        toast.success("User updated successfully!");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update user");
+      const errorMessage = err.response?.data?.message || "Failed to update user";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setUpdating(false);
-      setIsEditModalOpen(false);
-      setUserToEdit(null);
     }
   };
 

@@ -8,6 +8,7 @@ import {
   deleteVideo,
   updateVideo 
 } from "../../services/videoApi";
+import { toast } from "react-toastify";
 
 const AdminVideos = () => {
     const navigate = useNavigate();
@@ -43,9 +44,11 @@ const AdminVideos = () => {
                 setError(null);
             } else {
                 setError("Failed to fetch videos: Invalid response format");
+                toast.error("Failed to fetch videos: Invalid response format");
             }
         } catch (err) {
             setError("Failed to fetch videos. Please check your connection.");
+            toast.error("Failed to fetch videos. Please check your connection.");
             console.error("Error fetching videos:", err);
         } finally {
             setLoading(false);
@@ -78,11 +81,14 @@ const AdminVideos = () => {
                     );
                 }
                 setEditVideo(null);
+                toast.success("Video updated successfully!");
             } else {
                 setError("Failed to update video");
+                toast.error("Failed to update video");
             }
         } catch (err) {
             setError("Failed to update video. Please try again.");
+            toast.error("Failed to update video. Please try again.");
             console.error("Error updating video:", err);
         } finally {
             setSaveLoading(false);
@@ -102,11 +108,14 @@ const AdminVideos = () => {
                     setTiktokVideos((prev) => prev.filter((v) => v._id !== videoId));
                 }
                 setShowDeleteConfirm(null);
+                toast.success("Video deleted successfully!");
             } else {
                 setError("Failed to delete video");
+                toast.error("Failed to delete video");
             }
         } catch (err) {
             setError("Failed to delete video. Please try again.");
+            toast.error("Failed to delete video. Please try again.");
             console.error("Error deleting video:", err);
         } finally {
             setDeleteLoading(false);

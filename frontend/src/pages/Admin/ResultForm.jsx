@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { CheckCircle, ArrowLeft, Send, X } from "lucide-react";
 import resultService from "../../services/resultService.js";
+import { toast } from "react-toastify";
 
 const ResultForm = () => {
     const [searchParams] = useSearchParams();
@@ -98,9 +99,9 @@ const ResultForm = () => {
             try {
                 await resultService.createResult(formData);
                 
-                setSuccessMessage(
-                    `Result(s) sent to ${formData.patientName} successfully! Email notification sent.`
-                );
+                const successMsg = `Result(s) sent to ${formData.patientName} successfully! Email notification sent.`;
+                setSuccessMessage(successMsg);
+                toast.success(successMsg);
                 setSubmitted(true);
 
                 // Reset form fields
@@ -127,7 +128,9 @@ const ResultForm = () => {
                 }, 3000);
             } catch (error) {
                 console.error("Error sending result:", error);
-                setErrors({ submit: error.response?.data?.message || "Failed to send result" });
+                const errorMessage = error.response?.data?.message || "Failed to send result";
+                setErrors({ submit: errorMessage });
+                toast.error(errorMessage);
             } finally {
                 setLoading(false);
             }

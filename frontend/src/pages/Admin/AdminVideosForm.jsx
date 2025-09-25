@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Play } from "lucide-react";
 import { createVideo } from "../../services/videoApi";
+import { toast } from "react-toastify";
 
 const AdminVideosForm = () => {
     const navigate = useNavigate();
@@ -33,9 +34,12 @@ const AdminVideosForm = () => {
         
         try {
             await createVideo(formData);
+            toast.success("Video created successfully!");
             navigate("/admin/videos");
         } catch (err) {
-            setError(err.response?.data?.message || "Failed to create video");
+            const errorMessage = err.response?.data?.message || "Failed to create video";
+            setError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }

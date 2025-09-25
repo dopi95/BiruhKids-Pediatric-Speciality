@@ -5,6 +5,7 @@ import StatsCard from "../../components/StatsCard";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import userService from "../../services/userService";
 import resultService from "../../services/resultService";
+import { toast } from "react-toastify";
 
 const ResultManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -171,9 +172,12 @@ const ResultManagement = () => {
             handleViewHistory(selectedPatient);
             // Refresh stats
             fetchStats();
+            toast.success("Result deleted successfully!");
         } catch (err) {
             console.error("Error deleting result:", err);
-            setError('Failed to delete result. Please try again.');
+            const errorMessage = 'Failed to delete result. Please try again.';
+            setError(errorMessage);
+            toast.error(errorMessage);
         }
     };
 
