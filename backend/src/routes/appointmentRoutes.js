@@ -4,6 +4,7 @@ import {
   createAppointment,
   confirmAppointment,
   cancelAppointment,
+  deleteAppointment,
 } from "../controllers/appointmentController.js";
 import { protect, requirePermission } from "../middleware/authMiddleware.js";
 
@@ -30,6 +31,12 @@ router.put(
   protect,
   requirePermission("appointmentManagement"),
   cancelAppointment
+);
+router.delete(
+  "/:id",
+  protect,
+  requirePermission("appointmentManagement"),
+  deleteAppointment
 );
 
 export default router;

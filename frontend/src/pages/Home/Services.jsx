@@ -33,11 +33,11 @@ export default function Services({ lang = "En" }) {
   };
 
   const gradientMap = {
-    "Cardiology": "from-red-500 to-red-700",
-    "Neurology": "from-purple-500 to-purple-700",
-    "Laboratory": "from-green-500 to-green-700",
-    "Surgery": "from-blue-500 to-blue-700",
-    "General": "from-indigo-500 to-indigo-700"
+    "Cardiology": "from-orange-500 to-orange-500",
+    "Neurology": "from-orange-500 to-orange-500",
+    "Laboratory": "from-orange-500 to-orange-500",
+    "Surgery": "from-orange-500 to-orange-500",
+    "General": "from-orange-500 to-orange-500"
   };
 
   const getIcon = (title) => {
@@ -47,7 +47,7 @@ export default function Services({ lang = "En" }) {
 
   const getGradient = (title) => {
     const key = Object.keys(gradientMap).find(k => title.toLowerCase().includes(k.toLowerCase()));
-    return gradientMap[key] || "from-blue-500 to-blue-700";
+    return gradientMap[key] || "from-orange-500 to-orange-500";
   };
 
   useEffect(() => {

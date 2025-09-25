@@ -181,6 +181,23 @@ const Hero = ({ lang = "En" }) => {
 			{/* Glass Effect Overlay */}
 			<div className="absolute top-0 left-0 w-full h-full bg-white/5 backdrop-blur-[0.5px] z-40" />
 
+			{/* 24 Hour Service Announcement */}
+			<div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[80]">
+				<div className="relative overflow-hidden">
+					<div className="bg-gradient-to-r from-red-500 via-orange-500 to-red-500 text-white px-6 py-3 rounded-full shadow-2xl border border-white/20 backdrop-blur-md animate-pulse">
+						<div className="flex items-center gap-2 text-sm md:text-base font-bold">
+							<div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
+							<span className="drop-shadow-lg">
+								{currentLang === "am" ? "24 ሰዓት አገልግሎት" : "24 Hour Service"}
+							</span>
+							<div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
+						</div>
+					</div>
+					{/* Animated glow effect */}
+					<div className="absolute inset-0 bg-gradient-to-r from-red-400/50 via-orange-400/50 to-red-400/50 rounded-full blur-lg animate-pulse -z-10"></div>
+				</div>
+			</div>
+
 			<div
 				ref={carouselRef}
 				className="flex transition-transform duration-700 ease-in-out h-full relative z-50"

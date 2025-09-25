@@ -90,3 +90,24 @@ export const cancelAppointment = asyncHandler(async (req, res) => {
         message: "Appointment cancelled successfully"
     });
 });
+
+// @desc    Delete appointment
+// @route   DELETE /api/appointments/:id
+// @access  Private (Admin only)
+export const deleteAppointment = asyncHandler(async (req, res) => {
+    const appointment = await Appointment.findById(req.params.id);
+    
+    if (!appointment) {
+        return res.status(404).json({
+            success: false,
+            message: "Appointment not found"
+        });
+    }
+    
+    await Appointment.findByIdAndDelete(req.params.id);
+    
+    res.json({
+        success: true,
+        message: "Appointment deleted successfully"
+    });
+});

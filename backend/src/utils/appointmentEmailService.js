@@ -55,7 +55,7 @@ const getConfirmationEmailTemplate = (appointment) => {
                             📋 <strong>Important Reminders:</strong>
                         </p>
                         <ul style="color: #92400e; margin: 10px 0; padding-left: 20px;">
-                            <li>Please arrive 10 minutes early for check-in</li>
+                            <li>Please arrive 30 minutes early for check-in</li>
                             <li>Bring any previous medical records or test results</li>
                             <li>If you need to reschedule, please call us at least 24 hours in advance</li>
                         </ul>

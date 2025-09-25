@@ -45,11 +45,18 @@ const cancelAppointment = async (appointmentId, reason = "Doctor not available")
   return response.data;
 };
 
+// Delete appointment
+const deleteAppointment = async (appointmentId) => {
+  const response = await apiClient.delete(`/${appointmentId}`);
+  return response.data;
+};
+
 const appointmentService = {
   getAllAppointments,
   createAppointment,
   confirmAppointment,
   cancelAppointment,
+  deleteAppointment,
 };
 
 export default appointmentService;

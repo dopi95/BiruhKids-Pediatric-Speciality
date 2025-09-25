@@ -61,7 +61,7 @@ const translations = {
     },
     confirmedTitle: "Appointment Noted!",
     confirmedMessage:
-      "Thank you for booking. We'll notify you by email if your requested time is available. Please check your inbox for updates.",
+      "Thank you for booking. We'll notify you by email if your requested time is available. Please check your inbox for updates. If you do not receive an email after submitting the appointment, please call +251963555552 / +251939602927 to confirm.",
   },
   Am: {
     title: "ቀጠሮ ይያዙ",
@@ -105,7 +105,7 @@ const translations = {
     },
     confirmedTitle: "ቀጠሮ ተመዝግቧል!",
     confirmedMessage:
-      "ስለ መግዛትዎ እናመሰግናለን። የተመዘገበው ሰዓት ነጻ ከሆነ በኢሜይል እናሳውቅዎታለን። እባክዎን የኢሜይል ሳጥንዎን ያረጋግጡ።",
+      "ስለ መግዛትዎ እናመሰግናለን። የተመዘገበው ሰዓት ነጻ ከሆነ በኢሜይል እናሳውቅዎታለን። እባክዎን የኢሜይል ሳጥንዎን ያረጋግጡ። ቀጠሮ ካስገቡ በኋላ ኢሜይል ካላገኙ እባክዎን +251963555552 / +251939602927 ደውለው ያረጋግጡ።"
   },
 };
 

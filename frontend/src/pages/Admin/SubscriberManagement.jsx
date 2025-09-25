@@ -307,18 +307,6 @@ const SubscriberManagement = () => {
                         <table className="w-full">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left">
-                                        <input
-                                            type="checkbox"
-                                            checked={
-                                                selectedSubscribers.length ===
-                                                    filteredSubscribers.length &&
-                                                filteredSubscribers.length > 0
-                                            }
-                                            onChange={handleSelectAll}
-                                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                        />
-                                    </th>
                                     <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                         Email
                                     </th>
@@ -343,20 +331,6 @@ const SubscriberManagement = () => {
                                             key={subscriber._id}
                                             className="hover:bg-gray-50"
                                         >
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedSubscribers.includes(
-                                                        subscriber._id
-                                                    )}
-                                                    onChange={() =>
-                                                        handleSelectSubscriber(
-                                                            subscriber._id
-                                                        )
-                                                    }
-                                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                                />
-                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-100 rounded-full">

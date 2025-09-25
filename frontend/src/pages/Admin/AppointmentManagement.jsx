@@ -7,6 +7,7 @@ import {
   XCircle,
   Clock,
   Search,
+  Trash2,
 } from "lucide-react";
 import StatsCard from "../../components/StatsCard";
 import appointmentService from "../../services/appointmentService";
@@ -24,6 +25,7 @@ const AppointmentManagement = () => {
   const [customReason, setCustomReason] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, appointment: null });
 
   // Fetch appointments from API
   const fetchAppointments = async () => {
@@ -143,6 +145,28 @@ const AppointmentManagement = () => {
 
   const handleRefresh = () => {
     fetchAppointments();
+  };
+
+  const handleDeleteAppointment = async () => {
+    if (!deleteModal.appointment) return;
+
+    setUpdating(true);
+    setError("");
+    try {
+      const result = await appointmentService.deleteAppointment(deleteModal.appointment._id);
+
+      if (result.success) {
+        setAppointments(prev => prev.filter(appt => appt._id !== deleteModal.appointment._id));
+        setDeleteModal({ isOpen: false, appointment: null });
+      } else {
+        setError(result.message || "Failed to delete appointment");
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to delete appointment");
+      console.error("Error deleting appointment:", error);
+    } finally {
+      setUpdating(false);
+    }
   };
 
   // Filtered appointments with additional sorting to ensure latest is always on top
@@ -285,6 +309,7 @@ const AppointmentManagement = () => {
             <table className="min-w-full divide-y divide-gray-200 text-sm">
               <thead className="bg-gray-100">
                 <tr>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-700 w-16">Remove</th>
                   <th className="px-3 py-3 text-left font-semibold text-gray-700 w-24">Submitted</th>
                   <th className="px-3 py-3 text-left font-semibold text-gray-700 min-w-[120px]">
                     Name
@@ -322,7 +347,7 @@ const AppointmentManagement = () => {
                 {filteredAppointments.length === 0 ? (
                   <tr>
                     <td
-                      colSpan="11"
+                      colSpan="12"
                       className="px-3 py-8 text-center text-gray-500"
                     >
                       No appointments found.
@@ -331,6 +356,15 @@ const AppointmentManagement = () => {
                 ) : (
                   filteredAppointments.map((appt) => (
                     <tr key={appt._id} className="hover:bg-gray-50">
+                      <td className="px-3 py-3">
+                        <button
+                          onClick={() => setDeleteModal({ isOpen: true, appointment: appt })}
+                          className="p-1 text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                          title="Delete appointment"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
                       <td className="px-3 py-3 text-xs text-gray-600">
                         {appt.createdAt
                           ? new Date(appt.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -479,6 +513,42 @@ const AppointmentManagement = () => {
                   <RefreshCw className="w-4 h-4 animate-spin mr-2" />
                 )}
                 {updating ? "Cancelling..." : "Confirm Cancel"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Appointment Modal */}
+      {deleteModal.isOpen && deleteModal.appointment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold mb-4">Delete Appointment</h3>
+            <p className="text-gray-600 mb-4">
+              Are you sure you want to permanently delete the appointment for{" "}
+              <strong>
+                {deleteModal.appointment.firstName} {deleteModal.appointment.lastName}
+              </strong>
+              ? This action cannot be undone.
+            </p>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setDeleteModal({ isOpen: false, appointment: null })}
+                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                disabled={updating}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAppointment}
+                disabled={updating}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 flex items-center"
+              >
+                {updating && (
+                  <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                )}
+                {updating ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
