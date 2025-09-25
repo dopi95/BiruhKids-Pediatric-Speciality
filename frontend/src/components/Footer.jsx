@@ -129,7 +129,7 @@ export default function Footer({ lang }) {
                 <Facebook className="h-7 w-7" />
               </a>
               <a
-                href="#"
+                href=" https://www.instagram.com/biruh_kids?igsh=MXdqaHRvejJlZTkwbw=="
                 target="_blank"
                 className="text-pink-400 transition-colors duration-200"
               >

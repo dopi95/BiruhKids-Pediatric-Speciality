@@ -182,7 +182,7 @@ export default function About({ lang }) {
             },
             {
               icon: <Instagram className="h-7 w-7" />,
-              href: "#",
+              href: "https://www.instagram.com/biruh_kids?igsh=MXdqaHRvejJlZTkwbw==",
               color: "text-pink-500",
             },
           ].map((social, idx) => (
