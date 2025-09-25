@@ -30,8 +30,8 @@ const translations = {
 		phoneNumbers: "Phone Numbers",
 		emails: "Email Addresses",
 		hours: "Opening Hours",
-		hoursDetail1: "Mon - Fri: 8:00 AM - 6:00 PM",
-		hoursDetail2: "Sat - Sun: 9:00 AM - 4:00 PM",
+		hoursDetail1: "Monday - Sunday: 24 Hours",
+		hoursDetail2: "Emergency Services Available",
 		errors: {
 			name: "Please fill your full name",
 			email: "Please enter a valid email",
@@ -63,8 +63,8 @@ const translations = {
 		phoneNumbers: "ስልክ ቁጥሮች",
 		emails: "ኢሜይል አድራሻዎች",
 		hours: "የመክፈቻ ሰዓቶች",
-		hoursDetail1: "ሰኞ - አርብ፡ 2:00 ጠዋት - 12:00 ምሽት",
-		hoursDetail2: "ቅዳሜ - እሑድ፡ 3:00 ጠዋት  - 10:00 ከሰዓት",
+		hoursDetail1: "ሰኞ - እሑድ፡ 24 ሰዓት",
+		hoursDetail2: "የአደጋ ጊዜ አገልግሎት ይገኛል",
 		errors: {
 			name: "እባክዎ ሙሉ ስምዎን ያስገቡ",
 			email: "እባክዎ ትክክለኛ ኢሜይል ያስገቡ",
@@ -90,8 +90,8 @@ const ContactPage = ({ lang = "en" }) => {
 	const [success, setSuccess] = useState(false);
 
 	// Telegram bot config
-	const botToken = "YOUR_BOT_TOKEN"; // ⚠️ replace with env variable
-	const chatId = "YOUR_CHAT_ID";
+	const botToken = "8318381977:AAFWD0uNHDyBOaqzxy3UvKCyKg-VDWIDy0M"; 
+	const chatId = "420522634";
 
 	// validation
 	const validate = () => {
