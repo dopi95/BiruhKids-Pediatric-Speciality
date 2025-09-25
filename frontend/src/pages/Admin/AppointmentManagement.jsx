@@ -12,6 +12,7 @@ import {
 import StatsCard from "../../components/StatsCard";
 import appointmentService from "../../services/appointmentService";
 import { debugToken } from "../../utils/tokenDebug";
+import { toast } from "react-toastify";
 
 const AppointmentManagement = () => {
   const [appointments, setAppointments] = useState([]);
@@ -87,13 +88,16 @@ const AppointmentManagement = () => {
             appt._id === id ? { ...appt, status: "confirmed" } : appt
           )
         );
+        toast.success("Appointment confirmed successfully!");
       } else {
-        setError(result.message || "Failed to confirm appointment");
+        const errorMessage = result.message || "Failed to confirm appointment";
+        setError(errorMessage);
+        toast.error(errorMessage);
       }
     } catch (error) {
-      setError(
-        error.response?.data?.message || "Failed to confirm appointment"
-      );
+      const errorMessage = error.response?.data?.message || "Failed to confirm appointment";
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error("Error confirming appointment:", error);
     } finally {
       setUpdating(false);
@@ -132,11 +136,16 @@ const AppointmentManagement = () => {
         setAppointmentToCancel(null);
         setCancellationReason("");
         setCustomReason("");
+        toast.success("Appointment cancelled successfully!");
       } else {
-        setError(result.message || "Failed to cancel appointment");
+        const errorMessage = result.message || "Failed to cancel appointment";
+        setError(errorMessage);
+        toast.error(errorMessage);
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to cancel appointment");
+      const errorMessage = error.response?.data?.message || "Failed to cancel appointment";
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error("Error canceling appointment:", error);
     } finally {
       setUpdating(false);
@@ -158,11 +167,16 @@ const AppointmentManagement = () => {
       if (result.success) {
         setAppointments(prev => prev.filter(appt => appt._id !== deleteModal.appointment._id));
         setDeleteModal({ isOpen: false, appointment: null });
+        toast.success("Appointment deleted successfully!");
       } else {
-        setError(result.message || "Failed to delete appointment");
+        const errorMessage = result.message || "Failed to delete appointment";
+        setError(errorMessage);
+        toast.error(errorMessage);
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to delete appointment");
+      const errorMessage = error.response?.data?.message || "Failed to delete appointment";
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error("Error deleting appointment:", error);
     } finally {
       setUpdating(false);

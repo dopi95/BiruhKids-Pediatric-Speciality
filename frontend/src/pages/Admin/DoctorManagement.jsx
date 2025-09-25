@@ -11,6 +11,7 @@ import {
 import StatsCard from "../../components/StatsCard";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { doctorAPI } from "../../services/doctorApi";
+import { toast } from "react-toastify";
 
 export default function DoctorManagement() {
     const [doctors, setDoctors] = useState([]);
@@ -172,15 +173,19 @@ export default function DoctorManagement() {
             setLoading(true);
             if (editingDoctor) {
                 await doctorAPI.updateDoctor(editingDoctor._id, formData);
+                toast.success("Doctor updated successfully!");
             } else {
                 await doctorAPI.createDoctor(formData);
+                toast.success("Doctor created successfully!");
             }
             
             await fetchDoctors();
             setIsModalOpen(false);
             setError(null);
         } catch (err) {
-            setError("Failed to save doctor: " + err.message);
+            const errorMessage = "Failed to save doctor: " + err.message;
+            setError(errorMessage);
+            toast.error(errorMessage);
             console.error("Error saving doctor:", err);
         } finally {
             setLoading(false);
@@ -197,8 +202,11 @@ export default function DoctorManagement() {
             await doctorAPI.deleteDoctor(deleteModal.doctor._id);
             await fetchDoctors();
             setError(null);
+            toast.success("Doctor deleted successfully!");
         } catch (err) {
-            setError("Failed to delete doctor: " + err.message);
+            const errorMessage = "Failed to delete doctor: " + err.message;
+            setError(errorMessage);
+            toast.error(errorMessage);
             console.error("Error deleting doctor:", err);
         } finally {
             setLoading(false);
