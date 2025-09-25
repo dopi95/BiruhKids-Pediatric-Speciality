@@ -30,6 +30,7 @@ import AdminVideos from "./pages/Admin/AdminVideos";
 import AdminVideosForm from "./pages/Admin/AdminVideosForm";
 import TestimonialManagement from "./pages/Admin/TestimonialManagement";
 import SubscriberManagement from "./pages/Admin/SubscriberManagement";
+import UnsubscribePage from "./pages/UnsubscribePage";
 import AdminLayout from "./layouts/AdminLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./context/AuthContext";
@@ -313,6 +314,9 @@ export default function App() {
                             </ProtectedRoute>
                         }
                     />
+                    
+                    {/* Unsubscribe route */}
+                    <Route path="/unsubscribe" element={<UnsubscribePage />} />
                     
                     {/* 404 Catch-all route */}
                     <Route path="*" element={<NotFound />} />

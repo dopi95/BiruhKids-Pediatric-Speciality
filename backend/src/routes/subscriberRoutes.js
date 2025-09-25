@@ -1,6 +1,7 @@
 import express from "express";
 import Subscriber from "../models/Subscriber.js";
 import User from "../models/User.js";
+import { sendSubscriptionEmail } from "../utils/subscriptionEmailService.js";
 
 const router = express.Router();
 
@@ -32,6 +33,20 @@ router.post("/subscribe", async (req, res) => {
         existingSubscriber.unsubscribedAt = null;
         await existingSubscriber.save();
 
+        // Send confirmation email for resubscription
+        try {
+          console.log(`Attempting to send resubscription email to: ${email}`);
+          await sendSubscriptionEmail(email);
+          console.log(`Resubscription email sent successfully to: ${email}`);
+        } catch (emailError) {
+          console.error("Failed to send resubscription email:", emailError);
+          console.error("Resubscription email error details:", {
+            message: emailError.message,
+            code: emailError.code,
+            command: emailError.command
+          });
+        }
+
         return res.json({
           success: true,
           message: "Successfully resubscribed to our newsletter",
@@ -48,6 +63,21 @@ router.post("/subscribe", async (req, res) => {
 
     await newSubscriber.save();
 
+    // Send confirmation email
+    try {
+      console.log(`Attempting to send subscription email to: ${email}`);
+      await sendSubscriptionEmail(email);
+      console.log(`Subscription email sent successfully to: ${email}`);
+    } catch (emailError) {
+      console.error("Failed to send subscription email:", emailError);
+      console.error("Email error details:", {
+        message: emailError.message,
+        code: emailError.code,
+        command: emailError.command
+      });
+      // Don't fail the subscription if email fails
+    }
+
     res.json({
       success: true,
       message: "Successfully subscribed to our newsletter",
@@ -61,7 +91,209 @@ router.post("/subscribe", async (req, res) => {
   }
 });
 
-// Unsubscribe endpoint
+// Unsubscribe endpoint (GET for email links)
+router.get("/unsubscribe/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const decodedEmail = decodeURIComponent(email);
+
+    // Validate email
+    if (!decodedEmail || !decodedEmail.includes("@")) {
+      return res.status(400).send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Invalid Email - BiruhKids Pediatric Clinic</title>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
+            .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+            .error { color: #dc2626; font-size: 24px; margin-bottom: 20px; }
+            .contact { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1 style="color: #2563eb; margin: 0;">BiruhKids Pediatric Clinic</h1>
+            <p style="color: #666; margin: 5px 0 30px 0;">Where children become bright and healthy!</p>
+            
+            <div class="error">❌ Invalid Email</div>
+            
+            <p>Please provide a valid email address.</p>
+            
+            <div class="contact">
+              <p><strong>Contact Us:</strong></p>
+              <p>📞 +251963555552 / +251939602927</p>
+              <p>✉️ biruhkidsclinic@gmail.com</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `);
+    }
+
+    // Find subscriber
+    const subscriber = await Subscriber.findOne({ email: decodedEmail });
+
+    if (!subscriber) {
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Email Not Found - BiruhKids Pediatric Clinic</title>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
+            .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+            .warning { color: #f59e0b; font-size: 24px; margin-bottom: 20px; }
+            .email { background: #fef3c7; padding: 10px; border-radius: 5px; margin: 20px 0; }
+            .contact { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1 style="color: #2563eb; margin: 0;">BiruhKids Pediatric Clinic</h1>
+            <p style="color: #666; margin: 5px 0 30px 0;">Where children become bright and healthy!</p>
+            
+            <div class="warning">⚠️ Email Not Found</div>
+            
+            <p>This email address was not found in our subscriber list.</p>
+            
+            <div class="email"><strong>Email:</strong> ${decodedEmail}</div>
+            
+            <div class="contact">
+              <p><strong>Contact Us:</strong></p>
+              <p>📞 +251963555552 / +251939602927</p>
+              <p>✉️ biruhkidsclinic@gmail.com</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `);
+    }
+
+    if (subscriber.status === "unsubscribed") {
+      return res.status(200).send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Already Unsubscribed - BiruhKids Pediatric Clinic</title>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
+            .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+            .info { color: #2563eb; font-size: 24px; margin-bottom: 20px; }
+            .email { background: #f0f9ff; padding: 10px; border-radius: 5px; margin: 20px 0; }
+            .contact { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1 style="color: #2563eb; margin: 0;">BiruhKids Pediatric Clinic</h1>
+            <p style="color: #666; margin: 5px 0 30px 0;">Where children become bright and healthy!</p>
+            
+            <div class="info">ℹ️ Already Unsubscribed</div>
+            
+            <p>This email address is already unsubscribed from our newsletter.</p>
+            
+            <div class="email"><strong>Email:</strong> ${decodedEmail}</div>
+            
+            <div class="contact">
+              <p><strong>Contact Us:</strong></p>
+              <p>📞 +251963555552 / +251939602927</p>
+              <p>✉️ biruhkidsclinic@gmail.com</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `);
+    }
+
+    // Update subscriber status
+    subscriber.status = "unsubscribed";
+    subscriber.unsubscribedAt = new Date();
+    await subscriber.save();
+
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Unsubscribed - BiruhKids Pediatric Clinic</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
+          .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+          .success { color: #16a34a; font-size: 24px; margin-bottom: 20px; }
+          .email { background: #f0f9ff; padding: 10px; border-radius: 5px; margin: 20px 0; }
+          .contact { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #666; font-size: 14px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1 style="color: #2563eb; margin: 0;">BiruhKids Pediatric Clinic</h1>
+          <p style="color: #666; margin: 5px 0 30px 0;">Where children become bright and healthy!</p>
+          
+          <div class="success">✅ Successfully Unsubscribed</div>
+          
+          <p>You have been successfully unsubscribed from our newsletter.</p>
+          
+          <div class="email"><strong>Email:</strong> ${decodedEmail}</div>
+          
+          <p>You will no longer receive newsletter emails from BiruhKids Pediatric Clinic.</p>
+          <p>If you change your mind, you can always resubscribe from our website.</p>
+          
+          <div class="contact">
+            <p><strong>Contact Us:</strong></p>
+            <p>📞 +251963555552 / +251939602927</p>
+            <p>✉️ biruhkidsclinic@gmail.com</p>
+            <p>📍 Torhayloch, 100 meters from Augusta Bridge, Addis Ababa</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `);
+  } catch (error) {
+    console.error("Unsubscribe error:", error);
+    res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Error - BiruhKids Pediatric Clinic</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
+          .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+          .error { color: #dc2626; font-size: 24px; margin-bottom: 20px; }
+          .contact { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #666; font-size: 14px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1 style="color: #2563eb; margin: 0;">BiruhKids Pediatric Clinic</h1>
+          <p style="color: #666; margin: 5px 0 30px 0;">Where children become bright and healthy!</p>
+          
+          <div class="error">❌ Error</div>
+          
+          <p>An error occurred while processing your request. Please try again later.</p>
+          
+          <div class="contact">
+            <p><strong>Contact Us:</strong></p>
+            <p>📞 +251963555552 / +251939602927</p>
+            <p>✉️ biruhkidsclinic@gmail.com</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `);
+  }
+});
+
+// Unsubscribe endpoint (POST for forms)
 router.post("/unsubscribe", async (req, res) => {
   try {
     const { email } = req.body;

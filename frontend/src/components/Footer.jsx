@@ -8,48 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 export default function Footer({ lang }) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
-  // Load subscription status from localStorage on component mount
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("subscribedEmail");
-    const savedStatus = localStorage.getItem("isSubscribed");
-    
-    if (savedEmail && savedStatus === "true") {
-      setEmail(savedEmail);
-      setIsSubscribed(true);
-    }
-  }, []);
-
-  // Check if the email is already subscribed
-  useEffect(() => {
-    const checkSubscriptionStatus = async () => {
-      if (!email || !email.includes("@")) return;
-      
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/subscribers/check/${encodeURIComponent(email)}`
-        );
-        
-        if (response.ok) {
-          const data = await response.json();
-          setIsSubscribed(data.isSubscribed);
-          
-          // Save to localStorage if subscribed
-          if (data.isSubscribed) {
-            localStorage.setItem("subscribedEmail", email);
-            localStorage.setItem("isSubscribed", "true");
-          }
-        }
-      } catch (error) {
-        console.error("Error checking subscription status:", error);
-      }
-    };
-    
-    // Add a delay to prevent excessive API calls
-    const timeoutId = setTimeout(checkSubscriptionStatus, 500);
-    return () => clearTimeout(timeoutId);
-  }, [email]);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -62,8 +20,7 @@ export default function Footer({ lang }) {
     setIsSubmitting(true);
     
     try {
-      const endpoint = isSubscribed ? "unsubscribe" : "subscribe";
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers/${endpoint}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers/subscribe`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,22 +31,10 @@ export default function Footer({ lang }) {
       const data = await response.json();
 
       if (data.success) {
-        if (isSubscribed) {
-          toast.success("Successfully unsubscribed from our newsletter");
-          setIsSubscribed(false);
-          // Remove from localStorage when unsubscribed
-          localStorage.removeItem("subscribedEmail");
-          localStorage.removeItem("isSubscribed");
-        } else {
-          toast.success("🎉 Successfully subscribed to our newsletter!");
-          setIsSubscribed(true);
-          // Save to localStorage when subscribed
-          localStorage.setItem("subscribedEmail", email);
-          localStorage.setItem("isSubscribed", "true");
-        }
+        toast.success("🎉 Successfully subscribed! Check your email for confirmation.");
         setEmail("");
       } else {
-        toast.error(data.message || "Operation failed");
+        toast.error(data.message || "Subscription failed");
       }
     } catch (error) {
       console.error("Subscription error:", error);
@@ -280,18 +225,9 @@ export default function Footer({ lang }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full text-white px-4 py-2 rounded-md transition-colors duration-200 ${
-                  isSubscribed 
-                    ? "bg-red-600 hover:bg-red-700" 
-                    : "bg-blue-600 hover:bg-blue-700"
-                } ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`w-full text-white px-4 py-2 rounded-md transition-colors duration-200 bg-blue-600 hover:bg-blue-700 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                {isSubmitting 
-                  ? "Processing..." 
-                  : isSubscribed 
-                    ? t.unsubscribe 
-                    : t.subscribe
-                }
+                {isSubmitting ? "Processing..." : t.subscribe}
               </button>
             </form>
           </div>
