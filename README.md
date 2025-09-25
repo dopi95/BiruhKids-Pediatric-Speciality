@@ -73,7 +73,7 @@
 | **Bereket Eshete**  | Backend & AI Developer     |
 | **Dagim Sisay**     | UI/UX & Frontend Developer |
 | **Elyas Yenealem**  | Full Stack Developer       |
-| **Tinbite Daniale** | Full Stack Developer       |
+| **Tenbite Daniel** | Full Stack Developer       |
 
 ---
 
