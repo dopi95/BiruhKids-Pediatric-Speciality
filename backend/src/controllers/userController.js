@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/User.js";
+import Result from "../models/Result.js";
 
 // @desc    Create new admin
 // @route   POST /api/users/admin
@@ -175,11 +176,15 @@ export const deleteUser = asyncHandler(async (req, res) => {
         });
     }
     
+    // Delete all results associated with this user
+    await Result.deleteMany({ patientId: req.params.id });
+    
+    // Delete the user
     await User.findByIdAndDelete(req.params.id);
     
     res.json({
         success: true,
-        message: "User deleted successfully"
+        message: "User and associated results deleted successfully"
     });
 });
 
