@@ -332,6 +332,7 @@ export default function App() {
                     pauseOnFocusLoss
                     draggable
                     pauseOnHover
+                    style={{ zIndex: 9999 }}
                 />
             </Router>
         </AuthProvider>
