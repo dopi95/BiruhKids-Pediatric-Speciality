@@ -70,6 +70,9 @@ const AdminVideos = () => {
             const response = await updateVideo(updatedVideo._id, updatedVideo);
             
             if (response.data && response.data.success) {
+                toast.success("Video updated successfully!", { autoClose: 2000 });
+                setEditVideo(null);
+                
                 // Update the specific video in the state
                 if (selectedPlatform === "youtube") {
                     setYoutubeVideos((prev) =>
@@ -80,15 +83,13 @@ const AdminVideos = () => {
                         prev.map((v) => (v._id === updatedVideo._id ? response.data.data : v))
                     );
                 }
-                setEditVideo(null);
-                toast.success("Video updated successfully!");
             } else {
+                toast.error("Failed to update video", { autoClose: 3000 });
                 setError("Failed to update video");
-                toast.error("Failed to update video");
             }
         } catch (err) {
+            toast.error("Failed to update video. Please try again.", { autoClose: 3000 });
             setError("Failed to update video. Please try again.");
-            toast.error("Failed to update video. Please try again.");
             console.error("Error updating video:", err);
         } finally {
             setSaveLoading(false);
@@ -102,20 +103,21 @@ const AdminVideos = () => {
             const response = await deleteVideo(videoId);
             
             if (response.data && response.data.success) {
+                toast.success("Video deleted successfully!", { autoClose: 2000 });
+                setShowDeleteConfirm(null);
+                
                 if (selectedPlatform === "youtube") {
                     setYoutubeVideos((prev) => prev.filter((v) => v._id !== videoId));
                 } else {
                     setTiktokVideos((prev) => prev.filter((v) => v._id !== videoId));
                 }
-                setShowDeleteConfirm(null);
-                toast.success("Video deleted successfully!");
             } else {
+                toast.error("Failed to delete video", { autoClose: 3000 });
                 setError("Failed to delete video");
-                toast.error("Failed to delete video");
             }
         } catch (err) {
+            toast.error("Failed to delete video. Please try again.", { autoClose: 3000 });
             setError("Failed to delete video. Please try again.");
-            toast.error("Failed to delete video. Please try again.");
             console.error("Error deleting video:", err);
         } finally {
             setDeleteLoading(false);
