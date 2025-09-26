@@ -10,16 +10,7 @@ export const createDoctor = async (req, res) => {
     const { name, nameAmh, field, fieldAmh, experience, experienceAmh } = req.body;
     
     // Check if photo was uploaded and get URL
-    let photo = null;
-    if (req.file) {
-      // If using Cloudinary, use secure_url, otherwise use local path
-      photo = req.file.secure_url || req.file.path;
-      console.log('Doctor photo uploaded:', {
-        filename: req.file.filename,
-        url: photo,
-        publicId: req.file.public_id
-      });
-    }
+    const photo = req.file ? (req.file.secure_url || req.file.path) : null;
     
     const doctor = new Doctor({
       name,
@@ -34,13 +25,8 @@ export const createDoctor = async (req, res) => {
     const savedDoctor = await doctor.save();
     
     // Send newsletter asynchronously (non-blocking)
-    setImmediate(async () => {
-      try {
-        const newsletterResult = await sendNewDoctorNewsletter(savedDoctor);
-        console.log(`Newsletter sent to ${newsletterResult.sent}/${newsletterResult.total} subscribers`);
-      } catch (error) {
-        console.error("Newsletter sending failed:", error);
-      }
+    sendNewDoctorNewsletter(savedDoctor).catch(error => {
+      console.error("Newsletter sending failed:", error);
     });
     
     res.status(201).json({
@@ -141,33 +127,18 @@ export const updateDoctor = async (req, res) => {
     
     // If a new photo was uploaded
     if (req.file) {
-      // Get the old doctor data to clean up old photo
-      const oldDoctor = await Doctor.findById(req.params.id);
-      
-      // Set new photo URL
       updateData.photo = req.file.secure_url || req.file.path;
       
-      // Clean up old photo if it exists and is from Cloudinary
-      if (oldDoctor && oldDoctor.photo && req.file.public_id) {
-        try {
-          // Extract public_id from old Cloudinary URL if it's a Cloudinary URL
-          if (oldDoctor.photo.includes('cloudinary.com')) {
-            const urlParts = oldDoctor.photo.split('/');
-            const publicIdWithExt = urlParts[urlParts.length - 1];
-            const oldPublicId = publicIdWithExt.split('.')[0];
-            await cloudinary.uploader.destroy(`biruh-kids/doctors/${oldPublicId}`);
-            console.log('Old doctor photo deleted from Cloudinary');
-          }
-        } catch (error) {
-          console.error('Error deleting old doctor photo:', error);
+      // Clean up old photo asynchronously (non-blocking)
+      Doctor.findById(req.params.id).then(oldDoctor => {
+        if (oldDoctor?.photo?.includes('cloudinary.com') && req.file.public_id) {
+          const urlParts = oldDoctor.photo.split('/');
+          const publicIdWithExt = urlParts[urlParts.length - 1];
+          const oldPublicId = publicIdWithExt.split('.')[0];
+          cloudinary.uploader.destroy(`biruh-kids/doctors/${oldPublicId}`)
+            .catch(error => console.error('Error deleting old doctor photo:', error));
         }
-      }
-      
-      console.log('Doctor photo updated:', {
-        filename: req.file.filename,
-        url: updateData.photo,
-        publicId: req.file.public_id
-      });
+      }).catch(err => console.error('Error fetching old doctor:', err));
     }
     
     const doctor = await Doctor.findByIdAndUpdate(
