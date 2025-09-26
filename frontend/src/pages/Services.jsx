@@ -124,6 +124,17 @@ const Services = ({ lang = "En" }) => {
     const handleSeeServices = (department) => {
         setSelectedDepartment(department);
         setCurrentPage(1);
+        
+        // Scroll to services section after a brief delay to ensure DOM update
+        setTimeout(() => {
+            const servicesSection = document.getElementById('services-section');
+            if (servicesSection) {
+                servicesSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 100);
     };
 
     const paginate = (pageNumber) => {
