@@ -33,13 +33,15 @@ export const createDoctor = async (req, res) => {
     
     const savedDoctor = await doctor.save();
     
-    // Send newsletter to active subscribers
-    try {
-      const newsletterResult = await sendNewDoctorNewsletter(savedDoctor);
-      console.log(`Newsletter sent to ${newsletterResult.sent}/${newsletterResult.total} subscribers`);
-    } catch (error) {
-      console.error("Newsletter sending failed:", error);
-    }
+    // Send newsletter asynchronously (non-blocking)
+    setImmediate(async () => {
+      try {
+        const newsletterResult = await sendNewDoctorNewsletter(savedDoctor);
+        console.log(`Newsletter sent to ${newsletterResult.sent}/${newsletterResult.total} subscribers`);
+      } catch (error) {
+        console.error("Newsletter sending failed:", error);
+      }
+    });
     
     res.status(201).json({
       success: true,
