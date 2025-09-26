@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Calendar, CheckCircle } from "lucide-react";
 import { Listbox } from "@headlessui/react";
 import { Check, ChevronDown } from "lucide-react";
+import { doctorAPI } from "../services/doctorApi.js";
 
 // Appointment service
 const appointmentService = {
@@ -127,10 +128,33 @@ const AppointmentPage = ({ lang = "En" }) => {
   const [errors, setErrors] = useState({});
   const [confirmed, setConfirmed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [doctors, setDoctors] = useState([]);
+  const [loadingDoctors, setLoadingDoctors] = useState(true);
 
-  const doctors = lang === "Am" 
-    ? ["ዶ/ር ፋሲል መንበረ", "ዶ/ር ክንዱ"] 
-    : ["Dr. Fasil Menbere", "Dr. Kindu"];
+  // Fetch doctors from database
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        setLoadingDoctors(true);
+        const response = await doctorAPI.getDoctors('', 1, 100); // Get all doctors
+        const doctorNames = response.data.map(doctor => 
+          lang === "Am" ? (doctor.nameAmh || doctor.name) : doctor.name
+        );
+        setDoctors(doctorNames);
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+        // Fallback to hardcoded doctors if API fails
+        setDoctors(lang === "Am" 
+          ? ["ዶ/ር ፋሲል መንበረ", "ዶ/ር ክንዱ"] 
+          : ["Dr. Fasil Menbere", "Dr. Kindu"]
+        );
+      } finally {
+        setLoadingDoctors(false);
+      }
+    };
+    
+    fetchDoctors();
+  }, [lang]);
   
   const times = lang === "Am" 
     ? ["3:00 ጥዋት", "4:00 ጥዋት", "5:00 ጥዋት", "7:00 ከሰዓት", "8:00 ከሰዓት", "9:00 ከሰዓት"] 
@@ -399,11 +423,13 @@ const AppointmentPage = ({ lang = "En" }) => {
                   <div className="grid gap-6">
                     <CustomDropdown
                       label={t.placeholders.doctor}
-                      options={doctors}
+                      options={loadingDoctors ? ['Loading doctors...'] : doctors}
                       value={formData.doctor}
-                      setValue={(val) =>
-                        setFormData({ ...formData, doctor: val })
-                      }
+                      setValue={(val) => {
+                        if (!loadingDoctors && val !== 'Loading doctors...') {
+                          setFormData({ ...formData, doctor: val });
+                        }
+                      }}
                       error={errors.doctor}
                     />
                     <div>
