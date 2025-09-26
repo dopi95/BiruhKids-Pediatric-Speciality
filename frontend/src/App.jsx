@@ -326,13 +326,14 @@ export default function App() {
                     position="top-right"
                     autoClose={3000}
                     hideProgressBar={false}
-                    newestOnTop={false}
+                    newestOnTop={true}
                     closeOnClick
                     rtl={false}
-                    pauseOnFocusLoss
+                    pauseOnFocusLoss={false}
                     draggable
-                    pauseOnHover
+                    pauseOnHover={false}
                     style={{ zIndex: 9999 }}
+                    limit={3}
                 />
             </Router>
         </AuthProvider>
