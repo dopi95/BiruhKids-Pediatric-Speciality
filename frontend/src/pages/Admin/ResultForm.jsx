@@ -138,9 +138,9 @@ const ResultForm = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen bg-gray-50 pt-14 xl:pt-0">
             {/* Main content */}
-            <div className="flex-1 p-4 sm:p-6 lg:p-8">
+            <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
                 <div className="flex items-center mb-6">
                     <button
                         onClick={() => navigate(-1)}
@@ -151,89 +151,115 @@ const ResultForm = () => {
                     </button>
                 </div>
 
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">
                     Upload Patient Result
                 </h1>
 
                 <form
                     onSubmit={handleSubmit}
-                    className="bg-white shadow rounded-xl p-4 sm:p-6 lg:p-8 space-y-4"
+                    className="bg-white shadow rounded-xl p-4 sm:p-6 lg:p-8 space-y-6"
                 >
-                    {/* Patient Name */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">
-                            Patient Name
-                        </label>
-                        <input
-                            type="text"
-                            name="patientName"
-                            value={formData.patientName}
-                            onChange={handleChange}
-                            className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
-                                errors.patientName
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                        />
-                        {errors.patientName && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.patientName}
-                            </p>
-                        )}
-                    </div>
+                    {/* Patient Info Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        {/* Patient Name */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Patient Name
+                            </label>
+                            <input
+                                type="text"
+                                name="patientName"
+                                value={formData.patientName}
+                                onChange={handleChange}
+                                className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
+                                    errors.patientName
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                            />
+                            {errors.patientName && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.patientName}
+                                </p>
+                            )}
+                        </div>
 
-                    {/* Phone Number */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">
-                            Phone Number
-                        </label>
-                        <input
-                            type="tel"
-                            name="phoneNumber"
-                            value={formData.phoneNumber}
-                            onChange={handleChange}
-                            pattern="[0-9]*"
-                            inputMode="numeric"
-                            className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
-                                errors.phoneNumber
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                        />
-                        {errors.phoneNumber && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.phoneNumber}
-                            </p>
-                        )}
-                    </div>
+                        {/* Phone Number */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Phone Number
+                            </label>
+                            <input
+                                type="tel"
+                                name="phoneNumber"
+                                value={formData.phoneNumber}
+                                onChange={handleChange}
+                                pattern="[0-9]*"
+                                inputMode="numeric"
+                                className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
+                                    errors.phoneNumber
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                            />
+                            {errors.phoneNumber && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.phoneNumber}
+                                </p>
+                            )}
+                        </div>
 
-                    {/* Email */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
-                                errors.email
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                        />
-                        {errors.email && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.email}
-                            </p>
-                        )}
+                        {/* Email */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
+                                    errors.email
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                            />
+                            {errors.email && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.email}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Doctor Name */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">
+                                Doctor Name
+                            </label>
+                            <input
+                                type="text"
+                                name="doctorName"
+                                value={formData.doctorName}
+                                onChange={handleChange}
+                                className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
+                                    errors.doctorName
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                            />
+                            {errors.doctorName && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.doctorName}
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     {/* Date */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">
-                            Date
+                    <div className="md:w-1/2">
+                        <label className="block text-sm font-medium mb-2">
+                            Test Date
                         </label>
                         <input
                             type="date"
@@ -250,8 +276,8 @@ const ResultForm = () => {
 
                     {/* Result Files */}
                     <div>
-                        <label className="block text-sm font-medium mb-1">
-                            Upload Result(s)
+                        <label className="block text-sm font-medium mb-2">
+                            Upload Result Files
                         </label>
                         <input
                             type="file"
@@ -289,33 +315,12 @@ const ResultForm = () => {
                         )}
                     </div>
 
-                    {/* Doctor Name */}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">
-                            Doctor Name
-                        </label>
-                        <input
-                            type="text"
-                            name="doctorName"
-                            value={formData.doctorName}
-                            onChange={handleChange}
-                            className={`w-full px-3 py-2 border rounded-lg text-sm sm:text-base ${
-                                errors.doctorName
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                        />
-                        {errors.doctorName && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.doctorName}
-                            </p>
-                        )}
-                    </div>
+
 
                     {/* Additional Notes */}
                     <div>
-                        <label className="block text-sm font-medium mb-1">
-                            Additional Notes
+                        <label className="block text-sm font-medium mb-2">
+                            Additional Notes (Optional)
                         </label>
                         <textarea
                             name="additionalNotes"

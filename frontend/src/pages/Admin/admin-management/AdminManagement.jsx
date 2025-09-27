@@ -289,7 +289,7 @@ export default function AdminManagement() {
         <div className="bg-gray-50">
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-x-auto">
-                <div className="bg-white shadow-sm border-b px-4 sm:px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between sm:items-center my-14 md:mt-0">
+                <div className="bg-white shadow-sm border-b px-4 sm:px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between sm:items-center mt-14 xl:mt-0 mb-6">
                     <div>
                         <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                             Admin Management

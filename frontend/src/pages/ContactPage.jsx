@@ -170,7 +170,7 @@ Message: ${form.message}
 			</section>
 
 			{/* Contact + Get in Touch */}
-			<section className="py-16 px-6 lg:px-20 grid lg:grid-cols-2 gap-12">
+			<section className="py-16 px-6 lg:px-20 grid md:grid-cols-2 gap-8 md:gap-12">
 				{/* Left: Form */}
 				<form
 					onSubmit={handleSubmit}
