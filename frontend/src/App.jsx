@@ -34,14 +34,16 @@ import UnsubscribePage from "./pages/UnsubscribePage";
 import AdminLayout from "./layouts/AdminLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
     return (
-        <AuthProvider>
-            <Router>
+        <LanguageProvider>
+            <AuthProvider>
+                <Router>
                 <ScrollToTop /> 
                 <div className="flex flex-col min-h-screen">
                 <Routes>
@@ -335,7 +337,8 @@ export default function App() {
                     style={{ zIndex: 9999 }}
                     limit={3}
                 />
-            </Router>
-        </AuthProvider>
+                </Router>
+            </AuthProvider>
+        </LanguageProvider>
     );
 }

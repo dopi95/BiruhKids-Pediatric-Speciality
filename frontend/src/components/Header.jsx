@@ -4,14 +4,16 @@ import Logo from "../assets/logo.png";
 import { Menu, X, ChevronRight, Globe, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { getUserDisplayName } from "../utils/authHelpers";
 
-function Header({ lang, setLang }) {
+function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { language: lang, changeLanguage } = useLanguage();
 
   function toggleLang() {
-    setLang((prevLang) => (prevLang === "En" ? "Am" : "En"));
+    changeLanguage(lang === "En" ? "Am" : "En");
   }
 
   function handleCloseMenu() {

@@ -11,8 +11,10 @@ import {
   ChevronDown,
 } from "lucide-react";
 import departmentService from "../services/departmentService";
+import { useLanguage } from "../context/LanguageContext";
 
-const Services = ({ lang = "En" }) => {
+const Services = () => {
+  const { language: lang } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -139,6 +141,14 @@ const Services = ({ lang = "En" }) => {
   const handleSeeServices = (department) => {
     setSelectedDepartment(department);
     setCurrentPage(1);
+    
+    // Scroll to services section after a short delay
+    setTimeout(() => {
+      const servicesSection = document.getElementById('services-section');
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const paginate = (pageNumber) => {
