@@ -1,3 +1,11 @@
 {
-    "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_API_BASE_URL": "https://biruhkids-pediatric-speciality-backend.onrender.com/api"
+  }
 }

@@ -186,7 +186,7 @@ export default function DoctorsSlider({ lang }) {
     am: {
       title: "ዶክተሮቻችንን ያግኙ",
       subtitle: "ልምድ ያካበቱ የጤና ባለሙያዎቻችን የሚቻለውን ሁሉ እንክብካቤ ለእርስዎ ለመስጠት ቆርጦ ተነስቷል።",
-      experience: "የስራ ልምድ",
+      experience: "ዓመት የስራ ልምድ",
       noDoctors: "በአሁኑ ጊዜ ምንም ዶክተሮች የሉም።"
     },
   };

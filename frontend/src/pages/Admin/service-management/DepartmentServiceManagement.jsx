@@ -62,17 +62,17 @@ export default function DepartmentServiceManagement() {
         try {
             if (deptModal.editing) {
                 await departmentService.updateDepartment(deptModal.editing._id, deptData);
-                toast.success("Department updated successfully!");
+                toast.success("Department updated successfully!", { autoClose: 2000 });
             } else {
                 await departmentService.createDepartment(deptData);
-                toast.success("Department created successfully!");
+                toast.success("Department created successfully!", { autoClose: 2000 });
             }
-            fetchDepartments();
+            setDeptModal({ isOpen: false, editing: null });
+            setTimeout(() => fetchDepartments(), 100);
         } catch (error) {
             console.error("Error saving department:", error);
-            toast.error("Failed to save department");
+            toast.error("Failed to save department", { autoClose: 3000 });
         }
-        setDeptModal({ isOpen: false, editing: null });
     };
 
     const saveService = async (serviceData) => {
@@ -80,17 +80,17 @@ export default function DepartmentServiceManagement() {
         try {
             if (serviceModal.editing) {
                 await departmentService.updateService(deptId, serviceModal.editing._id, serviceData);
-                toast.success("Service updated successfully!");
+                toast.success("Service updated successfully!", { autoClose: 2000 });
             } else {
                 await departmentService.addService(deptId, serviceData);
-                toast.success("Service added successfully!");
+                toast.success("Service added successfully!", { autoClose: 2000 });
             }
-            fetchDepartments();
+            setServiceModal({ isOpen: false, editing: null, deptId: null });
+            setTimeout(() => fetchDepartments(), 100);
         } catch (error) {
             console.error("Error saving service:", error);
-            toast.error("Failed to save service");
+            toast.error("Failed to save service", { autoClose: 3000 });
         }
-        setServiceModal({ isOpen: false, editing: null, deptId: null });
     };
 
     const confirmDelete = async () => {
@@ -98,20 +98,20 @@ export default function DepartmentServiceManagement() {
         try {
             if (type === 'department') {
                 await departmentService.deleteDepartment(item._id);
-                toast.success("Department deleted successfully!");
+                toast.success("Department deleted successfully!", { autoClose: 2000 });
             } else if (type === 'service') {
                 const dept = departments.find(d => d.services.some(s => s._id === item._id));
                 if (dept) {
                     await departmentService.deleteService(dept._id, item._id);
-                    toast.success("Service deleted successfully!");
+                    toast.success("Service deleted successfully!", { autoClose: 2000 });
                 }
             }
-            fetchDepartments();
+            setDeleteModal({ isOpen: false, type: null, item: null });
+            setTimeout(() => fetchDepartments(), 100);
         } catch (error) {
             console.error("Error deleting:", error);
-            toast.error(`Failed to delete ${type}`);
+            toast.error(`Failed to delete ${type}`, { autoClose: 3000 });
         }
-        setDeleteModal({ isOpen: false, type: null, item: null });
     };
 
     const filteredDepartments = departments.filter(dept =>

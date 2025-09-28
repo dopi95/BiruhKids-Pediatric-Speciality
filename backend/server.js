@@ -34,7 +34,11 @@ app.use(
 	cors({
 		origin: process.env.FRONTEND_URLS
 			? process.env.FRONTEND_URLS.split(',')
-			: ["http://localhost:5173"],
+			: [
+				"http://localhost:5173",
+				"https://biruhkids-pediatric-speciality.vercel.app",
+				/\.vercel\.app$/
+			],
 		credentials: true
 	})
 );

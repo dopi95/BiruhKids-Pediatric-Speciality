@@ -170,25 +170,23 @@ export default function DoctorManagement() {
         if (!validateStep2()) return;
 
         try {
-            setLoading(true);
             if (editingDoctor) {
                 await doctorAPI.updateDoctor(editingDoctor._id, formData);
-                toast.success("Doctor updated successfully!");
+                toast.success("Doctor updated successfully!", { autoClose: 2000 });
             } else {
                 await doctorAPI.createDoctor(formData);
-                toast.success("Doctor created successfully!");
+                toast.success("Doctor created successfully!", { autoClose: 2000 });
             }
             
-            await fetchDoctors();
             setIsModalOpen(false);
             setError(null);
+            // Refresh data in background
+            setTimeout(() => fetchDoctors(), 100);
         } catch (err) {
             const errorMessage = "Failed to save doctor: " + err.message;
             setError(errorMessage);
-            toast.error(errorMessage);
+            toast.error(errorMessage, { autoClose: 3000 });
             console.error("Error saving doctor:", err);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -198,18 +196,17 @@ export default function DoctorManagement() {
 
     const handleDelete = async () => {
         try {
-            setLoading(true);
             await doctorAPI.deleteDoctor(deleteModal.doctor._id);
-            await fetchDoctors();
+            toast.success("Doctor deleted successfully!", { autoClose: 2000 });
+            setDeleteModal({ isOpen: false, doctor: null });
             setError(null);
-            toast.success("Doctor deleted successfully!");
+            // Refresh data in background
+            setTimeout(() => fetchDoctors(), 100);
         } catch (err) {
             const errorMessage = "Failed to delete doctor: " + err.message;
             setError(errorMessage);
-            toast.error(errorMessage);
+            toast.error(errorMessage, { autoClose: 3000 });
             console.error("Error deleting doctor:", err);
-        } finally {
-            setLoading(false);
         }
     };
 

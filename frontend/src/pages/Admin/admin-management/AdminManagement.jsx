@@ -205,17 +205,16 @@ export default function AdminManagement() {
             setSubmitting(true);
             if (editingAdmin) {
                 await userService.updateAdmin(editingAdmin._id, formData);
+                toast.success('Admin updated successfully!', { autoClose: 2000 });
                 setShowEditForm(false);
                 setEditingAdmin(null);
             } else {
                 await userService.createAdmin(formData);
+                toast.success('Admin created successfully!', { autoClose: 2000 });
                 setShowAddForm(false);
             }
             resetForm();
-            await fetchAdmins();
-            
-            // Show success toast after everything is complete
-            toast.success(editingAdmin ? 'Admin updated successfully!' : 'Admin created successfully!');
+            setTimeout(() => fetchAdmins(), 100);
         } catch (error) {
             console.error('Admin operation error:', error);
             if (error.response?.status === 400) {
@@ -259,16 +258,18 @@ export default function AdminManagement() {
     const confirmDeleteAdmin = async (adminId) => {
         try {
             await userService.deleteAdmin(adminId);
-            await fetchAdmins();
-            toast.success('Admin deleted successfully!');
+            toast.success('Admin deleted successfully!', { autoClose: 2000 });
+            setShowDeleteModal(false);
+            setDeletingAdmin(null);
+            setTimeout(() => fetchAdmins(), 100);
         } catch (error) {
             console.error('Delete admin error:', error);
             if (error.response?.status === 403) {
-                toast.error('Cannot delete admin: Insufficient permissions');
+                toast.error('Cannot delete admin: Insufficient permissions', { autoClose: 3000 });
             } else if (error.response?.status === 404) {
-                toast.error('Admin not found or already deleted');
+                toast.error('Admin not found or already deleted', { autoClose: 3000 });
             } else {
-                toast.error('Failed to delete admin: ' + (error.response?.data?.message || error.message));
+                toast.error('Failed to delete admin: ' + (error.response?.data?.message || error.message), { autoClose: 3000 });
             }
         }
     };
