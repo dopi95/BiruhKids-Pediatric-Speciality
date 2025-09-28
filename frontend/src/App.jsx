@@ -49,7 +49,7 @@ export default function App() {
     }, []);
 
     return (
-
+    <SEOProvider>
         <LanguageProvider>
             <AuthProvider>
                 <Router>
@@ -350,5 +350,6 @@ export default function App() {
             </AuthProvider>
 
         </LanguageProvider>
+        </SEOProvider>
     );
 }
