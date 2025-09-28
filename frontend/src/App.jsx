@@ -1,6 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { SEOProvider } from './components/SEO';
+import { initGA } from './utils/analytics';
+import { useEffect } from 'react';
 
 import AppointmentPage from "./pages/AppointmentPage";
 import VideosPage from "./pages/VideosPage";
@@ -40,7 +43,13 @@ import PublicRoute from "./components/PublicRoute";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
+    useEffect(() => {
+        // Initialize Google Analytics
+        initGA();
+    }, []);
+
     return (
+
         <LanguageProvider>
             <AuthProvider>
                 <Router>
@@ -339,6 +348,7 @@ export default function App() {
                 />
                 </Router>
             </AuthProvider>
+
         </LanguageProvider>
     );
 }
