@@ -262,22 +262,22 @@ const Hero = ({ lang = "En" }) => {
 				))}
 			</div>
 
-			{/* Prev Button - Desktop only */}
+			{/* Prev Button - Tablet and Desktop */}
 			<button
 				onClick={goToPrev}
-				className="hidden md:flex absolute left-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 hover:from-blue-400/50 hover:to-cyan-400/50 backdrop-blur-md text-white p-4 rounded-full transition-all duration-500 hover:scale-125 z-[70] border border-white/20 shadow-2xl hover:shadow-blue-500/25"
+				className="hidden md:flex absolute left-4 lg:left-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 hover:from-blue-400/50 hover:to-cyan-400/50 backdrop-blur-md text-white p-3 lg:p-4 rounded-full transition-all duration-500 hover:scale-125 z-[70] border border-white/20 shadow-2xl hover:shadow-blue-500/25"
 				aria-label="Previous slide"
 			>
-				<ChevronLeft size={28} className="drop-shadow-lg" />
+				<ChevronLeft size={24} className="lg:w-7 lg:h-7 drop-shadow-lg" />
 			</button>
 
-			{/* Next Button - Desktop only */}
+			{/* Next Button - Tablet and Desktop */}
 			<button
 				onClick={goToNext}
-				className="hidden md:flex absolute right-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 hover:from-cyan-400/50 hover:to-blue-400/50 backdrop-blur-md text-white p-4 rounded-full transition-all duration-500 hover:scale-125 z-[70] border border-white/20 shadow-2xl hover:shadow-cyan-500/25"
+				className="hidden md:flex absolute right-4 lg:right-6 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 hover:from-cyan-400/50 hover:to-blue-400/50 backdrop-blur-md text-white p-3 lg:p-4 rounded-full transition-all duration-500 hover:scale-125 z-[70] border border-white/20 shadow-2xl hover:shadow-cyan-500/25"
 				aria-label="Next slide"
 			>
-				<ChevronRight size={28} className="drop-shadow-lg" />
+				<ChevronRight size={24} className="lg:w-7 lg:h-7 drop-shadow-lg" />
 			</button>
 
 			{/* Dots - Clickable on all devices */}

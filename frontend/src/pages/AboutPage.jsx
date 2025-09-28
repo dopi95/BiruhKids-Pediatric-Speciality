@@ -253,7 +253,7 @@ const AboutPage = ({ lang }) => {
             </p>
           </div>
           <motion.div
-            className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-left"
+            className="max-w-6xl mx-auto grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-left"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -318,7 +318,7 @@ const AboutPage = ({ lang }) => {
             </p>
           </div>
           <motion.div
-            className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 text-left"
+            className="max-w-6xl mx-auto grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-left"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
