@@ -187,7 +187,7 @@ const ResultManagement = () => {
 
     if (loading) {
         return (
-            <div className="flex-1 pt-14 md:pt-0 p-4 flex items-center justify-center">
+            <div className="flex-1 pt-14 xl:pt-0 p-4 flex items-center justify-center">
                 <div className="text-gray-500">Loading patients...</div>
             </div>
         );
@@ -195,7 +195,7 @@ const ResultManagement = () => {
 
     if (error) {
         return (
-            <div className="flex-1 pt-14 md:pt-0 p-4 flex items-center justify-center">
+            <div className="flex-1 pt-14 xl:pt-0 p-4 flex items-center justify-center">
                 <div className="text-red-500">{error}</div>
                 <div className="ml-4 space-x-2">
                     <button 
@@ -216,7 +216,7 @@ const ResultManagement = () => {
     }
 
     return (
-        <div className="flex-1 pt-14 md:pt-0">
+        <div className="flex-1 pt-14 xl:pt-0">
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
                 <div className="px-4 md:px-6 py-4 flex items-center justify-between">

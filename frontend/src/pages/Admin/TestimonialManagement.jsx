@@ -185,7 +185,7 @@ const renderUserAvatar = (testimonial) => {
         <div className="p-6 bg-gray-50 min-h-screen">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
-                    <h1 className="text-xl font-bold text-gray-900 mb-2 flex items-center mt-14 md:mt-0">
+                    <h1 className="text-xl font-bold text-gray-900 mb-2 flex items-center mt-14 xl:mt-0">
                         <MessageSquare className="h-8 w-8 mr-2 text-blue-600" />
                         Testimonial Management
                     </h1>

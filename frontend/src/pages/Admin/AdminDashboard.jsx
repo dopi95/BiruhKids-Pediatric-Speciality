@@ -218,7 +218,7 @@ const AdminDashboard = () => {
             <div className="bg-white shadow-sm border-b">
                 <div className="px-6 py-4 flex items-center justify-between">
                     <div>
-                        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mt-14 md:mt-0">
+                        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mt-14 xl:mt-0">
                             Admin Dashboard
                         </h1>
                         <p className="text-gray-600 text-sm sm:text-base">
@@ -277,7 +277,7 @@ const AdminDashboard = () => {
                         Quick Actions
                     </h2>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                     {finalQuickActions.map((action, index) => (
                         <a
                             key={index}

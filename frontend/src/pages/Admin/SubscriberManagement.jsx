@@ -214,7 +214,7 @@ const SubscriberManagement = () => {
     return (
         <div className="flex-1">
             {/* Header */}
-            <div className="bg-white border-b shadow-sm mt-14 sm:mt-0">
+            <div className="bg-white border-b shadow-sm mt-14 xl:mt-0">
                 <div className="px-6 py-4 flex flex-col gap-4 sm:flex-row items-center justify-between">
                     <div>
                         <h1 className="text-xl md:text-2xl font-bold text-gray-900">

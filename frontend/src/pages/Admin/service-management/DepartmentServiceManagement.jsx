@@ -134,7 +134,7 @@ export default function DepartmentServiceManagement() {
     return (
         <div className="bg-gray-50 mx-5">
             {/* Header */}
-            <div className="bg-white shadow-sm border-b px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between sm:items-center mt-14 md:mt-0">
+            <div className="bg-white shadow-sm border-b px-6 py-4 flex flex-col gap-4 sm:flex-row justify-between sm:items-center mt-14 xl:mt-0">
                 <div>
                     <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                         Department & Service Management
@@ -152,19 +152,19 @@ export default function DepartmentServiceManagement() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
-                <div className="bg-white p-6 rounded-lg shadow">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-6 md:my-8">
+                <div className="bg-white p-6 rounded-lg shadow-sm">
                     <h3 className="text-lg font-semibold text-gray-900">Total Departments</h3>
                     <p className="text-3xl font-bold text-blue-600">{departments.length}</p>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-white p-6 rounded-lg shadow-sm">
                     <h3 className="text-lg font-semibold text-gray-900">Total Services</h3>
                     <p className="text-3xl font-bold text-green-600">{totalServices}</p>
                 </div>
             </div>
 
             {/* Search */}
-            <div className="bg-white p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="bg-white p-4 md:p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h2 className="text-lg font-semibold text-gray-900">All Departments & Services</h2>
                 <div className="flex items-center border rounded-lg overflow-hidden w-full sm:w-auto">
                     <input
@@ -172,14 +172,14 @@ export default function DepartmentServiceManagement() {
                         placeholder="Search departments or services..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="px-3 py-2 outline-none w-full sm:w-60"
+                        className="px-3 py-2 outline-none w-full sm:w-64 md:w-80"
                     />
                     <Search className="h-5 w-5 text-gray-400 mr-2" />
                 </div>
             </div>
 
             {/* Departments List */}
-            <div className="space-y-4 pb-6">
+            <div className="space-y-4 md:space-y-6 pb-6">
                 {filteredDepartments.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
                         <p className="text-gray-500 mb-4">No departments found</p>

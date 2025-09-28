@@ -81,14 +81,14 @@ export default function AdminProfile() {
 
     if (loading) {
         return (
-            <div className="flex-1 mt-20 sm:mt-0 flex items-center justify-center">
+            <div className="flex-1 mt-14 xl:mt-0 flex items-center justify-center">
                 <div className="text-gray-500">Loading profile...</div>
             </div>
         );
     }
 
     return (
-        <div className="flex-1 mt-20 sm:mt-0">
+        <div className="flex-1 mt-14 xl:mt-0">
             <ProfileHeader
                 isEditing={isEditing}
                 onEdit={() => setIsEditing(true)}

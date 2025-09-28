@@ -11,27 +11,32 @@ export default function Footer({ lang }) {
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
-    
+
     if (!email || !email.includes("@")) {
       toast.error("Please enter a valid email address");
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers/subscribe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/subscribers/subscribe`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       const data = await response.json();
 
       if (data.success) {
-        toast.success("🎉 Successfully subscribed! Check your email for confirmation.");
+        toast.success(
+          "🎉 Successfully subscribed! Check your email for confirmation."
+        );
         setEmail("");
       } else {
         toast.error(data.message || "Subscription failed");
@@ -46,9 +51,8 @@ export default function Footer({ lang }) {
 
   const translations = {
     en: {
-      name:"BiruhKids",
-      description:
-        "Where childrens become bright and healthy!",
+      name: "BiruhKids",
+      description: "Where childrens become bright and healthy!",
       quickLinks: "Quick Links",
       home: "Home",
       about: "About Us",
@@ -56,21 +60,21 @@ export default function Footer({ lang }) {
       videos: "Videos",
       contact: "Contact",
       contactInfo: "Contact Info",
-      address:
-        "Torhayloch 100 meters from augusta bridge, Addis Ababa, Ethiopia",
+      address: [
+        "Torhayloch 100 meters",
+        "from augusta bridge.",
+        "Addis Ababa, Ethiopia",
+      ],
       newsletter: "Newsletter",
-      subscribeText:
-        "Subscribe to get updates on health tips and clinic news.",
+      subscribeText: "Subscribe to get updates on health tips and clinic news.",
       placeholder: "Enter your email",
       subscribe: "Subscribe",
       unsubscribe: "Unsubscribe",
-      copyright:
-        "© 2025 All rights reserved. Developed by ",
+      copyright: "© 2025 All rights reserved. Developed by ",
     },
     am: {
-      name:"ብሩህኪድስ",
-      description:
-        'ልጆች ብሩህ እና ጤናማ የሚሆኑበት!',
+      name: "ብሩህኪድስ",
+      description: "ልጆች ብሩህ እና ጤናማ የሚሆኑበት!",
       quickLinks: "ፈጣን አገናኞች",
       home: "መነሻ",
       about: "ስለ እኛ",
@@ -78,16 +82,13 @@ export default function Footer({ lang }) {
       videos: "ቪዲዮዎች",
       contact: "አግኙን",
       contactInfo: "የእውቂያ መረጃ",
-      address:
-        "ጦርሃይሎች አውጉስታ ድልድይ ከሕብር አካዳሚ ት/ቤት ፊትለፊት ያገኙናል አዲስ አበባ፣ ኢትዮጵያ",
+      address: ["ጦርሃይሎች አውጉስታ ድልድይ", "ከሕብር አካዳሚ ት/ቤት ፊትለፊት", "አዲስ አበባ፣ ኢትዮጵያ"],
       newsletter: "ኒውስሌተር",
-      subscribeText:
-        "የጤና ምክሮችንና የክሊኒክ ዜናዎችን ለማወቅ ይመዝገቡ።",
+      subscribeText: "የጤና ምክሮችንና የክሊኒክ ዜናዎችን ለማወቅ ይመዝገቡ።",
       placeholder: "ኢሜይልዎን ያስገቡ",
       subscribe: "ይመዝገቡ",
       unsubscribe: "ከደረሰኝ ላይ ይውጡ",
-      copyright:
-        "© 2017 ሁሉም መብቶች ተጠብቀዋል። የተገነባ በ ",
+      copyright: "© 2017 ሁሉም መብቶች ተጠብቀዋል። የተገነባ በ ",
     },
   };
 
@@ -203,8 +204,12 @@ export default function Footer({ lang }) {
                 </span>
               </div>
               <div className="flex items-start space-x-3">
-                <MapPin className="h-4 w-4 text-blue-400 mt-1" />
-                <span className="text-gray-300 text-sm">{t.address}</span>
+                <MapPin className="h-5 w-5 text-blue-400 mt-1" />
+                <div className="text-gray-300 text-sm">
+                  {t.address.map((line, index) => (
+                    <div key={index}>{line}</div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -225,7 +230,9 @@ export default function Footer({ lang }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full text-white px-4 py-2 rounded-md transition-colors duration-200 bg-blue-600 hover:bg-blue-700 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`w-full text-white px-4 py-2 rounded-md transition-colors duration-200 bg-blue-600 hover:bg-blue-700 ${
+                  isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 {isSubmitting ? "Processing..." : t.subscribe}
               </button>
@@ -247,7 +254,7 @@ export default function Footer({ lang }) {
           </p>
         </div>
       </div>
-       <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}

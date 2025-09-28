@@ -129,7 +129,7 @@ const UserManagement = () => {
     <div className="bg-gray-50">
       <div>
         {/* Header */}
-        <div className="bg-white shadow-sm border-b mt-14 md:mt-0">
+        <div className="bg-white shadow-sm border-b mt-14 xl:mt-0">
           <div className="px-4 sm:px-6 py-4">
             <h1 className="text-xl md:text-2xl font-bold text-gray-900">
               User Management

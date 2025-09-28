@@ -4,14 +4,16 @@ import Logo from "../assets/logo.png";
 import { Menu, X, ChevronRight, Globe, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { getUserDisplayName } from "../utils/authHelpers";
 
-function Header({ lang, setLang }) {
+function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { language: lang, changeLanguage } = useLanguage();
 
   function toggleLang() {
-    setLang((prevLang) => (prevLang === "En" ? "Am" : "En"));
+    changeLanguage(lang === "En" ? "Am" : "En");
   }
 
   function handleCloseMenu() {
@@ -69,20 +71,20 @@ function Header({ lang, setLang }) {
   };
 
   return (
-    <nav className="w-full h-[8vh] md:h-[10vh] sticky top-0 bg-white shadow-md z-50">
+    <nav className="w-full h-16 sticky top-0 bg-white shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img
             src={Logo}
             alt="Logo"
-            className=" w-22 h-8 animate-logo-text-flip"
+            className="w-20 h-8 lg:w-24 lg:h-10 animate-logo-text-flip"
             style={{ transformOrigin: "center" }}
           />
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-6 items-center">
+        <div className="hidden xl:flex space-x-6 items-center">
           <Link to="/" className="hover:text-orange-500 transition">
             {translations[lang].home}
           </Link>
@@ -101,7 +103,7 @@ function Header({ lang, setLang }) {
         </div>
 
         {/* Desktop Right Side */}
-        <div className="hidden md:flex space-x-4 items-center md:gap-4">
+        <div className="hidden xl:flex items-center gap-4">
           <Link
             to="/appointment"
             className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
@@ -114,8 +116,7 @@ function Header({ lang, setLang }) {
             <>
               <Link
                 to={user.role === "user" ? "/user-dashboard" : "/admin"}
-                className="relative text-blue-500 font-semibold flex items-center 
-                                   hover:text-blue-600 transition group"
+                className="relative text-blue-500 font-semibold flex items-center hover:text-blue-600 transition group whitespace-nowrap"
               >
                 <User className="w-4 h-4 mr-1" />
                 {translations[lang].dashboard}
@@ -124,8 +125,7 @@ function Header({ lang, setLang }) {
               </Link>
               <button
                 onClick={logout}
-                className="relative text-red-500 font-semibold flex items-center 
-                                   hover:text-red-600 transition group"
+                className="relative text-red-500 font-semibold flex items-center hover:text-red-600 transition group whitespace-nowrap"
               >
                 <LogOut className="w-4 h-4 mr-1" />
                 {translations[lang].logout}
@@ -133,8 +133,7 @@ function Header({ lang, setLang }) {
               </button>
               <Link
                 to={user.role === "user" ? "/profile" : "/admin/profile"}
-                className="relative text-gray-600 font-medium flex items-center 
-                                   hover:text-gray-800 transition group"
+                className="relative text-gray-600 font-medium flex items-center hover:text-gray-800 transition group whitespace-nowrap"
               >
                 <User className="w-4 h-4 mr-1" />
                 {getUserDisplayName(user)}
@@ -146,8 +145,7 @@ function Header({ lang, setLang }) {
             <>
               <Link
                 to="/login"
-                className="relative text-blue-500 font-semibold flex items-center 
-                                   hover:text-blue-600 transition group"
+                className="relative text-blue-500 font-semibold flex items-center hover:text-blue-600 transition group whitespace-nowrap"
               >
                 {translations[lang].login}{" "}
                 <ChevronRight className="inline ml-0 transform transition-transform duration-300 group-hover:translate-x-1" />
@@ -155,7 +153,7 @@ function Header({ lang, setLang }) {
               </Link>
               <Link
                 to="/register"
-                className="relative text-blue-500 font-semibold hover:text-blue-600 transition group"
+                className="relative text-blue-500 font-semibold hover:text-blue-600 transition group whitespace-nowrap"
               >
                 {translations[lang].register}
                 <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
@@ -163,7 +161,7 @@ function Header({ lang, setLang }) {
             </>
           )}
 
-          <section className="flex items-center">
+          <section className="flex items-center ml-2">
             <Globe className="w-5 h-5 cursor-pointer" onClick={toggleLang} />
             <button className="px-1 cursor-pointer" onClick={toggleLang}>
               {lang === "En" ? "አማ" : "En"}
@@ -171,8 +169,8 @@ function Header({ lang, setLang }) {
           </section>
         </div>
 
-        {/* Mobile Right Side */}
-        <div className="md:hidden flex items-center gap-3">
+        {/* Mobile/Tablet Right Side */}
+        <div className="xl:hidden flex items-center gap-3">
           <section className="flex items-center">
             <Globe className="w-5 h-5 cursor-pointer" onClick={toggleLang} />
             <button className="px-2 cursor-pointer" onClick={toggleLang}>
@@ -195,7 +193,7 @@ function Header({ lang, setLang }) {
             animate="visible"
             exit="exit"
             variants={menuVariants}
-            className="md:hidden absolute top-full left-0 w-full flex flex-col items-center bg-white px-4 pt-2 pb-4 space-y-4 shadow-md border-t"
+            className="xl:hidden absolute top-full left-0 w-full flex flex-col items-center bg-white px-4 pt-2 pb-4 space-y-4 shadow-md border-t"
           >
             {[
               { to: "/", label: translations[lang].home },

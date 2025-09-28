@@ -160,7 +160,7 @@ const AdminVideos = () => {
             <div className="flex-1">
                 {/* Header */}
                 <div className="bg-white shadow-sm border-b">
-                    <div className="px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between mt-14 md:mt-0">
+                    <div className="px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between mt-14 xl:mt-0">
                         <div className="mb-4 md:mb-0">
                             <h1 className="text-xl md:text-2xl font-bold text-gray-900">
                                 Video Management

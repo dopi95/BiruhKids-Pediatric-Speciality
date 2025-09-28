@@ -1,12 +1,12 @@
 
-import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Chatbot from "../components/Chatbot";
+import { useLanguage } from "../context/LanguageContext";
 import React from "react";
 
 export default function MainLayout({ children }) {
-    const [lang, setLang] = useState("En");
+    const { language: lang, changeLanguage: setLang } = useLanguage();
 
     const enhancedChildren = Array.isArray(children)
         ? children.map((child) =>
@@ -20,7 +20,7 @@ export default function MainLayout({ children }) {
 
     return (
         <div>
-            <Header lang={lang} setLang={setLang} />
+            <Header />
             <main>{enhancedChildren}</main>
             <Footer lang={lang === "En" ? "en" : "am"} />
             <Chatbot />

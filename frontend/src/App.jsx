@@ -37,6 +37,7 @@ import UnsubscribePage from "./pages/UnsubscribePage";
 import AdminLayout from "./layouts/AdminLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import NotFound from "./pages/NotFound";
@@ -48,7 +49,8 @@ export default function App() {
     }, []);
 
     return (
-        <SEOProvider>
+
+        <LanguageProvider>
             <AuthProvider>
                 <Router>
                 <ScrollToTop /> 
@@ -346,6 +348,7 @@ export default function App() {
                 />
                 </Router>
             </AuthProvider>
-        </SEOProvider>
+
+        </LanguageProvider>
     );
 }
