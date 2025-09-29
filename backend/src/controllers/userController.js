@@ -188,6 +188,23 @@ export const deleteUser = asyncHandler(async (req, res) => {
     });
 });
 
+// @desc    Get patients only (for result management)
+// @route   GET /api/users/patients
+// @access  Private (Result management permission)
+export const getPatients = asyncHandler(async (req, res) => {
+    const patients = await User.find({ 
+        $or: [
+            { role: 'user' },
+            { role: { $exists: false } }
+        ]
+    }).select("-password -refreshToken");
+    
+    res.json({
+        success: true,
+        users: patients,
+    });
+});
+
 // @desc    Get user statistics
 // @route   GET /api/users/stats
 // @access  Private (Admin only)

@@ -77,7 +77,7 @@ const ResultManagement = () => {
             );
             
             const response = await Promise.race([
-                userService.getUsers(),
+                userService.getPatients(), // Use getPatients instead of getUsers
                 timeoutPromise
             ]);
             
@@ -96,15 +96,11 @@ const ResultManagement = () => {
             
             setAllUsers(usersData);
             
-            // Filter out admin and super_admin users, keep only regular users
-            const regularUsersOnly = usersData.filter(user => 
-                user.role === 'user' || !user.role // Include users with no role or 'user' role
-            );
-            
-            setRegularUsers(regularUsersOnly);
-            setFilteredUsers(regularUsersOnly);
+            // Since getPatients already returns only regular users, no need to filter
+            setRegularUsers(usersData);
+            setFilteredUsers(usersData);
         } catch (err) {
-            console.error("Error fetching users:", err);
+            console.error("Error fetching patients:", err);
             
             // Retry once if first attempt fails
             if (retryCount === 0) {
@@ -112,7 +108,7 @@ const ResultManagement = () => {
                 return;
             }
             
-            setError("Failed to fetch users. Please check your connection and try again.");
+            setError("Failed to fetch patients. Please check your connection and try again.");
         } finally {
             setLoading(false);
         }
