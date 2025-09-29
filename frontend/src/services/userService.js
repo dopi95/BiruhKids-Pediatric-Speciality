@@ -51,6 +51,17 @@ const deleteUser = async (userId) => {
   return response.data;
 };
 
+// Get patients only (for result management)
+const getPatients = async () => {
+  const token = getAuthToken();
+  const response = await axios.get(`${API_URL}/patients`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 // Get user statistics
 const getUserStats = async () => {
   const token = getAuthToken();
@@ -113,6 +124,7 @@ const deleteAdmin = async (adminId) => {
 const userService = {
   createAdmin,
   getUsers,
+  getPatients,
   getAdmins,
   updateUser,
   updateAdmin,

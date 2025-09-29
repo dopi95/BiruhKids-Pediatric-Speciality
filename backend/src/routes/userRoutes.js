@@ -1,11 +1,14 @@
 import express from 'express';
-import { createAdmin, getUsers, getUserById, updateUser, deleteUser, getUserStats } from '../controllers/userController.js';
+import { createAdmin, getUsers, getPatients, getUserById, updateUser, deleteUser, getUserStats } from '../controllers/userController.js';
 import { protect, requirePermission } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 // User statistics - requires user management permission
 router.get('/stats', protect, requirePermission('userManagement'), getUserStats);
+
+// Get patients only - requires result management permission
+router.get('/patients', protect, requirePermission('resultManagement'), getPatients);
 
 // Admin creation route - requires super admin or admin management permission
 router.post('/admin', protect, requirePermission('adminManagement'), createAdmin);
