@@ -25,9 +25,14 @@ export const createDoctor = async (req, res) => {
     const savedDoctor = await doctor.save();
     
     // Send newsletter asynchronously (non-blocking)
-    sendNewDoctorNewsletter(savedDoctor).catch(error => {
-      console.error("Newsletter sending failed:", error);
-    });
+    console.log('Attempting to send doctor newsletter...');
+    sendNewDoctorNewsletter(savedDoctor)
+      .then(result => {
+        console.log('Doctor newsletter result:', result);
+      })
+      .catch(error => {
+        console.error("Newsletter sending failed:", error);
+      });
     
     res.status(201).json({
       success: true,
