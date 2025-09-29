@@ -58,7 +58,7 @@ const AdminDashboard = () => {
         ? allQuickActions.slice(0, 3) // Show first 3 basic actions
         : quickActions;
 
-    const [statsData, setStatsData] = useState(finalStats);
+    const [statsData, setStatsData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -79,7 +79,7 @@ const AdminDashboard = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const newStats = [...statsData];
+                const newStats = [...finalStats];
                 
                 const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
                 const token = localStorage.getItem('token');
@@ -92,47 +92,47 @@ const AdminDashboard = () => {
                 const fetchPromises = [];
                 const endpointMap = [];
 
-                // Users and results stats (if has userManagement or resultManagement)
-                if (user?.role === 'super_admin' || hasPermission('userManagement')) {
-                    fetchPromises.push(userService.getUsers().catch(() => null));
-                    endpointMap.push({ type: 'users', index: 0 });
-                }
-                
-                if (user?.role === 'super_admin' || hasPermission('resultManagement')) {
-                    fetchPromises.push(resultService.getResultStats().catch(() => null));
-                    endpointMap.push({ type: 'results', index: 2 });
-                }
-
-                // API endpoints with permission checks
-                if (user?.role === 'super_admin' || hasPermission('doctorManagement')) {
-                    fetchPromises.push(fetch(`${baseUrl}/doctors`, { headers }).catch(() => null));
-                    endpointMap.push({ type: 'doctors', index: 1 });
-                }
-
-                if (user?.role === 'super_admin' || hasPermission('testimonialManagement')) {
-                    fetchPromises.push(fetch(`${baseUrl}/testimonials`, { headers }).catch(() => null));
-                    endpointMap.push({ type: 'testimonials', index: 3 });
-                }
-
-                if (user?.role === 'super_admin' || hasPermission('subscriberManagement')) {
-                    fetchPromises.push(fetch(`${baseUrl}/subscribers/stats`, { headers }).catch(() => null));
-                    endpointMap.push({ type: 'subscribers', index: 4 });
-                }
-
-                if (user?.role === 'super_admin' || hasPermission('videoManagement')) {
-                    fetchPromises.push(fetch(`${baseUrl}/videos`, { headers }).catch(() => null));
-                    endpointMap.push({ type: 'videos', index: 5 });
-                }
-
-                if (user?.role === 'super_admin' || hasPermission('appointmentManagement')) {
-                    fetchPromises.push(fetch(`${baseUrl}/appointments`, { headers }).catch(() => null));
-                    endpointMap.push({ type: 'appointments', index: 6 });
-                }
-
-                if (user?.role === 'super_admin' || hasPermission('serviceManagement')) {
-                    fetchPromises.push(fetch(`${baseUrl}/departments`, { headers }).catch(() => null));
-                    endpointMap.push({ type: 'services', index: 7 });
-                }
+                // Map each visible stat to its corresponding API call
+                finalStats.forEach((stat, index) => {
+                    const permission = stat.permission;
+                    
+                    if (user?.role === 'super_admin' || hasPermission(permission)) {
+                        switch (permission) {
+                            case 'userManagement':
+                                fetchPromises.push(userService.getUsers().catch(() => null));
+                                endpointMap.push({ type: 'users', index });
+                                break;
+                            case 'doctorManagement':
+                                fetchPromises.push(fetch(`${baseUrl}/doctors`, { headers }).catch(() => null));
+                                endpointMap.push({ type: 'doctors', index });
+                                break;
+                            case 'resultManagement':
+                                fetchPromises.push(resultService.getResultStats().catch(() => null));
+                                endpointMap.push({ type: 'results', index });
+                                break;
+                            case 'testimonialManagement':
+                                fetchPromises.push(fetch(`${baseUrl}/testimonials`, { headers }).catch(() => null));
+                                endpointMap.push({ type: 'testimonials', index });
+                                break;
+                            case 'subscriberManagement':
+                                fetchPromises.push(fetch(`${baseUrl}/subscribers/stats`, { headers }).catch(() => null));
+                                endpointMap.push({ type: 'subscribers', index });
+                                break;
+                            case 'videoManagement':
+                                fetchPromises.push(fetch(`${baseUrl}/videos`, { headers }).catch(() => null));
+                                endpointMap.push({ type: 'videos', index });
+                                break;
+                            case 'appointmentManagement':
+                                fetchPromises.push(fetch(`${baseUrl}/appointments`, { headers }).catch(() => null));
+                                endpointMap.push({ type: 'appointments', index });
+                                break;
+                            case 'serviceManagement':
+                                fetchPromises.push(fetch(`${baseUrl}/departments`, { headers }).catch(() => null));
+                                endpointMap.push({ type: 'services', index });
+                                break;
+                        }
+                    }
+                });
 
                 const responses = await Promise.allSettled(fetchPromises);
 
@@ -202,7 +202,7 @@ const AdminDashboard = () => {
         };
 
         fetchData();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [user, hasPermission]); // Re-fetch when user or permissions change
 
     if (loading) {
         return (
