@@ -1,34 +1,24 @@
-import nodemailer from "nodemailer";
+import * as brevo from '@getbrevo/brevo';
 import Subscriber from "../models/Subscriber.js";
 import User from "../models/User.js";
 
-// Create transporter
-const createTransporter = () => {
-    return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: parseInt(process.env.EMAIL_PORT),
-        secure: false,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
+// Helper function to send email via Brevo API
+const sendBrevoEmail = async (to, subject, htmlContent, fromName = "Biruh Kids Clinic") => {
+    const apiInstance = new brevo.TransactionalEmailsApi();
+    apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+    
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.to = [{ email: to }];
+    sendSmtpEmail.sender = { name: fromName, email: process.env.EMAIL_FROM || process.env.EMAIL_USER };
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.htmlContent = htmlContent;
+    
+    return await apiInstance.sendTransacEmail(sendSmtpEmail);
 };
 
 // Send password reset OTP email
 export const sendPasswordResetOTP = async (email, otp) => {
-    const transporter = createTransporter();
-
-    const mailOptions = {
-        from: `"Biruh Kids Clinic" <${
-            process.env.EMAIL_FROM || process.env.EMAIL_USER
-        }>`,
-        to: email,
-        subject: "Password Reset OTP - Biruh Kids Clinic",
-        html: `
+    const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #007799;">Password Reset OTP</h2>
         <p>You have requested a password reset for your Biruh Kids Clinic account.</p>
@@ -41,11 +31,10 @@ export const sendPasswordResetOTP = async (email, otp) => {
         <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
         <p style="color: #666; font-size: 12px;">Biruh Kids Pediatric Specialty Clinic</p>
       </div>
-    `,
-    };
+    `;
 
     try {
-        await transporter.sendMail(mailOptions);
+        await sendBrevoEmail(email, "Password Reset OTP - Biruh Kids Clinic", htmlContent);
         return { success: true };
     } catch (error) {
         console.error("Email send error:", error);
@@ -53,17 +42,11 @@ export const sendPasswordResetOTP = async (email, otp) => {
     }
 };
 
-
 // Send welcome email (non-blocking)
 export const sendWelcomeEmail = (email, name) => {
     setImmediate(async () => {
         try {
-            const transporter = createTransporter();
-            const mailOptions = {
-                from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-                to: email,
-                subject: "Welcome to Biruh Kids Clinic!",
-                html: `
+            const htmlContent = `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #007799;">Welcome ${name}!</h2>
                 <p>Your account has been successfully created at Biruh Kids Pediatric Specialty Clinic.</p>
@@ -77,10 +60,9 @@ export const sendWelcomeEmail = (email, name) => {
                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
                 <p style="color: #666; font-size: 12px;">Biruh Kids Pediatric Specialty Clinic</p>
               </div>
-            `
-            };
+            `;
             
-            await transporter.sendMail(mailOptions);
+            await sendBrevoEmail(email, "Welcome to Biruh Kids Clinic!", htmlContent, "Biruh Kids Pediatric Speciality Clinic");
             console.log(`✅ Welcome email sent to ${email}`);
         } catch (error) {
             console.error(`❌ Failed to send welcome email to ${email}:`, error.message);
@@ -91,18 +73,13 @@ export const sendWelcomeEmail = (email, name) => {
 // Send result notification email (non-blocking)
 export const sendResultNotification = (email, name, resultFiles = []) => {
     setImmediate(async () => {
-        const transporter = createTransporter();
         const fileLinks = resultFiles.map(file => {
             const resourceType = file.mimetype === "application/pdf" ? "raw" : "image";
             const downloadUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${resourceType}/upload/fl_attachment/${file.cloudinaryPublicId}`;
             return `<li><a href="${downloadUrl}" style="color: #007799; text-decoration: none;">${file.originalName}</a></li>`;
         }).join('');
         
-        const mailOptions = {
-            from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-            to: email,
-            subject: "Test Results Available - Biruh Kids Clinic",
-            html: `
+        const htmlContent = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #007799;">Test Results Available</h2>
             <p>Dear ${name},</p>
@@ -120,10 +97,9 @@ export const sendResultNotification = (email, name, resultFiles = []) => {
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
             <p style="color: #666; font-size: 12px;">Biruh Kids Pediatric Specialty Clinic</p>
           </div>
-        `
-        };
+        `;
         try {
-            await transporter.sendMail(mailOptions);
+            await sendBrevoEmail(email, "Test Results Available - Biruh Kids Clinic", htmlContent, "Biruh Kids Pediatric Speciality Clinic");
             console.log(`Result notification sent to ${email}`);
         } catch (error) {
             console.error(`Failed to send result notification to ${email}:`, error);
@@ -133,14 +109,9 @@ export const sendResultNotification = (email, name, resultFiles = []) => {
 
 // Send subscription confirmation email
 export const sendSubscriptionEmail = async (email) => {
-    const transporter = createTransporter();
     const unsubscribeUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/subscribers/unsubscribe/${encodeURIComponent(email)}`;
 
-    const mailOptions = {
-        from: `"BiruhKids Pediatric Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-        to: email,
-        subject: "Welcome to BiruhKids Newsletter! 🎉",
-        html: `
+    const htmlContent = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
                 <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                     <div style="text-align: center; margin-bottom: 30px;">
@@ -156,11 +127,10 @@ export const sendSubscriptionEmail = async (email) => {
                     <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                 </div>
             </div>
-        `
-    };
+        `;
 
     try {
-        await transporter.sendMail(mailOptions);
+        await sendBrevoEmail(email, "Welcome to BiruhKids Newsletter! 🎉", htmlContent, "BiruhKids Pediatric Clinic");
         return { success: true };
     } catch (error) {
         console.error("Subscription email error:", error);
@@ -198,7 +168,6 @@ export const sendNewDoctorNewsletter = async (doctor) => {
             return { success: true, sent: 0 };
         }
 
-        const transporter = createTransporter();
         let sentCount = 0;
 
         // Process emails in batches of 10 for better performance
@@ -207,11 +176,7 @@ export const sendNewDoctorNewsletter = async (doctor) => {
             const batch = uniqueRecipients.slice(i, i + batchSize);
             
             const emailPromises = batch.map(async (recipient) => {
-                const mailOptions = {
-                    from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-                    to: recipient.email,
-                    subject: "New Doctor Joined Our Team! - Biruh Kids Clinic",
-                    html: `
+                const htmlContent = `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
                             <div style="background: white; padding: 30px; border-radius: 10px;">
                                 <h2 style="color: #007799; text-align: center;">🩺 New Doctor Alert!</h2>
@@ -231,11 +196,10 @@ export const sendNewDoctorNewsletter = async (doctor) => {
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                             </div>
                         </div>
-                    `
-                };
+                    `;
 
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sendBrevoEmail(recipient.email, "New Doctor Joined Our Team! - Biruh Kids Clinic", htmlContent, "Biruh Kids Pediatric Speciality Clinic");
                     console.log(`Newsletter sent to ${recipient.email}`);
                     return true;
                 } catch (error) {
@@ -278,7 +242,6 @@ export const sendNewServiceNewsletter = (service) => {
         
         if (uniqueRecipients.length === 0) return;
 
-        const transporter = createTransporter();
         let sentCount = 0;
         const batchSize = 10;
         
@@ -286,11 +249,7 @@ export const sendNewServiceNewsletter = (service) => {
             const batch = uniqueRecipients.slice(i, i + batchSize);
             
             const emailPromises = batch.map(async (recipient) => {
-                const mailOptions = {
-                    from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-                    to: recipient.email,
-                    subject: "New Service Available! - Biruh Kids Clinic",
-                    html: `
+                const htmlContent = `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
                             <div style="background: white; padding: 30px; border-radius: 10px;">
                                 <h2 style="color: #007799; text-align: center;">🏥 New Service Available!</h2>
@@ -312,10 +271,9 @@ export const sendNewServiceNewsletter = (service) => {
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                             </div>
                         </div>
-                    `
-                };
+                    `;
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sendBrevoEmail(recipient.email, "New Service Available! - Biruh Kids Clinic", htmlContent, "Biruh Kids Pediatric Speciality Clinic");
                     return true;
                 } catch (error) {
                     console.error(`Failed to send service newsletter to ${recipient.email}:`, error);
@@ -351,7 +309,6 @@ export const sendNewVideoNewsletter = (video) => {
         
         if (uniqueRecipients.length === 0) return;
 
-        const transporter = createTransporter();
         let sentCount = 0;
         const batchSize = 10;
 
@@ -359,11 +316,7 @@ export const sendNewVideoNewsletter = (video) => {
             const batch = uniqueRecipients.slice(i, i + batchSize);
             
             const emailPromises = batch.map(async (recipient) => {
-                const mailOptions = {
-                    from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-                    to: recipient.email,
-                    subject: "New Educational Video Available! - Biruh Kids Clinic",
-                    html: `
+                const htmlContent = `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
                             <div style="background: white; padding: 30px; border-radius: 10px;">
                                 <h2 style="color: #007799; text-align: center;">📹 New Educational Video!</h2>
@@ -390,10 +343,9 @@ export const sendNewVideoNewsletter = (video) => {
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                             </div>
                         </div>
-                    `
-                };
+                    `;
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sendBrevoEmail(recipient.email, "New Educational Video Available! - Biruh Kids Clinic", htmlContent, "Biruh Kids Pediatric Speciality Clinic");
                     return true;
                 } catch (error) {
                     console.error(`Failed to send video newsletter to ${recipient.email}:`, error);
@@ -429,7 +381,6 @@ export const sendNewDepartmentNewsletter = (department) => {
         
         if (uniqueRecipients.length === 0) return;
 
-        const transporter = createTransporter();
         let sentCount = 0;
         const batchSize = 10;
 
@@ -437,11 +388,7 @@ export const sendNewDepartmentNewsletter = (department) => {
             const batch = uniqueRecipients.slice(i, i + batchSize);
             
             const emailPromises = batch.map(async (recipient) => {
-                const mailOptions = {
-                    from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-                    to: recipient.email,
-                    subject: "New Department Available! - Biruh Kids Clinic",
-                    html: `
+                const htmlContent = `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
                             <div style="background: white; padding: 30px; border-radius: 10px;">
                                 <h2 style="color: #007799; text-align: center;">🏥 New Department Available!</h2>
@@ -463,10 +410,9 @@ export const sendNewDepartmentNewsletter = (department) => {
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                             </div>
                         </div>
-                    `
-                };
+                    `;
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sendBrevoEmail(recipient.email, "New Department Available! - Biruh Kids Clinic", htmlContent, "Biruh Kids Pediatric Speciality Clinic");
                     return true;
                 } catch (error) {
                     console.error(`Failed to send department newsletter to ${recipient.email}:`, error);
@@ -502,7 +448,6 @@ export const sendNewDepartmentServiceNewsletter = (department, service) => {
         
         if (uniqueRecipients.length === 0) return;
 
-        const transporter = createTransporter();
         let sentCount = 0;
         const batchSize = 10;
 
@@ -510,11 +455,7 @@ export const sendNewDepartmentServiceNewsletter = (department, service) => {
             const batch = uniqueRecipients.slice(i, i + batchSize);
             
             const emailPromises = batch.map(async (recipient) => {
-                const mailOptions = {
-                    from: `"Biruh Kids Pediatric Speciality Clinic" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-                    to: recipient.email,
-                    subject: "New Service Added! - Biruh Kids Clinic",
-                    html: `
+                const htmlContent = `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px;">
                             <div style="background: white; padding: 30px; border-radius: 10px;">
                                 <h2 style="color: #007799; text-align: center;">🩺 New Service Added!</h2>
@@ -532,10 +473,9 @@ export const sendNewDepartmentServiceNewsletter = (department, service) => {
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                             </div>
                         </div>
-                    `
-                };
+                    `;
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sendBrevoEmail(recipient.email, "New Service Added! - Biruh Kids Clinic", htmlContent, "Biruh Kids Pediatric Speciality Clinic");
                     return true;
                 } catch (error) {
                     console.error(`Failed to send department service newsletter to ${recipient.email}:`, error);

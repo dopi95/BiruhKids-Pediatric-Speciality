@@ -1,19 +1,17 @@
-import nodemailer from "nodemailer";
+import * as brevo from '@getbrevo/brevo';
 
-// Create transporter
-const createTransporter = () => {
-    return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: parseInt(process.env.EMAIL_PORT),
-        secure: false,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
+// Helper function to send email via Brevo API
+const sendBrevoEmail = async (to, subject, htmlContent, fromName = "BiruhKids Pediatric Clinic") => {
+    const apiInstance = new brevo.TransactionalEmailsApi();
+    apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+    
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.to = [{ email: to }];
+    sendSmtpEmail.sender = { name: fromName, email: process.env.EMAIL_FROM || process.env.EMAIL_USER };
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.htmlContent = htmlContent;
+    
+    return await apiInstance.sendTransacEmail(sendSmtpEmail);
 };
 
 // Email templates
@@ -166,8 +164,6 @@ const getCancellationEmailTemplate = (appointment, reason) => {
 // Send appointment email
 export const sendAppointmentEmail = async (appointment, type, reason = null) => {
     try {
-        const transporter = createTransporter();
-        
         let emailTemplate;
         if (type === "confirmed") {
             emailTemplate = getConfirmationEmailTemplate(appointment);
@@ -177,14 +173,13 @@ export const sendAppointmentEmail = async (appointment, type, reason = null) => 
             throw new Error("Invalid email type");
         }
         
-        const mailOptions = {
-            from: `"BiruhKids Pediatric Clinic" <${process.env.EMAIL_FROM}>`,
-            to: appointment.email,
-            subject: emailTemplate.subject,
-            html: emailTemplate.html
-        };
+        const result = await sendBrevoEmail(
+            appointment.email,
+            emailTemplate.subject,
+            emailTemplate.html,
+            "BiruhKids Pediatric Clinic"
+        );
         
-        const result = await transporter.sendMail(mailOptions);
         console.log(`${type} email sent successfully:`, result.messageId);
         return result;
         

@@ -1,37 +1,28 @@
-import nodemailer from "nodemailer";
+import * as brevo from '@getbrevo/brevo';
 
-// Create transporter
-const createTransporter = () => {
-    return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: parseInt(process.env.EMAIL_PORT),
-        secure: false,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
+// Helper function to send email via Brevo API
+const sendBrevoEmail = async (to, subject, htmlContent, fromName = "BiruhKids Pediatric Clinic") => {
+    const apiInstance = new brevo.TransactionalEmailsApi();
+    apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+    
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.to = [{ email: to }];
+    sendSmtpEmail.sender = { name: fromName, email: process.env.EMAIL_FROM || process.env.EMAIL_USER };
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.htmlContent = htmlContent;
+    
+    return await apiInstance.sendTransacEmail(sendSmtpEmail);
 };
 
 // Send subscription confirmation email
 export const sendSubscriptionEmail = async (email) => {
     try {
-        console.log('Creating email transporter...');
-        const transporter = createTransporter();
+        console.log('Preparing subscription email...');
         
-        console.log('Generating unsubscribe URL...');
         const unsubscribeUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/subscribers/unsubscribe/${encodeURIComponent(email)}`;
         console.log('Unsubscribe URL:', unsubscribeUrl);
 
-        console.log('Preparing mail options...');
-        const mailOptions = {
-            from: `"BiruhKids Pediatric Clinic" <${process.env.EMAIL_USER}>`,
-            to: email,
-            subject: "Welcome to BiruhKids Newsletter! 🎉",
-            html: `
+        const htmlContent = `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
                     <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                         <div style="text-align: center; margin-bottom: 30px;">
@@ -85,16 +76,17 @@ export const sendSubscriptionEmail = async (email) => {
                         </div>
                     </div>
                 </div>
-            `
-        };
+            `;
 
-        console.log('Sending email with options:', {
-            from: mailOptions.from,
-            to: mailOptions.to,
-            subject: mailOptions.subject
-        });
+        console.log('Sending subscription email via Brevo API...');
         
-        const result = await transporter.sendMail(mailOptions);
+        const result = await sendBrevoEmail(
+            email,
+            "Welcome to BiruhKids Newsletter! 🎉",
+            htmlContent,
+            "BiruhKids Pediatric Clinic"
+        );
+        
         console.log(`Subscription confirmation email sent successfully to ${email}`);
         console.log('Email result:', result.messageId);
         return result;
@@ -103,7 +95,6 @@ export const sendSubscriptionEmail = async (email) => {
         console.error("Email error details:", {
             message: error.message,
             code: error.code,
-            command: error.command,
             response: error.response
         });
         throw error;
