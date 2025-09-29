@@ -121,11 +121,10 @@ const ResultForm = () => {
                     fileInputRef.current.value = "";
                 }
 
-                // Hide success after 3s
+                // Navigate back to result management after 2s
                 setTimeout(() => {
-                    setSubmitted(false);
-                    setSuccessMessage("");
-                }, 3000);
+                    navigate('/admin/results');
+                }, 2000);
             } catch (error) {
                 console.error("Error sending result:", error);
                 const errorMessage = error.response?.data?.message || "Failed to send result";
