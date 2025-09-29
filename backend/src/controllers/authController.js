@@ -47,8 +47,8 @@ export const register = asyncHandler(async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    // Send welcome email
-    await sendWelcomeEmail(user.email, user.name);
+    // Send welcome email (non-blocking)
+    sendWelcomeEmail(user.email, user.name);
 
     res.status(201).json({
         success: true,

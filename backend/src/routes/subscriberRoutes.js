@@ -1,7 +1,7 @@
 import express from "express";
 import Subscriber from "../models/Subscriber.js";
 import User from "../models/User.js";
-import { sendSubscriptionEmail } from "../utils/subscriptionEmailService.js";
+import { sendSubscriptionEmail } from "../utils/emailService.js";
 
 const router = express.Router();
 
@@ -36,15 +36,14 @@ router.post("/subscribe", async (req, res) => {
         // Send confirmation email for resubscription
         try {
           console.log(`Attempting to send resubscription email to: ${email}`);
-          await sendSubscriptionEmail(email);
-          console.log(`Resubscription email sent successfully to: ${email}`);
+          const emailResult = await sendSubscriptionEmail(email);
+          if (emailResult.success) {
+            console.log(`Resubscription email sent successfully to: ${email}`);
+          } else {
+            console.error(`Failed to send resubscription email to ${email}:`, emailResult.error);
+          }
         } catch (emailError) {
           console.error("Failed to send resubscription email:", emailError);
-          console.error("Resubscription email error details:", {
-            message: emailError.message,
-            code: emailError.code,
-            command: emailError.command
-          });
         }
 
         return res.json({
@@ -66,15 +65,14 @@ router.post("/subscribe", async (req, res) => {
     // Send confirmation email
     try {
       console.log(`Attempting to send subscription email to: ${email}`);
-      await sendSubscriptionEmail(email);
-      console.log(`Subscription email sent successfully to: ${email}`);
+      const emailResult = await sendSubscriptionEmail(email);
+      if (emailResult.success) {
+        console.log(`Subscription email sent successfully to: ${email}`);
+      } else {
+        console.error(`Failed to send subscription email to ${email}:`, emailResult.error);
+      }
     } catch (emailError) {
       console.error("Failed to send subscription email:", emailError);
-      console.error("Email error details:", {
-        message: emailError.message,
-        code: emailError.code,
-        command: emailError.command
-      });
       // Don't fail the subscription if email fails
     }
 
