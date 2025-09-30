@@ -257,6 +257,21 @@ const Hero = ({ lang = "En" }) => {
 										</Link>
 									</button>
 								</div>
+								{/* Dots - Inside slider box */}
+								<div className="flex justify-center mt-6 xs:mt-7 sm:mt-8 md:mt-9 lg:mt-6 xl:mt-8 space-x-1.5 xs:space-x-2 md:space-x-3">
+									{slides.map((_, index) => (
+										<button
+											key={index}
+											onClick={() => goToSlide(index)}
+											className={`transition-all duration-500 rounded-full border border-white/30 backdrop-blur-sm touch-manipulation ${
+												index === getActualSlideIndex()
+													? "w-6 xs:w-7 sm:w-8 md:w-10 lg:w-12 h-2.5 xs:h-3 md:h-3.5 lg:h-4 bg-gradient-to-r from-cyan-400 to-blue-500 scale-110 shadow-lg shadow-blue-500/50"
+													: "w-2.5 xs:w-3 md:w-3.5 lg:w-4 h-2.5 xs:h-3 md:h-3.5 lg:h-4 bg-white/40 hover:bg-white/60 hover:scale-110 active:scale-125"
+											}`}
+											aria-label={`Go to slide ${index + 1}`}
+										/>
+									))}
+								</div>
 							</div>
 						</div>
 					</div>
@@ -281,21 +296,7 @@ const Hero = ({ lang = "En" }) => {
 				<ChevronRight size={24} className="lg:w-7 lg:h-7 drop-shadow-lg" />
 			</button>
 
-			{/* Dots - Outside slider box */}
-			<div className="flex fixed xl:absolute bottom-8 xs:bottom-10 sm:bottom-12 md:bottom-6 lg:bottom-8 xl:bottom-2 left-1/2 transform -translate-x-1/2 space-x-1.5 xs:space-x-2 md:space-x-3 z-[80]">
-				{slides.map((_, index) => (
-					<button
-						key={index}
-						onClick={() => goToSlide(index)}
-						className={`transition-all duration-500 rounded-full border border-white/30 backdrop-blur-sm touch-manipulation ${
-							index === getActualSlideIndex()
-								? "w-6 xs:w-7 sm:w-8 md:w-10 lg:w-12 h-2.5 xs:h-3 md:h-3.5 lg:h-4 bg-gradient-to-r from-cyan-400 to-blue-500 scale-110 shadow-lg shadow-blue-500/50"
-								: "w-2.5 xs:w-3 md:w-3.5 lg:w-4 h-2.5 xs:h-3 md:h-3.5 lg:h-4 bg-white/40 hover:bg-white/60 hover:scale-110 active:scale-125"
-						}`}
-						aria-label={`Go to slide ${index + 1}`}
-					/>
-				))}
-			</div>
+
 		</div>
 	);
 };
