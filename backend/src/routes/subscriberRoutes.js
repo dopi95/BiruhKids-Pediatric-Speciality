@@ -105,10 +105,11 @@ router.get("/unsubscribe/:email", async (req, res) => {
       `);
 		}
 
-		// Find subscriber
+		// Find subscriber or user with email notifications
 		const subscriber = await Subscriber.findOne({ email: decodedEmail });
+		const user = await User.findOne({ email: decodedEmail, emailNotifications: true });
 
-		if (!subscriber) {
+		if (!subscriber && !user) {
 			return res.status(404).send(`
         <!DOCTYPE html>
         <html>
@@ -131,7 +132,7 @@ router.get("/unsubscribe/:email", async (req, res) => {
             
             <div class="warning">⚠️ Email Not Found</div>
             
-            <p>This email address was not found in our subscriber list.</p>
+            <p>This email address was not found in our mailing list.</p>
             
             <div class="email"><strong>Email:</strong> ${decodedEmail}</div>
             
@@ -146,7 +147,8 @@ router.get("/unsubscribe/:email", async (req, res) => {
       `);
 		}
 
-		if (subscriber.status === "unsubscribed") {
+		// Check if already unsubscribed
+		if (subscriber && subscriber.status === "unsubscribed" && (!user || !user.emailNotifications)) {
 			return res.status(200).send(`
         <!DOCTYPE html>
         <html>
@@ -184,10 +186,18 @@ router.get("/unsubscribe/:email", async (req, res) => {
       `);
 		}
 
-		// Update subscriber status
-		subscriber.status = "unsubscribed";
-		subscriber.unsubscribedAt = new Date();
-		await subscriber.save();
+		// Update subscriber status if exists
+		if (subscriber) {
+			subscriber.status = "unsubscribed";
+			subscriber.unsubscribedAt = new Date();
+			await subscriber.save();
+		}
+
+		// Update user email notifications if exists
+		if (user) {
+			user.emailNotifications = false;
+			await user.save();
+		}
 
 		res.send(`
       <!DOCTYPE html>
