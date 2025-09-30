@@ -297,7 +297,30 @@ const Chatbot = () => {
                     </button>
                   )}
                   <button
-                    onClick={() => setShowHistory(false)}
+                    onClick={() => {
+                      // Save current conversation to history before starting new chat
+                      if (messages.length > 1) {
+                        const conversation = {
+                          id: Date.now(),
+                          timestamp: new Date(),
+                          messages: [...messages]
+                        };
+                        setHistory(prev => [conversation, ...prev.slice(0, 9)]); // Keep last 10 conversations
+                      }
+                      
+                      setShowHistory(false);
+                      setMessages([
+                        {
+                          id: "1",
+                          text: "Hi! I'm here to help you with any questions about BiruhKids Pediatric Specialty Clinic. How can I assist you with your child's healthcare today?",
+                          sender: "bot",
+                          timestamp: new Date(),
+                        },
+                      ]);
+                      conversationHistory.current = [
+                        { role: "system", content: SYSTEM_PROMPT },
+                      ];
+                    }}
                     className="text-blue-600 text-sm font-medium hover:underline"
                   >
                     ➕ New Chat
@@ -323,7 +346,7 @@ const Chatbot = () => {
                       {conv.timestamp.toLocaleDateString()} {conv.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                     </span>
                     <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                      {conv.messages.length} messages
+                      {conv.messages.filter(m => m.sender === 'user').length} questions
                     </span>
                   </div>
                   <div className="text-sm text-gray-700 line-clamp-2">
