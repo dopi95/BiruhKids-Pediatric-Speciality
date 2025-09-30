@@ -11,6 +11,7 @@ export default function Faqs({ lang }) {
 
   // English FAQ
   const faqsEn = [
+    
     {
       question: "Where are you located?",
       answer:
@@ -22,9 +23,19 @@ export default function Faqs({ lang }) {
         "we offer all service of Pediatric cares pls call 0939602927 or 0963555552",
     },
     {
+      question: "How do I register or Create Account to the website?",
+      answer:
+        "To register, click either the 'Register' button in the header or the 'Get Started' button. Then complete the registration forms. Once your account is created, you can log in using your email and password. This gives you access to your personal account where you can view and control your results online.",
+    },
+    {
+      question: "How can I see my test results online?",
+      answer:
+        "After logging into your account, when we complete and send your results, you can check and view them in your dashboard. During registration, if you allow notifications, you will receive an email notification when your results are available. You can then check them on your dashboard or download them directly from the link we send in the email.",
+    },
+    {
       question: "Do you accept online booking?",
       answer:
-        "Yes, Book directly on our website and we are accepting in person booking pls call 0939602927 or 0963555552 for further information. If you book online, wait for verification we’ll notify you by email once confirmed.",
+        "Yes, Book directly on our website and we are accepting in person booking pls call 0939602927 or 0963555552 for further information. If you book online, wait for verification we'll notify you by email once confirmed.",
     },
     {
       question: "What type of laboratory service do you offer?",
@@ -35,6 +46,7 @@ export default function Faqs({ lang }) {
 
   // Amharic FAQ
   const faqsAm = [
+    
     {
       question: "የት ነው የሚገኙት?",
       answer:
@@ -45,6 +57,17 @@ export default function Faqs({ lang }) {
       answer:
         "ሁሉንም የህፃናት ህክምና አገልግሎቶችን እንሰጣለን ለበለጠ መረጃ ይደውሉ 0939602927 ወይም 0963555552",
     },
+    {
+      question: "በድረገጹ ላይ እንዴት መመዝገብ ወይም አካውንት መክፈት እችላለሁ?",
+      answer:
+        "ለመመዝገብ ከላይ ያለውን 'ይመዝገቡ' ወይም 'ይጀምሩ' የሚለውን ይጫኑ። ከዚያ የመመዝገቢያ ቅጾችን ይሙሉ. አንዴ መለያዎ ከተፈጠረ ኢሜልዎን እና የይለፍ ቃልዎን ተጠቅመው መግባት ይችላሉ። ይህ የእርስዎን ውጤቶች መመልከት እና መቆጣጠር የሚችሉበት የእርስዎን የግል መለያ አካውንት ይሰጥዎታል.",
+    },
+    {
+      question: "የምርመራ ውጤቶቼን በኦንላይን እንዴት ማየት እችላለሁ?",
+      answer:
+        "ወደ አካውንትዎ ከገቡ በኋላ፣ ውጤትዎን ስናስተላልፍ አካውንትዎ ላይ ሄደው ማየትና ማረጋገጥ ይችላሉ። በምዝገባ ሂደት ላይ ማሳወቂያዎችን ከፈቀዱ፣ ውጤትዎ ሲደርስ በኢሜይል ማሳወቂያ ይደርስዎታል። ከዚያ አካውንትዎ ላይ ማየት እና ማውረድ ወይም በኢሜይል ከላክንልዎ ሊንክ በቀጥታ ማውረድ ይችላሉ።",
+    },
+    
     {
       question: "ኦንላይን ቀጠሮ ማስያዝ ይቻላል?",
       answer:
@@ -116,7 +139,7 @@ export default function Faqs({ lang }) {
                     transition={{ duration: 0.4, ease: "easeInOut" }}
                   >
                     <div className="px-4 sm:px-6 pb-4 sm:pb-6">
-                      <p className="text-gray-600 text-sm sm:text-base leading-relaxed pl-7">
+                      <p className="text-gray-600 text-sm sm:text-base leading-relaxed pl-7 whitespace-pre-line">
                         {faq.answer}
                       </p>
                     </div>
