@@ -1,4 +1,4 @@
-# 🏥 BiruhKids Pediatric Specialty Clinic
+# 🏥 BiruhKids Pediatric Speciality Clinic
 
 <div align="center">
   <img src="./frontend/src/assets/logo.png" alt="BiruhKids Logo" width="200" height="200">

@@ -145,7 +145,7 @@ const Hero = ({ lang = "En" }) => {
 	};
 
 	const clinicName = {
-		en: "BiruhKids Pediatric Specialty Clinic",
+		en: "BiruhKids Pediatric Speciality Clinic",
 		am: "ብሩህኪድስ የህፃናት ልዩ ክሊኒክ",
 	};
 
