@@ -188,10 +188,7 @@ export const sendNewDoctorNewsletter = async (doctor) => {
                                     <p><strong>Specialty:</strong> ${doctor.field || 'Not specified'}</p>
                                     <p><strong>Experience:</strong> ${doctor.experience || 'Not specified'}</p>
                                 </div>
-                                <p style="text-align: center; color: #666;">We're excited to welcome Dr. ${doctor.name} to our team of pediatric specialists!</p>
-                                <div style="text-align: center; margin: 25px 0;">
-                                    <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/doctors" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">View All Doctors</a>
-                                </div>
+                                <p style="text-align: center; color: #666;">We're excited to welcome Dr. ${doctor.name} to our team</p>
                                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                             </div>
@@ -265,7 +262,7 @@ export const sendNewServiceNewsletter = (service) => {
                                 </div>
                                 <p style="text-align: center; color: #666;">We're excited to offer this new service to better serve your child's health needs!</p>
                                 <div style="text-align: center; margin: 25px 0;">
-                                    <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/services" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">View All Services</a>
+                                    <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/services" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">View All Services</a>
                                 </div>
                                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
@@ -402,10 +399,7 @@ export const sendNewDepartmentNewsletter = (department) => {
                                         </ul>
                                     ` : ''}
                                 </div>
-                                <p style="text-align: center; color: #666;">We're excited to offer this new department to better serve your child's health needs!</p>
-                                <div style="text-align: center; margin: 25px 0;">
-                                    <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/services" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">View All Departments</a>
-                                </div>
+                                <p style="text-align: center; color: #666;">We're excited to offer this new department to better serve your health needs!</p>
                                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                             </div>
@@ -466,9 +460,6 @@ export const sendNewDepartmentServiceNewsletter = (department, service) => {
                                     ${service.name_am ? `<p><strong>አማርኛ:</strong> ${service.name_am}</p>` : ''}
                                 </div>
                                 <p style="text-align: center; color: #666;">We've added a new service to our ${department.title_en} department!</p>
-                                <div style="text-align: center; margin: 25px 0;">
-                                    <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/services" style="background: #007799; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">View All Services</a>
-                                </div>
                                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
                                 <p style="color: #666; font-size: 12px; text-align: center;">Biruh Kids Pediatric Specialty Clinic</p>
                             </div>
