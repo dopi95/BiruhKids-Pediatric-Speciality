@@ -21,19 +21,7 @@ const Chatbot = () => {
     { role: "system", content: SYSTEM_PROMPT },
   ]);
 
-  // Load Puter SDK
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://js.puter.com/v2/";
-    script.async = true;
-    document.body.appendChild(script);
 
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-  }, []);
 
   // Load history from localStorage
   useEffect(() => {
@@ -54,34 +42,81 @@ const Chatbot = () => {
   }, [messages]);
 
   const generateAIResponse = async (userMessage) => {
-    if (!window.puter) {
-      return getFallbackResponse(userMessage);
-    }
-
     try {
-      conversationHistory.current.push({
-        role: "user",
-        content: userMessage,
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          conversationHistory: conversationHistory.current.slice(1) // Exclude system prompt
+        })
       });
 
-      const response = await window.puter.ai.chat(conversationHistory.current);
-      const reply = response.message?.content || getFallbackResponse(userMessage);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-      conversationHistory.current.push({
-        role: "assistant",
-        content: reply,
-      });
+      const data = await response.json();
+      
+      const reply = data.response || getIntelligentResponse(userMessage);
+
+      conversationHistory.current.push(
+        { role: "user", content: userMessage },
+        { role: "assistant", content: reply }
+      );
 
       return reply;
     } catch (error) {
-      console.error("AI response error:", error);
-      return getFallbackResponse(userMessage);
+      return getIntelligentResponse(userMessage);
     }
   };
 
-  const getFallbackResponse = (question) => {
+  const getIntelligentResponse = (question) => {
     const lowerQuestion = question.toLowerCase();
     
+    // Healthcare-specific keywords
+    const keywords = {
+      appointment: ["appointment", "book", "schedule", "visit"],
+      services: ["service", "treatment", "care", "what do you do"],
+      location: ["where", "location", "address", "find you"],
+      emergency: ["emergency", "urgent", "24/7", "immediate"],
+      hours: ["hours", "time", "open", "close", "when"],
+      cost: ["cost", "price", "fee", "charge", "payment"],
+      doctors: ["doctor", "pediatrician", "staff", "team"],
+      vaccination: ["vaccine", "immunization", "shot", "vaccination"],
+      nutrition: ["nutrition", "feeding", "diet", "food"],
+      lab: ["lab", "test", "blood", "urine", "laboratory"]
+    };
+
+    // Check for keyword matches
+    for (const [category, words] of Object.entries(keywords)) {
+      if (words.some(word => lowerQuestion.includes(word))) {
+        switch(category) {
+          case 'appointment':
+            return "📅 You can book an appointment online through our website or call us at ☎️ 0996505319 / 0939602927 / 0984650912. We're here to help schedule the best time for your child's visit!";
+          case 'services':
+            return "🏥 BiruhKids offers comprehensive pediatric care including OPD services, 24/7 emergency care, advanced laboratory & imaging, pediatric surgery, and nutrition counseling. We specialize in well-baby follow-ups, growth monitoring, and special needs evaluations.";
+          case 'location':
+            return "📍 We're located at Torhayloch, 100 meters from Augusta Bridge, Addis Ababa, Ethiopia. Easy to find and accessible for families!";
+          case 'emergency':
+            return "🚨 Yes! We provide 24/7 pediatric emergency services. For immediate emergencies, please call ☎️ 0996505319 / 0939602927 / 0984650912 right away.";
+          case 'doctors':
+            return "👨‍⚕️ Our experienced team includes specialized pediatricians, nurses, radiologists, and lab technicians - all dedicated to providing the best care for your child.";
+          case 'vaccination':
+            return "💉 Yes, we provide all recommended pediatric immunizations following national and international guidelines. Schedule a vaccination appointment today!";
+          case 'nutrition':
+            return "🥗 We offer specialized pediatric nutrition counseling for infant feeding, childhood nutrition, and management of undernutrition or obesity.";
+          case 'lab':
+            return "🔬 Our advanced laboratory provides comprehensive pediatric blood work, hormonal panels, metabolic testing, and infectious disease screening.";
+          default:
+            return FALLBACK_RESPONSES.default;
+        }
+      }
+    }
+    
+    // Check original fallback responses
     for (const [key, response] of Object.entries(FALLBACK_RESPONSES)) {
       if (lowerQuestion.includes(key.replace(/\?/g, ""))) {
         return response;
@@ -118,8 +153,7 @@ const Chatbot = () => {
 
       setMessages((prev) => [...prev, botMessage]);
       
-      const newConversation = [userMessage, botMessage];
-      setHistory((prev) => [...prev, newConversation]);
+      // History is now saved when closing chat
     } catch (error) {
       console.error("Error sending message:", error);
       const errorMessage = {
@@ -143,7 +177,23 @@ const Chatbot = () => {
 
   const handleClose = () => {
     setOpen(false);
-    setMessages([]); // clear current chat when closing
+    // Save current conversation to history before clearing
+    if (messages.length > 1) {
+      const conversation = {
+        id: Date.now(),
+        timestamp: new Date(),
+        messages: [...messages]
+      };
+      setHistory(prev => [conversation, ...prev.slice(0, 9)]); // Keep last 10 conversations
+    }
+    setMessages([
+      {
+        id: "1",
+        text: "Hi! I'm here to help you with any questions about BiruhKids Pediatric Specialty Clinic. How can I assist you with your child's healthcare today?",
+        sender: "bot",
+        timestamp: new Date(),
+      },
+    ]);
     setTyping(false);
   };
 
@@ -161,7 +211,7 @@ const Chatbot = () => {
 
       {/* Chat Popup */}
       {open && (
-        <div className="fixed bottom-6 inset-x-2 mx-auto z-50 w-[95%] max-w-sm h-[70vh] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden border border-gray-200 sm:inset-x-auto sm:right-6 sm:mx-0 sm:w-96 sm:h-[520px]">
+        <div className="fixed bottom-6 inset-x-2 mx-auto z-50 w-[95%] max-w-md h-[75vh] bg-white shadow-2xl rounded-2xl flex flex-col overflow-hidden border border-gray-200 sm:inset-x-auto sm:right-6 sm:mx-0 sm:w-[420px] sm:h-[580px] md:w-[450px] lg:w-[480px]">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white flex justify-between items-center p-4">
             <div>
@@ -194,7 +244,7 @@ const Chatbot = () => {
               {messages.map((msg, i) => (
                 <div
                   key={i}
-                  className={`max-w-[75%] px-3 py-2 rounded-2xl text-sm ${
+                  className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                     msg.sender === "user"
                       ? "bg-blue-500 text-white ml-auto rounded-br-none"
                       : "bg-white border shadow-sm text-gray-800 rounded-bl-none"
@@ -230,27 +280,29 @@ const Chatbot = () => {
               </div>
 
               {history.length === 0 && (
-                <p className="text-gray-500 text-sm mt-2">No history yet.</p>
+                <p className="text-gray-500 text-sm mt-2">No chat history yet. Start a conversation and it will be saved here when you close the chat.</p>
               )}
 
               {history.map((conv, idx) => (
                 <div
-                  key={idx}
-                  className="p-3 bg-white border rounded-lg shadow-sm space-y-2"
+                  key={conv.id}
+                  className="p-4 bg-white border rounded-lg shadow-sm space-y-3 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => {
+                    setMessages(conv.messages);
+                    setShowHistory(false);
+                  }}
                 >
-                  {conv.map((msg, i) => (
-                    <div
-                      key={i}
-                      className={`text-sm ${
-                        msg.sender === "user"
-                          ? "text-blue-700 font-medium"
-                          : "text-gray-700"
-                      }`}
-                    >
-                      {msg.sender === "user" ? "You: " : "Bot: "}
-                      {msg.text}
-                    </div>
-                  ))}
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">
+                      {conv.timestamp.toLocaleDateString()} {conv.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    </span>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                      {conv.messages.length} messages
+                    </span>
+                  </div>
+                  <div className="text-sm text-gray-700 line-clamp-2">
+                    <strong>First question:</strong> {conv.messages.find(m => m.sender === 'user')?.text || 'No question'}
+                  </div>
                 </div>
               ))}
             </div>
