@@ -76,11 +76,11 @@ export default function Footer({ lang }) {
       name: "ብሩህኪድስ",
       description: "ልጆች ብሩህ እና ጤናማ የሚሆኑበት!",
       quickLinks: "ፈጣን አገናኞች",
-      home: "መነሻ",
+      home: "ዋና ገጽ",
       about: "ስለ እኛ",
       services: "አገልግሎቶች",
       videos: "ቪዲዮዎች",
-      contact: "አግኙን",
+      contact: "ያግኙን",
       contactInfo: "የእውቂያ መረጃ",
       address: ["ጦርሃይሎች አውጉስታ ድልድይ", "ከሕብር አካዳሚ ት/ቤት ፊትለፊት", "አዲስ አበባ፣ ኢትዮጵያ"],
       newsletter: "ኒውስሌተር",
@@ -88,7 +88,7 @@ export default function Footer({ lang }) {
       placeholder: "ኢሜይልዎን ያስገቡ",
       subscribe: "ይመዝገቡ",
       unsubscribe: "ከደረሰኝ ላይ ይውጡ",
-      copyright: "© 2017 ሁሉም መብቶች ተጠብቀዋል። የተገነባ በ ",
+      copyright: "© 2018 ሁሉም መብቶች ተጠብቀዋል። የተገነባ በ ",
     },
   };
 
@@ -146,6 +146,7 @@ export default function Footer({ lang }) {
               <li>
                 <Link
                   to="/"
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   className="text-gray-300 hover:text-white transition-colors duration-200"
                 >
                   {t.home}
@@ -241,7 +242,7 @@ export default function Footer({ lang }) {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-400 text-sm whitespace-nowrap">
             {t.copyright}
             <a
               href="https://t.me/ChainTech_6/"

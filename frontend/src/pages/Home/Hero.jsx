@@ -194,12 +194,12 @@ const Hero = ({ lang = "En" }) => {
 				{extendedSlides.map((slide, index) => (
 					<div
 						key={`${slide.id}-${index}`}
-						className="min-w-full h-full relative flex items-center justify-center"
+						className="min-w-full h-full relative flex items-start md:items-center justify-center pt-16 xs:pt-20 sm:pt-24 md:pt-0"
 					>
-						<div className="text-center text-white px-3 xs:px-4 sm:px-6 lg:px-8 max-w-sm xs:max-w-md sm:max-w-3xl md:max-w-3xl lg:max-w-2xl xl:max-w-3xl mx-auto">
-							<div className="backdrop-blur-sm bg-white/8 rounded-xl sm:rounded-2xl pt-10 pb-9 px-5 xs:pt-12 xs:pb-10 xs:px-6 sm:pt-14 sm:pb-12 sm:px-7 md:pt-16 md:pb-14 md:px-8 lg:pt-8 lg:pb-7 lg:px-6 xl:pt-10 xl:pb-8 xl:px-7 border border-white/15 shadow-2xl">
+						<div className="text-center text-white px-3 xs:px-4 sm:px-6 lg:px-8 max-w-sm xs:max-w-md sm:max-w-3xl md:max-w-3xl lg:max-w-2xl xl:max-w-3xl mx-auto mt-0">
+							<div className="backdrop-blur-sm bg-white/8 rounded-xl sm:rounded-2xl pt-8 pb-7 px-5 xs:pt-10 xs:pb-8 xs:px-6 sm:pt-12 sm:pb-10 sm:px-7 md:pt-16 md:pb-14 md:px-8 lg:pt-8 lg:pb-7 lg:px-6 xl:pt-10 xl:pb-8 xl:px-7 border border-white/15 shadow-2xl">
 								{/* 24 Hour Service Announcement */}
-								<div className="mb-4 xs:mb-4 sm:mb-5 md:mb-6 lg:mb-5 flex justify-center">
+								<div className="mb-3 xs:mb-4 sm:mb-5 md:mb-6 lg:mb-5 flex justify-center">
 									<div className="relative overflow-hidden">
 										<div className="bg-gradient-to-r from-red-500 via-orange-500 to-red-500 text-white px-3 xs:px-4 sm:px-6 py-2 xs:py-2.5 sm:py-3 rounded-full shadow-2xl border border-white/20 backdrop-blur-md animate-pulse">
 											<div className="flex items-center gap-1.5 xs:gap-2 text-xs xs:text-sm md:text-base font-bold">
@@ -214,17 +214,17 @@ const Hero = ({ lang = "En" }) => {
 										<div className="absolute inset-0 bg-gradient-to-r from-red-400/50 via-orange-400/50 to-red-400/50 rounded-full blur-lg animate-pulse -z-10"></div>
 									</div>
 								</div>
-								<h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold mb-4 xs:mb-4 sm:mb-5 md:mb-6 lg:mb-3 xl:mb-5 leading-tight">
+								<h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold mb-3 xs:mb-4 sm:mb-5 md:mb-6 lg:mb-3 xl:mb-5 leading-tight">
 									<span className="bg-gradient-to-r from-blue-500 via-orange-500 to-blue-500 bg-clip-text text-transparent drop-shadow-2xl">
 										{lang === "En" ? clinicName.en : clinicName.am}
 									</span>
 								</h2>
-								<h3 className="text-lg xs:text-xl sm:text-2xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold mb-4 xs:mb-4 sm:mb-5 md:mb-6 lg:mb-3 xl:mb-5 leading-tight">
+								<h3 className="text-lg xs:text-xl sm:text-2xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold mb-3 xs:mb-4 sm:mb-5 md:mb-6 lg:mb-3 xl:mb-5 leading-tight">
 									<span className="text-white drop-shadow-2xl">
 										{slide.title[currentLang]}
 									</span>
 								</h3>
-								<p className="text-sm xs:text-base sm:text-lg md:text-lg lg:text-xl text-white/95 max-w-full leading-relaxed mb-5 xs:mb-6 sm:mb-7 md:mb-8 lg:mb-4 xl:mb-7 drop-shadow-xl px-2 xs:px-0">
+								<p className="text-sm xs:text-base sm:text-lg md:text-lg lg:text-xl text-white/95 max-w-full leading-relaxed mb-4 xs:mb-5 sm:mb-6 md:mb-8 lg:mb-4 xl:mb-7 drop-shadow-xl px-2 xs:px-0">
 									{slide.tagline[currentLang]}
 								</p>
 								<div className="flex flex-col gap-3 xs:gap-4 sm:flex-row sm:justify-center sm:gap-4 md:gap-6 lg:gap-8">
@@ -258,7 +258,7 @@ const Hero = ({ lang = "En" }) => {
 									</button>
 								</div>
 								{/* Dots - Inside slider box */}
-								<div className="flex justify-center mt-6 xs:mt-7 sm:mt-8 md:mt-9 lg:mt-6 xl:mt-8 space-x-1.5 xs:space-x-2 md:space-x-3">
+								<div className="flex justify-center mt-5 xs:mt-6 sm:mt-7 md:mt-9 lg:mt-6 xl:mt-8 space-x-1.5 xs:space-x-2 md:space-x-3">
 									{slides.map((_, index) => (
 										<button
 											key={index}
