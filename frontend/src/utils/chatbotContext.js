@@ -118,10 +118,7 @@ ANSWERING RULES:
 export const SAMPLE_PROMPTS = [
   "What services do you provide?",
   "How can I book an appointment?",
-  "Where are you located?",
   "Do you offer emergency care?",
-  "Do you provide nutrition counseling?",
-  "What makes BiruhKids different?",
 ];
 
 export const FALLBACK_RESPONSES = {
