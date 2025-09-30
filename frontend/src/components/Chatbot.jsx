@@ -87,7 +87,8 @@ const Chatbot = () => {
       doctors: ["doctor", "pediatrician", "staff", "team"],
       vaccination: ["vaccine", "immunization", "shot", "vaccination"],
       nutrition: ["nutrition", "feeding", "diet", "food"],
-      lab: ["lab", "test", "blood", "urine", "laboratory"]
+      lab: ["lab", "test", "blood", "urine", "laboratory"],
+      results: ["result", "report", "online", "receive", "get my", "check my"]
     };
 
     // Check for keyword matches
@@ -95,7 +96,7 @@ const Chatbot = () => {
       if (words.some(word => lowerQuestion.includes(word))) {
         switch(category) {
           case 'appointment':
-            return "📅 You can book an appointment online through our website or call us at ☎️ 0996505319 / 0939602927 / 0984650912. We're here to help schedule the best time for your child's visit!";
+            return "📅 You can book an appointment online through our website by filling out the appointment form. Once submitted, you'll receive a confirmation email or we'll call you to confirm your appointment. For further assistance, contact us at ☎️ 0996505319 / 0939602927 / 0984650912 or biruhkidsclinic@gmail.com.";
           case 'services':
             return "🏥 BiruhKids offers comprehensive pediatric care including OPD services, 24/7 emergency care, advanced laboratory & imaging, pediatric surgery, and nutrition counseling. We specialize in well-baby follow-ups, growth monitoring, and special needs evaluations.";
           case 'location':
@@ -110,6 +111,8 @@ const Chatbot = () => {
             return "🥗 We offer specialized pediatric nutrition counseling for infant feeding, childhood nutrition, and management of undernutrition or obesity.";
           case 'lab':
             return "🔬 Our advanced laboratory provides comprehensive pediatric blood work, hormonal panels, metabolic testing, and infectious disease screening.";
+          case 'results':
+            return "📋 Yes! You can receive your lab results and reports online. Here's how:\n\n1️⃣ Visit our website and log into your patient portal\n2️⃣ Or call us at ☎️ 0996505319 / 0939602927 / 0984650912 to request results via email\n3️⃣ Results are typically available within 24-48 hours\n\nFor urgent results, please call us directly. We'll guide you through accessing your child's medical reports securely online!";
           default:
             return FALLBACK_RESPONSES.default;
         }
