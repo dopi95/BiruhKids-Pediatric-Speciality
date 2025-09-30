@@ -97,7 +97,8 @@ CONTACT INFORMATION
 - Email: biruhkidsclinic@gmail.com  
 - Phone: 0996505319 / 0939602927 / 0984650912  
 - For emergencies: Call immediately  
-- For appointments: Online booking or phone call  
+- For appointments: Online booking or phone call
+- For results: Visit our website, click 'Sign In', enter your email and password, then you'll be redirected to your user dashboard where you can see your result history. Alternatively, call us at the phone numbers above. Results are typically available within 24-48 hours.  
 
 ----------------------------------------------------
 TONE GUIDELINES:
@@ -110,15 +111,16 @@ ANSWERING RULES:
 1. For medical questions: Provide general info + advise consulting our doctors.  
 2. For appointments: Direct to online booking or phone.  
 3. For emergencies: Urge immediate phone contact.  
-4. For services: Explain clearly.  
-5. For unknown/complex questions: Suggest contacting our team (email/phone).  
-6. Always end with: "Is there anything else I can help you with regarding your child's healthcare?"  
+4. For results: Direct to online access if registered or phone contact.  
+5. For services: Explain clearly.  
+6. For unknown/complex questions: Suggest contacting our team (email/phone).  
+7. Always end with: "Is there anything else I can help you with regarding your child's healthcare?"  
 `;
 
 export const SAMPLE_PROMPTS = [
   "What services do you provide?",
   "How can I book an appointment?",
-  "Do you offer emergency care?",
+  "Can I receive my results online?",
 ];
 
 export const FALLBACK_RESPONSES = {
@@ -132,13 +134,16 @@ export const FALLBACK_RESPONSES = {
     "✨ BiruhKids combines modern child-friendly facilities, advanced diagnostics, and highly experienced pediatric specialists. We also provide strong family support and community health education.",
 
   "how can i book an appointment?":
-    "📅 You can book online via our website or call us at ☎️ 0996505319 / 0939602927 / 0984650912. Walk-ins are accepted for urgent cases.",
+    "📅 You can book an appointment online through our website by filling out the appointment form. Once submitted, you'll receive a confirmation email or we'll call you to confirm your appointment. For further assistance, contact us at ☎️ 0996505319 / 0939602927 / 0984650912 or biruhkidsclinic@gmail.com.",
 
   "where are you located?":
     "📍 BiruhKids Pediatric Specialty Clinic is located at Torhayloch, 100 meters from Augusta Bridge, Addis Ababa.",
 
   "do you provide vaccinations?":
     "💉 Yes, BiruhKids provides all recommended pediatric immunizations, following national and international guidelines.",
+
+  "can i receive my results online?":
+    "📋 Yes! Visit our website, click 'Sign In', enter your email and password, then you'll be redirected to your user dashboard where you can see your result history. Alternatively, call ☎️ 0996505319 / 0939602927 / 0984650912. Results are typically available within 24-48 hours.",
 
   default:
     "Thank you for your question! For specific or complex inquiries, please contact us directly at biruhkidsclinic@gmail.com or ☎️ 0996505319 / 0939602927 / 0984650912. Is there anything else I can help you with regarding your child's healthcare?",

@@ -27,7 +27,17 @@ const Chatbot = () => {
   useEffect(() => {
     const savedHistory = localStorage.getItem("biruhkids-chatHistory");
     if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
+      const parsedHistory = JSON.parse(savedHistory);
+      // Convert timestamp strings back to Date objects
+      const historyWithDates = parsedHistory.map(conv => ({
+        ...conv,
+        timestamp: new Date(conv.timestamp),
+        messages: conv.messages.map(msg => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }))
+      }));
+      setHistory(historyWithDates);
     }
   }, []);
 
@@ -43,7 +53,7 @@ const Chatbot = () => {
 
   const generateAIResponse = async (userMessage) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +97,8 @@ const Chatbot = () => {
       doctors: ["doctor", "pediatrician", "staff", "team"],
       vaccination: ["vaccine", "immunization", "shot", "vaccination"],
       nutrition: ["nutrition", "feeding", "diet", "food"],
-      lab: ["lab", "test", "blood", "urine", "laboratory"]
+      lab: ["lab", "test", "blood", "urine", "laboratory"],
+      results: ["result", "report", "online", "receive", "get my", "check my"]
     };
 
     // Check for keyword matches
@@ -95,7 +106,7 @@ const Chatbot = () => {
       if (words.some(word => lowerQuestion.includes(word))) {
         switch(category) {
           case 'appointment':
-            return "📅 You can book an appointment online through our website or call us at ☎️ 0996505319 / 0939602927 / 0984650912. We're here to help schedule the best time for your child's visit!";
+            return "📅 You can book an appointment online through our website by filling out the appointment form. Once submitted, you'll receive a confirmation email or we'll call you to confirm your appointment. For further assistance, contact us at ☎️ 0996505319 / 0939602927 / 0984650912 or biruhkidsclinic@gmail.com.";
           case 'services':
             return "🏥 BiruhKids offers comprehensive pediatric care including OPD services, 24/7 emergency care, advanced laboratory & imaging, pediatric surgery, and nutrition counseling. We specialize in well-baby follow-ups, growth monitoring, and special needs evaluations.";
           case 'location':
@@ -110,6 +121,8 @@ const Chatbot = () => {
             return "🥗 We offer specialized pediatric nutrition counseling for infant feeding, childhood nutrition, and management of undernutrition or obesity.";
           case 'lab':
             return "🔬 Our advanced laboratory provides comprehensive pediatric blood work, hormonal panels, metabolic testing, and infectious disease screening.";
+          case 'results':
+            return "📋 Yes! You can access your lab results and reports online. Here's how:\n\n1️⃣ Visit our website\n2️⃣ Click the 'Sign In' tab\n3️⃣ Enter your email and password\n4️⃣ You'll be redirected to your user dashboard where you can see your result history\n\nAlternatively, call us at ☎️ 0996505319 / 0939602927 / 0984650912. Results are typically available within 24-48 hours.";
           default:
             return FALLBACK_RESPONSES.default;
         }
@@ -271,12 +284,48 @@ const Chatbot = () => {
             <div className="flex-1 px-4 py-3 space-y-4 bg-gray-50 overflow-y-auto">
               <div className="flex justify-between items-center">
                 <h3 className="font-semibold text-gray-700">Chat History</h3>
-                <button
-                  onClick={() => setShowHistory(false)}
-                  className="text-blue-600 text-sm font-medium hover:underline"
-                >
-                  ➕ New Chat
-                </button>
+                <div className="flex gap-2">
+                  {history.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setHistory([]);
+                        localStorage.removeItem("biruhkids-chatHistory");
+                      }}
+                      className="text-red-600 text-xs font-medium hover:underline"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      // Save current conversation to history before starting new chat
+                      if (messages.length > 1) {
+                        const conversation = {
+                          id: Date.now(),
+                          timestamp: new Date(),
+                          messages: [...messages]
+                        };
+                        setHistory(prev => [conversation, ...prev.slice(0, 9)]); // Keep last 10 conversations
+                      }
+                      
+                      setShowHistory(false);
+                      setMessages([
+                        {
+                          id: "1",
+                          text: "Hi! I'm here to help you with any questions about BiruhKids Pediatric Specialty Clinic. How can I assist you with your child's healthcare today?",
+                          sender: "bot",
+                          timestamp: new Date(),
+                        },
+                      ]);
+                      conversationHistory.current = [
+                        { role: "system", content: SYSTEM_PROMPT },
+                      ];
+                    }}
+                    className="text-blue-600 text-sm font-medium hover:underline"
+                  >
+                    ➕ New Chat
+                  </button>
+                </div>
               </div>
 
               {history.length === 0 && (
@@ -297,7 +346,7 @@ const Chatbot = () => {
                       {conv.timestamp.toLocaleDateString()} {conv.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                     </span>
                     <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                      {conv.messages.length} messages
+                      {conv.messages.filter(m => m.sender === 'user').length} questions
                     </span>
                   </div>
                   <div className="text-sm text-gray-700 line-clamp-2">
