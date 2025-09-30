@@ -98,7 +98,7 @@ CONTACT INFORMATION
 - Phone: 0996505319 / 0939602927 / 0984650912  
 - For emergencies: Call immediately  
 - For appointments: Online booking or phone call
-- For results: Access your lab results and reports online through our website if you're registered, or call us at the phone numbers above. Results are typically available within 24-48 hours.  
+- For results: Visit our website, click 'Sign In', enter your email and password, then you'll be redirected to your user dashboard where you can see your result history. Alternatively, call us at the phone numbers above. Results are typically available within 24-48 hours.  
 
 ----------------------------------------------------
 TONE GUIDELINES:
@@ -143,7 +143,7 @@ export const FALLBACK_RESPONSES = {
     "💉 Yes, BiruhKids provides all recommended pediatric immunizations, following national and international guidelines.",
 
   "can i receive my results online?":
-    "📋 Yes! You can access your lab results and reports online through our patient portal or by calling ☎️ 0996505319 / 0939602927 / 0984650912 to request results via email. Results are typically available within 24-48 hours.",
+    "📋 Yes! Visit our website, click 'Sign In', enter your email and password, then you'll be redirected to your user dashboard where you can see your result history. Alternatively, call ☎️ 0996505319 / 0939602927 / 0984650912. Results are typically available within 24-48 hours.",
 
   default:
     "Thank you for your question! For specific or complex inquiries, please contact us directly at biruhkidsclinic@gmail.com or ☎️ 0996505319 / 0939602927 / 0984650912. Is there anything else I can help you with regarding your child's healthcare?",

@@ -27,7 +27,17 @@ const Chatbot = () => {
   useEffect(() => {
     const savedHistory = localStorage.getItem("biruhkids-chatHistory");
     if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
+      const parsedHistory = JSON.parse(savedHistory);
+      // Convert timestamp strings back to Date objects
+      const historyWithDates = parsedHistory.map(conv => ({
+        ...conv,
+        timestamp: new Date(conv.timestamp),
+        messages: conv.messages.map(msg => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }))
+      }));
+      setHistory(historyWithDates);
     }
   }, []);
 
@@ -112,7 +122,7 @@ const Chatbot = () => {
           case 'lab':
             return "🔬 Our advanced laboratory provides comprehensive pediatric blood work, hormonal panels, metabolic testing, and infectious disease screening.";
           case 'results':
-            return "📋 Yes! You can receive your lab results and reports online. Here's how:\n\n1️⃣ Visit our website and log into your patient portal\n2️⃣ Or call us at ☎️ 0996505319 / 0939602927 / 0984650912 to request results via email\n3️⃣ Results are typically available within 24-48 hours\n\nFor urgent results, please call us directly. We'll guide you through accessing your child's medical reports securely online!";
+            return "📋 Yes! You can access your lab results and reports online. Here's how:\n\n1️⃣ Visit our website\n2️⃣ Click the 'Sign In' tab\n3️⃣ Enter your email and password\n4️⃣ You'll be redirected to your user dashboard where you can see your result history\n\nAlternatively, call us at ☎️ 0996505319 / 0939602927 / 0984650912. Results are typically available within 24-48 hours.";
           default:
             return FALLBACK_RESPONSES.default;
         }
@@ -274,12 +284,25 @@ const Chatbot = () => {
             <div className="flex-1 px-4 py-3 space-y-4 bg-gray-50 overflow-y-auto">
               <div className="flex justify-between items-center">
                 <h3 className="font-semibold text-gray-700">Chat History</h3>
-                <button
-                  onClick={() => setShowHistory(false)}
-                  className="text-blue-600 text-sm font-medium hover:underline"
-                >
-                  ➕ New Chat
-                </button>
+                <div className="flex gap-2">
+                  {history.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setHistory([]);
+                        localStorage.removeItem("biruhkids-chatHistory");
+                      }}
+                      className="text-red-600 text-xs font-medium hover:underline"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setShowHistory(false)}
+                    className="text-blue-600 text-sm font-medium hover:underline"
+                  >
+                    ➕ New Chat
+                  </button>
+                </div>
               </div>
 
               {history.length === 0 && (
