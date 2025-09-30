@@ -41,7 +41,7 @@ function Header() {
       home: "ዋና ገጽ",
       about: "ስለ እኛ",
       services: "አገልግሎቶች",
-      contact: "አግኙን",
+      contact: "ያግኙን",
       videos: "ቪዲዮዎች",
       book: "ቀጠሮ ያስይዙ",
       login: "ይግቡ",
