@@ -7,7 +7,6 @@ import {
 } from "../utils/tokenUtils.js";
 import {
     sendPasswordResetOTP,
-    sendWelcomeEmail,
 } from "../utils/emailService.js";
 
 // @desc    Register new user
@@ -46,9 +45,6 @@ export const register = asyncHandler(async (req, res) => {
     // Save refresh token to user
     user.refreshToken = refreshToken;
     await user.save();
-
-    // Send welcome email (non-blocking)
-    sendWelcomeEmail(user.email, user.name);
 
     res.status(201).json({
         success: true,

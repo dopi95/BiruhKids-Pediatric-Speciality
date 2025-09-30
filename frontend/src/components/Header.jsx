@@ -78,7 +78,7 @@ function Header() {
           <img
             src={Logo}
             alt="Logo"
-            className="w-20 h-8 lg:w-24 lg:h-10 animate-logo-text-flip"
+            className="w-24 h-10 lg:w-32 lg:h-14 animate-logo-text-flip"
             style={{ transformOrigin: "center" }}
           />
         </Link>
