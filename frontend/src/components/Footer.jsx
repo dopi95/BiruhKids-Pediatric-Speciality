@@ -88,7 +88,7 @@ export default function Footer({ lang }) {
       placeholder: "ኢሜይልዎን ያስገቡ",
       subscribe: "ይመዝገቡ",
       unsubscribe: "ከደረሰኝ ላይ ይውጡ",
-      copyright: "© 2017 ሁሉም መብቶች ተጠብቀዋል። የተገነባ በ ",
+      copyright: "© 2018 ሁሉም መብቶች ተጠብቀዋል። የተገነባ በ ",
     },
   };
 
@@ -241,7 +241,7 @@ export default function Footer({ lang }) {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-400 text-sm whitespace-nowrap">
             {t.copyright}
             <a
               href="https://t.me/ChainTech_6/"
