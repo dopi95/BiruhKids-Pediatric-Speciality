@@ -296,7 +296,6 @@ const renderUserAvatar = (testimonial) => {
                                             </p>
 
                                             <div className="text-sm text-gray-600">
-                                                <p>Treatment: {testimonial.treatment}</p>
                                                 <p>
                                                     Submitted:{" "}
                                                     {new Date(testimonial.createdAt).toLocaleDateString()}

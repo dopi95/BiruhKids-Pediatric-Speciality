@@ -198,9 +198,7 @@ const renderUserAvatar = (testimonial) => {
     const [formData, setFormData] = useState({
       name: "",
       email: "",
-      treatment: "",
       rating: 0,
-      title: "",
       testimony: "",
       image: null,
     });
@@ -218,8 +216,8 @@ const renderUserAvatar = (testimonial) => {
         const formDataToSend = new FormData();
         formDataToSend.append("name", formData.name);
         formDataToSend.append("email", formData.email);
-        formDataToSend.append("title", formData.title);
-        formDataToSend.append("treatment", formData.treatment);
+        formDataToSend.append("title", "Patient Testimonial");
+        formDataToSend.append("treatment", "General Care");
         formDataToSend.append("testimony", formData.testimony);
         formDataToSend.append("rating", formData.rating.toString());
         
@@ -236,9 +234,7 @@ const renderUserAvatar = (testimonial) => {
         setFormData({
           name: "",
           email: "",
-          treatment: "",
           rating: 0,
-          title: "",
           testimony: "",
           image: null,
         });
@@ -354,36 +350,7 @@ const renderUserAvatar = (testimonial) => {
                 </div>
               </div>
 
-              {/* treatment */}
-              <div>
-                <label
-                  htmlFor="treatment"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    {t.treatment}
-                  </label>
-                  <select
-                    id="treatment"
-                    name="treatment"
-                    value={formData.treatment}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                  >
-                    <option value="">
-                      {t.selectTreatment}
-                    </option>
-                    <option value="Dental Care">Dental Care</option>
-                    <option value="Physical Therapy">Physical Therapy</option>
-                    <option value="Pediatric Care">Pediatric Care</option>
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="General Medicine">General Medicine</option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Orthopedics">Orthopedics</option>
-                    <option value="Surgery">Surgery</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
+
 
               {/* rating */}
               <div>
@@ -411,24 +378,7 @@ const renderUserAvatar = (testimonial) => {
                 </div>
               </div>
 
-              {/* title */}
-              <div>
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  {t.testimonyTitle}
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                />
-              </div>
+
 
               {/* testimony */}
               <div>
@@ -573,9 +523,6 @@ const renderUserAvatar = (testimonial) => {
                             <h4 className="font-semibold text-gray-900 text-lg md:text-xl">
                               {testimonial.name}
                             </h4>
-                            <p className="text-gray-600 text-sm md:text-base">
-                              {testimonial.treatment}
-                            </p>
                           </div>
                         </div>
                       </div>
