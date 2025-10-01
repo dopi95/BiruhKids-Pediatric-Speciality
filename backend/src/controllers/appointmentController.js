@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Appointment from "../models/Appointment.js";
 import { sendAppointmentEmail } from "../utils/appointmentEmailService.js";
+import { sendNewAppointmentNotification } from "../utils/telegramService.js";
 
 // @desc    Get all appointments
 // @route   GET /api/appointments
@@ -19,6 +20,14 @@ export const getAppointments = asyncHandler(async (req, res) => {
 export const createAppointment = asyncHandler(async (req, res) => {
     const appointment = new Appointment(req.body);
     const savedAppointment = await appointment.save();
+    
+    // Send Telegram notification (non-blocking)
+    try {
+        await sendNewAppointmentNotification(savedAppointment);
+    } catch (telegramError) {
+        console.error("Telegram notification failed:", telegramError);
+        // Don't fail the request if Telegram notification fails
+    }
     
     res.status(201).json({
         success: true,
