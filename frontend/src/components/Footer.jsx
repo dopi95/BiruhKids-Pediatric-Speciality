@@ -241,7 +241,7 @@ export default function Footer({ lang }) {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+        <div className="border-t border-gray-800 mt-8 pt-8 pb-16 sm:pb-8 text-center">
           <p className="text-gray-400 text-sm whitespace-nowrap">
             {t.copyright}
             <a

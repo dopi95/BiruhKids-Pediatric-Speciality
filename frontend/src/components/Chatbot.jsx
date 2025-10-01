@@ -216,9 +216,9 @@ const Chatbot = () => {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-20 right-6 z-50 bg-gradient-to-r from-blue-500 to-blue-700 p-4 rounded-full shadow-lg text-white hover:scale-110 transition-transform"
+          className="fixed bottom-6 right-4 z-50 bg-gradient-to-r from-blue-500 to-blue-700 p-3 sm:p-4 rounded-full shadow-lg text-white hover:scale-110 transition-transform"
         >
-          <MessageCircle size={28} />
+          <MessageCircle size={24} className="sm:w-7 sm:h-7" />
         </button>
       )}
 
