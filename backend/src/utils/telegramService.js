@@ -1,7 +1,7 @@
 // Telegram notification service for appointments
 const sendTelegramNotification = async (message) => {
-    const botToken = '7622120987:AAECTaQR0ZoWfOAxLbW6SeKtWJjeiuf2Afk';
-    const chatId = '2120123278';
+    const botToken = '8187730921:AAGrH0SRdbZzd6VmPYbffqwDSbbUtmb5erQ';
+    const chatId = '8147966412';
     
     try {
         const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
