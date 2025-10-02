@@ -68,12 +68,12 @@
 
 ## 👥 Team Members
 
-| Name                | Role                       |
-| ------------------- | -------------------------- |
-| **Bereket Eshete**  | Backend & AI Developer     |
-| **Dagim Sisay**     | UI/UX & Frontend Developer |
-| **Elyas Yenealem**  | Full Stack Developer       |
-| **Tenbite Daniel** | Full Stack Developer       |
+| Name                | Role                         |
+| ------------------- | --------------------------   |
+| **Bereket Eshete**  | Backend & AI Developer       |
+| **Dagim Sisay**     | UI/UX & Full Stack Developer |
+| **Elyas Yenealem**  | UI/UX & Full Stack Developer |
+| **Tenbite Daniel**  | UI/UX & Full Stack Developer |
 
 ---
 
