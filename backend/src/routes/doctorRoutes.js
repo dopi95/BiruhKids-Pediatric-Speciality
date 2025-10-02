@@ -8,6 +8,7 @@ import {
   getDoctorStats
 } from "../controllers/doctorController.js";
 import { doctorUpload } from "../middleware/upload.js";
+import auditMiddleware from "../middleware/auditMiddleware.js";
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post("/", (req, res, next) => {
       message: "Photo upload service not available"
     });
   }
-}, createDoctor);
+}, auditMiddleware('CREATE', 'Doctor'), createDoctor);
 
 router.get("/", getDoctors);
 router.get("/stats", getDoctorStats);
@@ -40,8 +41,8 @@ router.put("/:id", (req, res, next) => {
       message: "Photo upload service not available"
     });
   }
-}, updateDoctor);
+}, auditMiddleware('UPDATE', 'Doctor'), updateDoctor);
 
-router.delete("/:id", deleteDoctor);
+router.delete("/:id", auditMiddleware('DELETE', 'Doctor'), deleteDoctor);
 
 export default router;

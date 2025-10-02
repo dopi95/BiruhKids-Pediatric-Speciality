@@ -17,7 +17,7 @@ const auditLogSchema = new mongoose.Schema(
         },
         action: {
             type: String,
-            enum: ["CREATE", "UPDATE", "DELETE", "APPROVE", "REJECT"],
+            enum: ["CREATE", "UPDATE", "DELETE", "APPROVE", "REJECT", "CONFIRM", "CANCEL"],
             required: true,
         },
         resourceType: {

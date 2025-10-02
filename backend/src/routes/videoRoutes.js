@@ -1,6 +1,7 @@
 import express from "express";
 import Video from "../models/Video.js";
 import { sendNewVideoNewsletter } from "../utils/emailService.js";
+import auditMiddleware from "../middleware/auditMiddleware.js";
 
 const router = express.Router();
 
@@ -60,7 +61,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create video
-router.post("/", async (req, res) => {
+router.post("/", auditMiddleware('CREATE', 'Video'), async (req, res) => {
   try {
     const video = await Video.create(req.body);
     
@@ -85,7 +86,7 @@ router.post("/", async (req, res) => {
 });
 
 // Update video
-router.put("/:id", async (req, res) => {
+router.put("/:id", auditMiddleware('UPDATE', 'Video'), async (req, res) => {
   try {
     const video = await Video.findByIdAndUpdate(
       req.params.id,
@@ -111,7 +112,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete video
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auditMiddleware('DELETE', 'Video'), async (req, res) => {
   try {
     const video = await Video.findByIdAndDelete(req.params.id);
     if (!video) {

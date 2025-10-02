@@ -40,6 +40,24 @@ class AuditService {
         }
     }
 
+    static async logAction(userId, action, resourceType, resourceId = null, metadata = {}) {
+        try {
+            const auditLog = new AuditLog({
+                adminId: userId,
+                action,
+                resourceType,
+                resourceId,
+                details: metadata,
+            });
+            
+            await auditLog.save();
+            return auditLog;
+        } catch (error) {
+            console.error('Failed to log audit action:', error);
+            // Don't throw error to avoid breaking the main operation
+        }
+    }
+
     static async getLogs({
         page = 1,
         limit = 50,

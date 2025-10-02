@@ -1,6 +1,7 @@
 import express from "express";
 import Subscriber from "../models/Subscriber.js";
 import User from "../models/User.js";
+import auditMiddleware from "../middleware/auditMiddleware.js";
 
 const router = express.Router();
 
@@ -533,7 +534,7 @@ router.post("/bulk-resubscribe", async (req, res) => {
 });
 
 // ✅ Delete single subscriber
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auditMiddleware('DELETE', 'Subscriber'), async (req, res) => {
 	try {
 		const { id } = req.params;
 		const deletedSubscriber = await Subscriber.findByIdAndDelete(id);
@@ -559,7 +560,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // ✅ Bulk delete subscribers
-router.post("/bulk-delete", async (req, res) => {
+router.post("/bulk-delete", auditMiddleware('DELETE', 'Subscriber'), async (req, res) => {
 	try {
 		const { subscriberIds } = req.body;
 

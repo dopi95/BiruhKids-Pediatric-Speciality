@@ -11,6 +11,7 @@ import {
 } from "../controllers/testimonialController.js";
 import { testimonialUpload } from "../middleware/upload.js";
 import { validateTestimonialData, rateLimitTestimonials } from "../middleware/testimonialValidation.js";
+import auditMiddleware from "../middleware/auditMiddleware.js";
 
 const router = express.Router();
 
@@ -78,8 +79,8 @@ router.put("/:id", (req, res, next) => {
     });
   }
 }, handleMulterError, asyncHandler(updateTestimonial));
-router.delete("/:id", asyncHandler(deleteTestimonial));
-router.patch("/:id/approve", asyncHandler(approveTestimonial));
-router.patch("/:id/reject", asyncHandler(rejectTestimonial));
+router.delete("/:id", auditMiddleware('DELETE', 'Testimonial'), asyncHandler(deleteTestimonial));
+router.patch("/:id/approve", auditMiddleware('APPROVE', 'Testimonial'), asyncHandler(approveTestimonial));
+router.patch("/:id/reject", auditMiddleware('REJECT', 'Testimonial'), asyncHandler(rejectTestimonial));
 
 export default router;
