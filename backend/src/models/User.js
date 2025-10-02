@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema(
             enum: ["user", "admin", "super_admin"],
             default: "user",
         },
+        roleRef: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Role'
+        },
         permissions: {
             dashboard: { type: Boolean, default: false },
             userManagement: { type: Boolean, default: false },

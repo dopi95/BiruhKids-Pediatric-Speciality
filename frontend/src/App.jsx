@@ -33,6 +33,7 @@ import AdminVideos from "./pages/Admin/AdminVideos";
 import AdminVideosForm from "./pages/Admin/AdminVideosForm";
 import TestimonialManagement from "./pages/Admin/TestimonialManagement";
 import SubscriberManagement from "./pages/Admin/SubscriberManagement";
+import AuditLogs from "./pages/Admin/AuditLogs";
 import UnsubscribePage from "./pages/UnsubscribePage";
 import AdminLayout from "./layouts/AdminLayout";
 import ScrollToTop from "./components/ScrollToTop";
@@ -321,6 +322,16 @@ export default function App() {
                             <ProtectedRoute requiredPermission="subscriberManagement">
                                 <AdminLayout>
                                     <SubscriberManagement />
+                                </AdminLayout>
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/audit-logs"
+                        element={
+                            <ProtectedRoute requiredRole="super_admin">
+                                <AdminLayout>
+                                    <AuditLogs />
                                 </AdminLayout>
                             </ProtectedRoute>
                         }
