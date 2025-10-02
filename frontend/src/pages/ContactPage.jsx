@@ -90,8 +90,8 @@ const ContactPage = ({ lang = "en" }) => {
 	const [success, setSuccess] = useState(false);
 
 	// Telegram bot config
-	const botToken = "8318381977:AAFWD0uNHDyBOaqzxy3UvKCyKg-VDWIDy0M"; 
-	const chatId = "420522634";
+	const botToken = "8296960059:AAEHtlMLzvKROIVxRawYkvKLgN0eJWHPkBg"; 
+	const chatId = "8147966412";
 
 	// validation
 	const validate = () => {
