@@ -24,6 +24,7 @@ import userRoutes from "./src/routes/userRoutes.js";
 import resultRoutes from "./src/routes/resultRoutes.js";
 import departmentRoutes from "./src/routes/departmentRoutes.js";
 import chatRoutes from "./src/routes/chatRoutes.js";
+import auditRoutes from "./src/routes/auditRoutes.js";
 
 // Connect to database
 connectDB();
@@ -60,6 +61,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/results", resultRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api", chatRoutes);
+app.use("/api/audit-logs", auditRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
