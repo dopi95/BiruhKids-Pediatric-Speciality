@@ -6,22 +6,26 @@ const auditMiddleware = (action, resourceType) => {
     
     res.send = function(data) {
       // Log successful operations (2xx status codes)
-      if (res.statusCode >= 200 && res.statusCode < 300) {
-        const userId = req.user?.id || req.user?._id || 'anonymous';
-        const resourceId = req.params.id || req.body._id || req.body.id;
+      if (res.statusCode >= 200 && res.statusCode < 300 && req.user) {
+        const resourceId = req.params.id || req.body._id || req.body.id || 'unknown';
+        const resourceName = req.body.name || req.body.title || req.body.email || resourceId;
         
-        auditService.logAction(
-          userId,
+        auditService.log({
+          adminId: req.user._id,
+          adminName: req.user.name,
+          adminEmail: req.user.email,
           action,
           resourceType,
           resourceId,
-          {
+          resourceName,
+          details: {
             method: req.method,
             url: req.originalUrl,
             ip: req.ip,
             userAgent: req.get('User-Agent')
-          }
-        ).catch(err => console.error('Audit logging failed:', err));
+          },
+          req
+        }).catch(err => console.error('Audit logging failed:', err));
       }
       
       originalSend.call(this, data);
