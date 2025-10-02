@@ -1,3 +1,5 @@
+import { SYSTEM_PROMPT } from '../utils/chatbotPrompt.js';
+
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 export const chatWithAI = async (req, res) => {
@@ -12,7 +14,7 @@ export const chatWithAI = async (req, res) => {
 		if (!process.env.GROQ_API_KEY) {
 			return res.json({
 				response:
-					"Thank you for your question! For specific inquiries, please contact us at biruhkidsclinic@gmail.com or call 0996505319. Is there anything else I can help you with regarding your child's healthcare?",
+					"Thank you for your question! For specific inquiries, please contact us at biruhkidsclinic@gmail.com or call 0963555552. Is there anything else I can help you with regarding your child's healthcare?",
 				source: "fallback",
 			});
 		}
@@ -20,18 +22,7 @@ export const chatWithAI = async (req, res) => {
 		const messages = [
 			{
 				role: "system",
-				content: `You are a helpful assistant for BiruhKids Pediatric Specialty Clinic in Addis Ababa, Ethiopia.
-
-Services: Pediatric OPD, Emergency care, Laboratory, Ultrasound, Surgery, Nutrition counseling, and paid Consultancy services.
-Contact: 0996505319 / 0939602927 / 0984650912 or biruhkidsclinic@gmail.com
-Location: Torhayloch, 100 meters from Augusta Bridge
-
-Appointments: You can book appointments online through our website by filling out the appointment form. Once submitted, you'll receive a confirmation email or we'll call you to confirm your appointment. For further assistance, contact us at the phone numbers or email above.
-
-Results: You can access your lab results and reports online by following these steps: 1) Click the 'Sign In' tab 2) Enter your email and password 3) You'll be redirected to your user dashboard where you can see your result history. Alternatively, call us at the phone numbers above. Results are typically available within 24-48 hours.
-
-For consultancy questions, mention it's a premium paid service and provide contact details.
-Be warm, professional, and always end with asking if they need more help with their child's healthcare.`,
+				content: SYSTEM_PROMPT,
 			},
 			...conversationHistory,
 			{ role: "user", content: message },
@@ -71,13 +62,13 @@ Be warm, professional, and always end with asking if they need more help with th
 
 		const aiResponse =
 			data.choices[0]?.message?.content ||
-			"I apologize, but I encountered an issue. Please contact us directly at biruhkidsclinic@gmail.com or call 0996505319.";
+			"I apologize, but I encountered an issue. Please contact us directly at biruhkidsclinic@gmail.com or call 0963555552.";
 
 		console.log("✅ GROQ AI RESPONSE SENT");
 		res.json({ response: aiResponse, source: "groq-ai" });
 	} catch (error) {
 		res.status(500).json({
-			error: "AI service temporarily unavailable. Please contact us directly at biruhkidsclinic@gmail.com or call 0996505319.",
+			error: "AI service temporarily unavailable. Please contact us directly at biruhkidsclinic@gmail.com or call 0963555552.",
 			source: "error",
 		});
 	}

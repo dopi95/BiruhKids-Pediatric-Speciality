@@ -8,7 +8,7 @@ BIRUH KIDS PEDIATRIC SPECIALTY CLINIC
 "Where Children Come First"
 
 📍 Location: Torhayloch, 100 meters from Augusta Bridge, Addis Ababa, Ethiopia  
-☎️ Phone: 0996505319 / 0939602927 / 0984650912  
+☎️ Phone: 0963555552 / 0939602927 / 0984650912  
 📧 Email: biruhkidsclinic@gmail.com  
 
 ----------------------------------------------------
@@ -95,7 +95,7 @@ LICENSE, TIN NUMBER & QUALIFICATION
 ----------------------------------------------------
 CONTACT INFORMATION
 - Email: biruhkidsclinic@gmail.com  
-- Phone: 0996505319 / 0939602927 / 0984650912  
+- Phone: 0963555552 / 0939602927 / 0984650912  
 - For emergencies: Call immediately  
 - For appointments: Online booking or phone call
 - For results: Visit our website, click 'Sign In', enter your email and password, then you'll be redirected to your user dashboard where you can see your result history. Alternatively, call us at the phone numbers above. Results are typically available within 24-48 hours.  
@@ -118,33 +118,33 @@ ANSWERING RULES:
 `;
 
 export const SAMPLE_PROMPTS = [
-  "What services do you provide?",
-  "How can I book an appointment?",
-  "Can I receive my results online?",
+	"What services do you provide?",
+	"How can I book an appointment?",
+	"Can I receive my results online?",
 ];
 
 export const FALLBACK_RESPONSES = {
-  "what services do you provide?":
-    "🌟 BiruhKids offers outpatient & inpatient pediatric services, 24/7 emergency care, advanced laboratory and imaging, pediatric surgery, and nutrition counseling. For details, please contact us at biruhkidsclinic@gmail.com or ☎️ 0996505319 / 0939602927 / 0984650912.",
+	"what services do you provide?":
+		"🌟 BiruhKids offers outpatient & inpatient pediatric services, 24/7 emergency care, advanced laboratory and imaging, pediatric surgery, and nutrition counseling. For details, please contact us at biruhkidsclinic@gmail.com or ☎️ 0963555552 / 0939602927 / 0984650912.",
 
-  "what is your mission?":
-    "💙 Our mission is to provide outstanding, family-centered pediatric specialty care with compassion, dignity, and respect.",
+	"what is your mission?":
+		"💙 Our mission is to provide outstanding, family-centered pediatric specialty care with compassion, dignity, and respect.",
 
-  "what makes biruhkids different?":
-    "✨ BiruhKids combines modern child-friendly facilities, advanced diagnostics, and highly experienced pediatric specialists. We also provide strong family support and community health education.",
+	"what makes biruhkids different?":
+		"✨ BiruhKids combines modern child-friendly facilities, advanced diagnostics, and highly experienced pediatric specialists. We also provide strong family support and community health education.",
 
-  "how can i book an appointment?":
-    "📅 You can book an appointment online through our website by filling out the appointment form. Once submitted, you'll receive a confirmation email or we'll call you to confirm your appointment. For further assistance, contact us at ☎️ 0996505319 / 0939602927 / 0984650912 or biruhkidsclinic@gmail.com.",
+	"how can i book an appointment?":
+		"📅 You can book an appointment online through our website by filling out the appointment form. Once submitted, you'll receive a confirmation email or we'll call you to confirm your appointment. For further assistance, contact us at ☎️ 0963555552 / 0939602927 / 0984650912 or biruhkidsclinic@gmail.com.",
 
-  "where are you located?":
-    "📍 BiruhKids Pediatric Specialty Clinic is located at Torhayloch, 100 meters from Augusta Bridge, Addis Ababa.",
+	"where are you located?":
+		"📍 BiruhKids Pediatric Specialty Clinic is located at Torhayloch, 100 meters from Augusta Bridge, Addis Ababa.",
 
-  "do you provide vaccinations?":
-    "💉 Yes, BiruhKids provides all recommended pediatric immunizations, following national and international guidelines.",
+	"do you provide vaccinations?":
+		"💉 Yes, BiruhKids provides all recommended pediatric immunizations, following national and international guidelines.",
 
-  "can i receive my results online?":
-    "📋 Yes! Visit our website, click 'Sign In', enter your email and password, then you'll be redirected to your user dashboard where you can see your result history. Alternatively, call ☎️ 0996505319 / 0939602927 / 0984650912. Results are typically available within 24-48 hours.",
+	"can i receive my results online?":
+		"📋 Yes! Visit our website, click 'Sign In', enter your email and password, then you'll be redirected to your user dashboard where you can see your result history. Alternatively, call ☎️ 0963555552 / 0939602927 / 0984650912. Results are typically available within 24-48 hours.",
 
-  default:
-    "Thank you for your question! For specific or complex inquiries, please contact us directly at biruhkidsclinic@gmail.com or ☎️ 0996505319 / 0939602927 / 0984650912. Is there anything else I can help you with regarding your child's healthcare?",
+	default:
+		"Thank you for your question! For specific or complex inquiries, please contact us directly at biruhkidsclinic@gmail.com or ☎️ 0963555552 / 0939602927 / 0984650912. Is there anything else I can help you with regarding your child's healthcare?",
 };
