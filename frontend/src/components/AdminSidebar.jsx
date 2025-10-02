@@ -16,6 +16,7 @@ import {
     Globe,
     Menu,
     X,
+    Shield,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -47,6 +48,7 @@ const AdminSidebar = () => {
         },
         { path: "/admin/subscribers", icon: Mail, label: "Subscribers", permission: "subscriberManagement" },
         { path: "/admin/admins", icon: UserCog, label: "Admins", permission: "adminManagement" },
+        { path: "/admin/audit-logs", icon: Shield, label: "Audit Logs", permission: "auditManagement" },
         { path: "/admin/profile", icon: User, label: "Profile", permission: null }, // Always visible
     ];
 
