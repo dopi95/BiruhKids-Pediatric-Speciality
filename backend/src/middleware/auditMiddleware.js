@@ -22,7 +22,7 @@ const auditMiddleware = (action, resourceType) => {
           
           const resourceId = req.params.id || req.body?._id || req.body?.id || 'unknown';
           let resourceName = req.body?.name || req.body?.title || req.body?.email || 
-                            req.body?.title_en || req.body?.name_en;
+                            req.body?.title_en || req.body?.name_en || req.body?.patientName;
           
           // Try to get name from response data for all operations
           if (!resourceName) {
@@ -30,9 +30,10 @@ const auditMiddleware = (action, resourceType) => {
               const responseData = typeof data === 'string' ? JSON.parse(data) : data;
               resourceName = responseData?.data?.name || responseData?.data?.title || 
                            responseData?.data?.email || responseData?.data?.title_en || 
-                           responseData?.data?.name_en || responseData?.name || 
-                           responseData?.title || responseData?.email || 
-                           responseData?.title_en || responseData?.name_en;
+                           responseData?.data?.name_en || responseData?.data?.patientName ||
+                           responseData?.name || responseData?.title || 
+                           responseData?.email || responseData?.title_en || 
+                           responseData?.name_en || responseData?.patientName;
             } catch {
               // Ignore parsing errors
             }
