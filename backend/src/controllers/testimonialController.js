@@ -222,6 +222,8 @@ export const deleteTestimonial = async (req, res) => {
       });
     }
 
+    const testimonialName = testimonial.name;
+
     // Delete associated image file
     if (testimonial.image) {
       if (testimonial.image.includes('cloudinary.com')) {
@@ -252,6 +254,7 @@ export const deleteTestimonial = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      data: { name: testimonialName },
       message: "Testimonial deleted successfully",
     });
   } catch (error) {
