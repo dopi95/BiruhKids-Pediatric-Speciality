@@ -192,49 +192,52 @@ const AuditLogs = () => {
 
           {/* Filters */}
           <div className="bg-white rounded-lg shadow-sm mb-6">
-            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                <Filter className="h-5 w-5 mr-2" />
-                Filters
-              </h3>
-              <div className="flex space-x-2">
-                <button
-                  onClick={clearFilters}
-                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"
-                >
-                  Clear All
-                </button>
-                <button
-                  onClick={() => {
-                    fetchLogs();
-                    fetchStats();
-                  }}
-                  className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 border border-blue-300 rounded-md hover:bg-blue-50 flex items-center"
-                >
-                  <RefreshCw className="h-4 w-4 mr-1" />
-                  Refresh
-                </button>
-                <button
-                  onClick={handleExport}
-                  disabled={exporting}
-                  className="px-3 py-1 text-sm text-green-600 hover:text-green-800 border border-green-300 rounded-md hover:bg-green-50 flex items-center disabled:opacity-50"
-                >
-                  <Download className="h-4 w-4 mr-1" />
-                  {exporting ? 'Exporting...' : 'Export'}
-                </button>
+            <div className="p-4 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+                <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                  <Filter className="h-5 w-5 mr-2" />
+                  Filters
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={clearFilters}
+                    className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"
+                  >
+                    Clear All
+                  </button>
+                  <button
+                    onClick={() => {
+                      fetchLogs();
+                      fetchStats();
+                    }}
+                    className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 border border-blue-300 rounded-md hover:bg-blue-50 flex items-center"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-1" />
+                    Refresh
+                  </button>
+                  <button
+                    onClick={handleExport}
+                    disabled={exporting}
+                    className="px-3 py-1 text-sm text-green-600 hover:text-green-800 border border-green-300 rounded-md hover:bg-green-50 flex items-center disabled:opacity-50"
+                  >
+                    <Download className="h-4 w-4 mr-1" />
+                    {exporting ? 'Exporting...' : 'Export'}
+                  </button>
+                </div>
               </div>
             </div>
             <div className="p-4 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Mobile: Stack all filters vertically */}
+              <div className="block sm:hidden space-y-3">
                 {/* Search */}
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search admin, action, resource..."
+                    placeholder="Search..."
                     value={filters.search}
                     onChange={(e) => handleFilterChange("search", e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base"
                   />
                 </div>
 
@@ -242,7 +245,7 @@ const AuditLogs = () => {
                 <select
                   value={filters.action}
                   onChange={(e) => handleFilterChange("action", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base"
                 >
                   <option value="">All Actions</option>
                   {filterOptions.actions.map(action => (
@@ -254,7 +257,7 @@ const AuditLogs = () => {
                 <select
                   value={filters.resourceType}
                   onChange={(e) => handleFilterChange("resourceType", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base"
                 >
                   <option value="">All Resources</option>
                   {filterOptions.resourceTypes.map(type => (
@@ -262,22 +265,89 @@ const AuditLogs = () => {
                   ))}
                 </select>
 
-                {/* Date Range */}
-                <div className="flex space-x-2">
-                  <input
-                    type="date"
-                    value={filters.startDate}
-                    onChange={(e) => handleFilterChange("startDate", e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    title="Start Date"
-                  />
-                  <input
-                    type="date"
-                    value={filters.endDate}
-                    onChange={(e) => handleFilterChange("endDate", e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    title="End Date"
-                  />
+                {/* Date Range - Stacked on mobile */}
+                <div className="space-y-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                    <input
+                      type="date"
+                      value={filters.startDate}
+                      onChange={(e) => handleFilterChange("startDate", e.target.value)}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                    <input
+                      type="date"
+                      value={filters.endDate}
+                      onChange={(e) => handleFilterChange("endDate", e.target.value)}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-base"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Tablet and Desktop: Responsive grid */}
+              <div className="hidden sm:block">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Search - Takes full width on tablet, 1 column on desktop */}
+                  <div className="relative sm:col-span-2 lg:col-span-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search admin, action, resource..."
+                      value={filters.search}
+                      onChange={(e) => handleFilterChange("search", e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+
+                  {/* Action Filter */}
+                  <select
+                    value={filters.action}
+                    onChange={(e) => handleFilterChange("action", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="">All Actions</option>
+                    {filterOptions.actions.map(action => (
+                      <option key={action} value={action}>{action}</option>
+                    ))}
+                  </select>
+
+                  {/* Resource Type Filter */}
+                  <select
+                    value={filters.resourceType}
+                    onChange={(e) => handleFilterChange("resourceType", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="">All Resources</option>
+                    {filterOptions.resourceTypes.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                {/* Date Range - Separate row to prevent overflow */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                    <input
+                      type="date"
+                      value={filters.startDate}
+                      onChange={(e) => handleFilterChange("startDate", e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                    <input
+                      type="date"
+                      value={filters.endDate}
+                      onChange={(e) => handleFilterChange("endDate", e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
