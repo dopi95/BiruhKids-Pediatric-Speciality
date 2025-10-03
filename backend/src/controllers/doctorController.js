@@ -184,6 +184,8 @@ export const deleteDoctor = async (req, res) => {
       });
     }
     
+    const doctorName = doctor.name;
+    
     // Clean up photo if it exists and is from Cloudinary
     if (doctor.photo && doctor.photo.includes('cloudinary.com')) {
       try {
@@ -201,6 +203,7 @@ export const deleteDoctor = async (req, res) => {
     
     res.status(200).json({
       success: true,
+      data: { name: doctorName },
       message: "Doctor deleted successfully"
     });
   } catch (error) {

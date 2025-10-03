@@ -2,6 +2,7 @@ import express from "express";
 import { createResult, getPatientResults, markResultAsRead, serveResultFile, downloadResultFile, getResultStats, getPatientResultsByEmail, deleteResult, debugResultFiles } from "../controllers/resultController.js";
 import { protect, adminOnly } from "../middleware/authMiddleware.js";
 import { resultUpload } from "../middleware/upload.js";
+import auditMiddleware from "../middleware/auditMiddleware.js";
 
 const router = express.Router();
 
@@ -17,10 +18,10 @@ router.post("/", protect, adminOnly, (req, res, next) => {
             message: "File upload service not available"
         });
     }
-}, createResult);
+}, auditMiddleware('CREATE', 'Result'), createResult);
 router.get("/stats", protect, adminOnly, getResultStats);
 router.get("/patient/:email", protect, adminOnly, getPatientResultsByEmail);
-router.delete("/:id", protect, adminOnly, deleteResult);
+router.delete("/:id", protect, adminOnly, auditMiddleware('DELETE', 'Result'), deleteResult);
 
 // Patient routes
 router.get("/patient", protect, getPatientResults);

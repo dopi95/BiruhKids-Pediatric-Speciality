@@ -7,6 +7,7 @@ import {
     Mail,
     UserCheck,
     CalendarDays,
+    Activity,
 } from "lucide-react";
 import resultService from "../../services/resultService";
 import userService from "../../services/userService";
@@ -33,6 +34,7 @@ const AdminDashboard = () => {
         { title: "Manage Admins", link: "/admin/admins", icon: UserCheck, color: "pink", permission: "adminManagement" },
         { title: "Manage Appointments", link: "/admin/appointments", icon: CalendarDays, color: "indigo", permission: "appointmentManagement" },
         { title: "Manage Services", link: "/admin/services", icon: FileText, color: "teal", permission: "serviceManagement" },
+        { title: "Audit Logs", link: "/admin/audit-logs", icon: Activity, color: "purple", permission: "superAdminOnly" },
     ];
 
     // Filter stats and actions based on user permissions
@@ -45,7 +47,9 @@ const AdminDashboard = () => {
     const quickActions = user?.role === 'super_admin'
         ? allQuickActions
         : user?.role === 'admin'
-            ? allQuickActions.filter(action => hasPermission(action.permission))
+            ? allQuickActions.filter(action => 
+                action.permission === 'superAdminOnly' ? false : hasPermission(action.permission)
+              )
             : [];
     
     // If admin has no permissions set, show basic dashboard items

@@ -11,6 +11,8 @@ import {
 } from "../controllers/testimonialController.js";
 import { testimonialUpload } from "../middleware/upload.js";
 import { validateTestimonialData, rateLimitTestimonials } from "../middleware/testimonialValidation.js";
+import { protect, requirePermission } from "../middleware/authMiddleware.js";
+import auditMiddleware from "../middleware/auditMiddleware.js";
 
 const router = express.Router();
 
@@ -64,9 +66,9 @@ router.post("/", (req, res, next) => {
 }, handleMulterError, asyncHandler(createTestimonial));
 
 // Admin routes
-router.get("/", asyncHandler(getTestimonials));
-router.get("/:id", asyncHandler(getTestimonialById));
-router.put("/:id", (req, res, next) => {
+router.get("/", protect, requirePermission('testimonialManagement'), asyncHandler(getTestimonials));
+router.get("/:id", protect, requirePermission('testimonialManagement'), asyncHandler(getTestimonialById));
+router.put("/:id", protect, requirePermission('testimonialManagement'), (req, res, next) => {
   try {
     const upload = testimonialUpload();
     upload.single("image")(req, res, next);
@@ -77,9 +79,9 @@ router.put("/:id", (req, res, next) => {
       message: "Image upload service not available"
     });
   }
-}, handleMulterError, asyncHandler(updateTestimonial));
-router.delete("/:id", asyncHandler(deleteTestimonial));
-router.patch("/:id/approve", asyncHandler(approveTestimonial));
-router.patch("/:id/reject", asyncHandler(rejectTestimonial));
+}, handleMulterError, auditMiddleware('UPDATE', 'Testimonial'), asyncHandler(updateTestimonial));
+router.delete("/:id", protect, requirePermission('testimonialManagement'), auditMiddleware('DELETE', 'Testimonial'), asyncHandler(deleteTestimonial));
+router.patch("/:id/approve", protect, requirePermission('testimonialManagement'), auditMiddleware('APPROVE', 'Testimonial'), asyncHandler(approveTestimonial));
+router.patch("/:id/reject", protect, requirePermission('testimonialManagement'), auditMiddleware('REJECT', 'Testimonial'), asyncHandler(rejectTestimonial));
 
 export default router;

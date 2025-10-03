@@ -113,10 +113,12 @@ export const deleteAppointment = asyncHandler(async (req, res) => {
         });
     }
     
+    const appointmentEmail = appointment.email;
     await Appointment.findByIdAndDelete(req.params.id);
     
     res.json({
         success: true,
+        data: { email: appointmentEmail },
         message: "Appointment deleted successfully"
     });
 });

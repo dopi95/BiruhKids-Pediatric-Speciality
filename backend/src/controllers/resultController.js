@@ -226,6 +226,8 @@ export const deleteResult = asyncHandler(async (req, res) => {
         });
     }
 
+    const resultName = result.patientName;
+
     // Delete associated files from Cloudinary
     if (result.resultFiles && result.resultFiles.length > 0) {
         for (const file of result.resultFiles) {
@@ -243,6 +245,7 @@ export const deleteResult = asyncHandler(async (req, res) => {
 
     res.json({
         success: true,
+        data: { name: resultName },
         message: "Result deleted successfully",
     });
 });

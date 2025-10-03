@@ -176,6 +176,8 @@ export const deleteUser = asyncHandler(async (req, res) => {
         });
     }
     
+    const userName = user.name;
+    
     // Delete all results associated with this user
     await Result.deleteMany({ patientId: req.params.id });
     
@@ -184,6 +186,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
     
     res.json({
         success: true,
+        data: { name: userName },
         message: "User and associated results deleted successfully"
     });
 });

@@ -92,7 +92,7 @@ export const deleteDepartment = async (req, res) => {
   try {
     const { id } = req.params;
     
-    const department = await Department.findByIdAndDelete(id);
+    const department = await Department.findById(id);
     
     if (!department) {
       return res.status(404).json({
@@ -101,8 +101,12 @@ export const deleteDepartment = async (req, res) => {
       });
     }
     
+    const departmentName = department.title_en;
+    await Department.findByIdAndDelete(id);
+    
     res.json({
       success: true,
+      data: { title_en: departmentName },
       message: 'Department deleted successfully'
     });
   } catch (error) {
@@ -211,12 +215,15 @@ export const deleteService = async (req, res) => {
       });
     }
     
+    const serviceToDelete = department.services.id(serviceId);
+    const serviceName = serviceToDelete?.name_en || 'Unknown Service';
+    
     department.services.pull(serviceId);
     await department.save();
     
     res.json({
       success: true,
-      data: department,
+      data: { name_en: serviceName },
       message: 'Service deleted successfully'
     });
   } catch (error) {
