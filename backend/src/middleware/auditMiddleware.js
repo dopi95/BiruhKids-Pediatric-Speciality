@@ -16,7 +16,9 @@ const auditMiddleware = (action, resourceType) => {
           }
           
           if (!adminUser || !adminUser.name || !adminUser.email) {
-            console.error('Audit middleware: User data incomplete:', { userId: req.user._id, adminUser });
+            if (process.env.NODE_ENV === 'development') {
+              console.error('Audit middleware: User data incomplete:', { userId: req.user._id });
+            }
             return originalSend.call(this, data);
           }
           
@@ -62,7 +64,7 @@ const auditMiddleware = (action, resourceType) => {
             details = `${action} ${actualResourceType.toLowerCase()}: ${resourceName}`;
           }
           
-          console.log('Creating audit log for:', adminUser?.name || 'Unknown', action, actualResourceType, resourceName);
+
           
           await auditService.log({
             adminId: adminUser._id,
@@ -76,7 +78,10 @@ const auditMiddleware = (action, resourceType) => {
             req
           });
         } catch (err) {
-          console.error('Audit logging failed:', err);
+          // Log audit failures but don't break the main operation
+          if (process.env.NODE_ENV === 'development') {
+            console.error('Audit logging failed:', err.message);
+          }
         }
       }
       

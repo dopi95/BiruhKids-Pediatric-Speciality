@@ -13,30 +13,40 @@ class AuditService {
         req = null
     }) {
         try {
+            // Validate required fields
+            if (!adminId || !adminName || !adminEmail) {
+                if (process.env.NODE_ENV === 'development') {
+                    console.error('Audit log missing required fields:', { adminId, adminName, adminEmail });
+                }
+                return;
+            }
+
             const auditData = {
                 adminId,
                 adminName,
                 adminEmail,
                 action,
                 resourceType,
-                resourceId,
-                resourceName,
+                resourceId: resourceId || 'unknown',
+                resourceName: resourceName || 'unknown',
                 details,
             };
 
             // Add request info if available
             if (req) {
-                auditData.ipAddress = req.ip || req.connection.remoteAddress;
-                auditData.userAgent = req.get('User-Agent');
+                auditData.ipAddress = req.ip || req.connection?.remoteAddress || 'unknown';
+                auditData.userAgent = req.get('User-Agent') || 'unknown';
             }
 
             const auditLog = new AuditLog(auditData);
             await auditLog.save();
             
-            console.log(`Audit log created: ${adminName} ${action} ${resourceType} ${resourceName}`);
+
         } catch (error) {
-            console.error("Failed to create audit log:", error);
-            // Don't throw error to avoid breaking the main operation
+            // Log audit failures but don't break the main operation
+            if (process.env.NODE_ENV === 'development') {
+                console.error("Failed to create audit log:", error.message);
+            }
         }
     }
 
@@ -126,11 +136,15 @@ class AuditService {
         try {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
+            
+            // Import User model dynamically to avoid circular dependency
+            const User = (await import('../models/User.js')).default;
 
             const [
                 totalLogs,
                 todayLogs,
-                activeAdmins
+                activeAdminsInLogs,
+                totalAdmins
             ] = await Promise.all([
                 AuditLog.countDocuments(),
                 AuditLog.countDocuments({
@@ -138,13 +152,16 @@ class AuditService {
                 }),
                 AuditLog.distinct('adminId', {
                     createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+                }),
+                User.countDocuments({
+                    role: { $in: ['admin', 'super_admin'] }
                 })
             ]);
 
             return {
                 totalLogs,
                 todayLogs,
-                activeAdmins: activeAdmins.length
+                activeAdmins: totalAdmins
             };
         } catch (error) {
             console.error("Failed to fetch audit stats:", error);

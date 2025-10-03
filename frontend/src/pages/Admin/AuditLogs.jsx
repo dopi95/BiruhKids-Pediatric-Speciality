@@ -87,11 +87,20 @@ const AuditLogs = () => {
     fetchLogs();
     fetchStats();
     fetchFilterOptions();
+    
+    // Set up auto-refresh for stats every 30 seconds
+    const statsInterval = setInterval(() => {
+      fetchStats();
+    }, 30000);
+    
+    return () => clearInterval(statsInterval);
   }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       fetchLogs();
+      // Also refresh stats when filters change to get updated counts
+      fetchStats();
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [filters.search, filters.action, filters.resourceType, filters.startDate, filters.endDate]);
@@ -118,7 +127,7 @@ const AuditLogs = () => {
       icon: Calendar,
     },
     {
-      label: "Active Admins",
+      label: "Total Admins",
       value: stats.activeAdmins?.toString() || "0",
       color: "purple",
       icon: User,
@@ -196,7 +205,10 @@ const AuditLogs = () => {
                   Clear All
                 </button>
                 <button
-                  onClick={fetchLogs}
+                  onClick={() => {
+                    fetchLogs();
+                    fetchStats();
+                  }}
                   className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 border border-blue-300 rounded-md hover:bg-blue-50 flex items-center"
                 >
                   <RefreshCw className="h-4 w-4 mr-1" />
@@ -313,7 +325,7 @@ const AuditLogs = () => {
                     {logs.map((log) => (
                       <tr key={log._id} className="hover:bg-gray-50">
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(log.timestamp).toLocaleString()}
+                          {new Date(log.createdAt || log.timestamp).toLocaleString()}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
@@ -342,8 +354,19 @@ const AuditLogs = () => {
                           )}
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-900 max-w-xs">
-                          <div className="truncate" title={log.details}>
-                            {log.details || 'No details available'}
+                          <div className="truncate">
+                            {(() => {
+                              if (!log.details) return 'No details available';
+                              if (typeof log.details === 'string') return log.details;
+                              if (typeof log.details === 'object') {
+                                // Create user-friendly description
+                                const action = log.action.toLowerCase();
+                                const resource = log.resourceType.toLowerCase();
+                                const resourceName = log.resourceName || 'item';
+                                return `${action === 'create' ? 'Created' : action === 'update' ? 'Updated' : action === 'delete' ? 'Deleted' : action} ${resource}: ${resourceName}`;
+                              }
+                              return log.details;
+                            })()} 
                           </div>
                           {log.ipAddress && (
                             <div className="text-xs text-gray-500 mt-1">

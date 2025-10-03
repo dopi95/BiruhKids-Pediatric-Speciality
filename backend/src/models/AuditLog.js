@@ -38,11 +38,11 @@ const auditLogSchema = new mongoose.Schema(
         },
         resourceId: {
             type: String,
-            required: true,
+            required: false,
         },
         resourceName: {
             type: String,
-            required: true,
+            required: false,
         },
         details: {
             type: Object,
