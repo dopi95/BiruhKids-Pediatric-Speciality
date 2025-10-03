@@ -1,6 +1,7 @@
 import express from "express";
 import Subscriber from "../models/Subscriber.js";
 import User from "../models/User.js";
+import { protect, requirePermission } from "../middleware/authMiddleware.js";
 import auditMiddleware from "../middleware/auditMiddleware.js";
 
 const router = express.Router();
@@ -324,8 +325,8 @@ router.post("/unsubscribe", async (req, res) => {
 	}
 });
 
-// Get all subscribers (including users with email notifications)
-router.get("/", async (req, res) => {
+// Protected admin routes
+router.get("/", protect, requirePermission('subscriberManagement'), async (req, res) => {
 	try {
 		// Get newsletter subscribers
 		const newsletterSubscribers = await Subscriber.find().sort({
@@ -420,7 +421,7 @@ router.get("/check/:email", async (req, res) => {
 });
 
 // Get subscriber statistics (including users with email notifications)
-router.get("/stats", async (req, res) => {
+router.get("/stats", protect, requirePermission('subscriberManagement'), async (req, res) => {
 	try {
 		// Newsletter subscriber stats
 		const newsletterTotal = await Subscriber.countDocuments();
@@ -468,7 +469,7 @@ router.get("/stats", async (req, res) => {
 });
 
 // Bulk unsubscribe endpoint
-router.post("/bulk-unsubscribe", async (req, res) => {
+router.post("/bulk-unsubscribe", protect, requirePermission('subscriberManagement'), auditMiddleware('UPDATE', 'Subscriber'), async (req, res) => {
 	try {
 		const { subscriberIds } = req.body;
 
@@ -501,7 +502,7 @@ router.post("/bulk-unsubscribe", async (req, res) => {
 });
 
 // Bulk resubscribe endpoint
-router.post("/bulk-resubscribe", async (req, res) => {
+router.post("/bulk-resubscribe", protect, requirePermission('subscriberManagement'), auditMiddleware('UPDATE', 'Subscriber'), async (req, res) => {
 	try {
 		const { subscriberIds } = req.body;
 
@@ -534,20 +535,24 @@ router.post("/bulk-resubscribe", async (req, res) => {
 });
 
 // ✅ Delete single subscriber
-router.delete("/:id", auditMiddleware('DELETE', 'Subscriber'), async (req, res) => {
+router.delete("/:id", protect, requirePermission('subscriberManagement'), auditMiddleware('DELETE', 'Subscriber'), async (req, res) => {
 	try {
 		const { id } = req.params;
-		const deletedSubscriber = await Subscriber.findByIdAndDelete(id);
+		const subscriber = await Subscriber.findById(id);
 
-		if (!deletedSubscriber) {
+		if (!subscriber) {
 			return res.status(404).json({
 				success: false,
 				message: "Subscriber not found",
 			});
 		}
 
+		const subscriberEmail = subscriber.email;
+		await Subscriber.findByIdAndDelete(id);
+
 		res.json({
 			success: true,
+			data: { email: subscriberEmail },
 			message: "Subscriber deleted successfully",
 		});
 	} catch (error) {
@@ -560,7 +565,7 @@ router.delete("/:id", auditMiddleware('DELETE', 'Subscriber'), async (req, res) 
 });
 
 // ✅ Bulk delete subscribers
-router.post("/bulk-delete", auditMiddleware('DELETE', 'Subscriber'), async (req, res) => {
+router.post("/bulk-delete", protect, requirePermission('subscriberManagement'), auditMiddleware('DELETE', 'Subscriber'), async (req, res) => {
 	try {
 		const { subscriberIds } = req.body;
 
