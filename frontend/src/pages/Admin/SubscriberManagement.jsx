@@ -3,6 +3,7 @@ import { Mail, Send, Search, Filter, Calendar, Trash2, RefreshCw } from "lucide-
 import StatsCard from "../../components/StatsCard";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { toast } from "react-toastify";
+import apiService from "../../services/api";
 
 const SubscriberManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -37,8 +38,7 @@ const SubscriberManagement = () => {
     const fetchSubscribers = async (showLoading = true) => {
         try {
             if (showLoading) setLoading(true);
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers`);
-            const data = await response.json();
+            const data = await apiService.request('/subscribers');
             
             if (data.success) {
                 setSubscribers(data.data.subscribers);
@@ -55,8 +55,7 @@ const SubscriberManagement = () => {
 
     const fetchStats = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscribers/stats`);
-            const data = await response.json();
+            const data = await apiService.request('/subscribers/stats');
             
             if (data.success) {
                 setStats([
@@ -120,14 +119,9 @@ const SubscriberManagement = () => {
 
     const handleDeleteSubscriber = async () => {
         try {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/subscribers/${deleteModal.subscriber._id}`,
-                {
-                    method: "DELETE",
-                }
-            );
-
-            const data = await response.json();
+            const data = await apiService.request(`/subscribers/${deleteModal.subscriber._id}`, {
+                method: "DELETE",
+            });
 
             if (data.success) {
                 toast.success("Subscriber deleted successfully");
@@ -153,20 +147,11 @@ const SubscriberManagement = () => {
     };
 
     const handleBulkDelete = async () => {
-
         try {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/subscribers/bulk-delete`,
-                {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ ids: selectedSubscribers }),
-                }
-            );
-
-            const data = await response.json();
+            const data = await apiService.request('/subscribers/bulk-delete', {
+                method: "DELETE",
+                body: JSON.stringify({ subscriberIds: selectedSubscribers }),
+            });
 
             if (data.success) {
                 toast.success(`${selectedSubscribers.length} subscribers deleted successfully`);
@@ -179,14 +164,10 @@ const SubscriberManagement = () => {
                 let successCount = 0;
                 for (const id of selectedSubscribers) {
                     try {
-                        const individualResponse = await fetch(
-                            `${import.meta.env.VITE_API_BASE_URL}/subscribers/${id}`,
-                            {
-                                method: "DELETE",
-                            }
-                        );
+                        const individualData = await apiService.request(`/subscribers/${id}`, {
+                            method: "DELETE",
+                        });
                         
-                        const individualData = await individualResponse.json();
                         if (individualData.success) {
                             successCount++;
                         }
