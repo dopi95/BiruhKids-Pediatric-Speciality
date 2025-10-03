@@ -8,12 +8,17 @@ import {
   getDoctorStats
 } from "../controllers/doctorController.js";
 import { doctorUpload } from "../middleware/upload.js";
+import { protect, requirePermission } from "../middleware/authMiddleware.js";
 import auditMiddleware from "../middleware/auditMiddleware.js";
 
 const router = express.Router();
 
-// Doctor routes
-router.post("/", (req, res, next) => {
+// Public routes
+router.get("/", getDoctors);
+router.get("/:id", getDoctor);
+
+// Protected admin routes
+router.post("/", protect, requirePermission('doctorManagement'), (req, res, next) => {
   try {
     const upload = doctorUpload();
     upload.single("photo")(req, res, next);
@@ -26,11 +31,9 @@ router.post("/", (req, res, next) => {
   }
 }, auditMiddleware('CREATE', 'Doctor'), createDoctor);
 
-router.get("/", getDoctors);
-router.get("/stats", getDoctorStats);
-router.get("/:id", getDoctor);
+router.get("/stats", protect, requirePermission('doctorManagement'), getDoctorStats);
 
-router.put("/:id", (req, res, next) => {
+router.put("/:id", protect, requirePermission('doctorManagement'), (req, res, next) => {
   try {
     const upload = doctorUpload();
     upload.single("photo")(req, res, next);
@@ -43,6 +46,6 @@ router.put("/:id", (req, res, next) => {
   }
 }, auditMiddleware('UPDATE', 'Doctor'), updateDoctor);
 
-router.delete("/:id", auditMiddleware('DELETE', 'Doctor'), deleteDoctor);
+router.delete("/:id", protect, requirePermission('doctorManagement'), auditMiddleware('DELETE', 'Doctor'), deleteDoctor);
 
 export default router;
