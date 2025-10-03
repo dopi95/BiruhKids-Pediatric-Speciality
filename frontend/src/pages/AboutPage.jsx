@@ -15,7 +15,7 @@ import { useInView } from "react-intersection-observer";
 import VisionMissionSection from "../components/VisionMissionSection";
 const clinicImage = "https://i.postimg.cc/bJ6GYR11/clinic-Image.jpg"
 
-const ceoImage = "https://imgur.com/Jvnc3F4.jpg";
+const ceoImage = "https://i.postimg.cc/XJdCW93M/fasil.jpg";
 
 // ✅ Translations
 const translations = {
@@ -419,7 +419,11 @@ const SectionImage = ({ src, alt, showName, showRole }) => (
     <img
       src={src}
       alt={alt}
-      className="rounded-xl w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover shadow-lg"
+      className={`rounded-xl shadow-lg w-full ${
+        showName && showRole 
+          ? 'h-80 sm:h-[28rem] md:h-[36rem] lg:h-[32rem] object-top object-cover' 
+          : 'h-64 sm:h-72 md:h-80 lg:h-96 object-cover'
+      }`}
     />
     {showName && showRole && (
       <div className="mt-4 bg-white px-4 py-2 rounded-lg shadow-lg text-center text-black">
