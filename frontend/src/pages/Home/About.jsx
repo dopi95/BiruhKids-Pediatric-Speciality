@@ -31,7 +31,7 @@ export default function About({ lang }) {
   const stats = [
     {
       icon: Users,
-      value: "1,000+",
+      value: "7,000+",
       label: isAmh ? "ደስተኛ ታካሚዎች" : "Happy Patients",
       color: "text-blue-600",
       bg: "bg-blue-100",
@@ -47,7 +47,7 @@ export default function About({ lang }) {
 
     {
       icon: Stethoscope,
-      value: "4+",
+      value: "7+",
       label: isAmh ? "ባለሙያ ሐኪሞች" : "Expert Doctors",
       color: "text-green-600",
       bg: "bg-green-100",
