@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
 import GoogleMap from "../components/GoogleMap";
 import OnlineConsultation from "../components/OnlineConsultation";
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks/useSEO';
+import { trackPageView, trackContactForm } from '../utils/analytics';
 
 // ✅ Translations
 const translations = {
@@ -76,6 +79,13 @@ const translations = {
 
 const ContactPage = ({ lang = "en" }) => {
 	const t = translations[lang.toLowerCase()] || translations.en;
+	const currentLang = lang.toLowerCase() === 'am' ? 'am' : 'en';
+	
+	useSEO('contact', {}, currentLang);
+	
+	useEffect(() => {
+		trackPageView(window.location.href, document.title);
+	}, []);
 
 	const [form, setForm] = useState({
 		name: "",
@@ -148,6 +158,7 @@ Message: ${form.message}
 			});
 
 			setSuccess(true);
+			trackContactForm('contact_form', currentLang);
 			setForm({
 				name: "",
 				email: "",
@@ -162,7 +173,14 @@ Message: ${form.message}
 	};
 
 	return (
-		<div className="flex flex-col">
+		<>
+			<SEOHead 
+				title={currentLang === 'am' ? 'ብሩህኪድስ የህፃናት ክሊኒክን ያግኚ | አዲስ አበባ ኢትዮጵያ' : 'Contact BiruhKids Pediatric Clinic | Addis Ababa Ethiopia'}
+				description={currentLang === 'am' ? 'በአዲስ አበባ፣ ኢትዮጵያ ብሩህኪድስ የህፃናት ልዩ ክሊኒክን ያግኚ። ለህፃናት የጤና አገልግሎት ተቃማችን አድራሻዎች፣ ስልክ ቅጥሮች እና የቢሮ ሰዓቶች ያግኚ።' : 'Contact BiruhKids Pediatric Specialty Clinic in Addis Ababa, Ethiopia. Get directions, phone numbers, and office hours for our children healthcare facility.'}
+				keywords={currentLang === 'am' ? 'ብሩህኪድስን ያግኚ, የህፃናት ክሊኒክ አድራሻ, አዲስ አበባ የህፃናት ሆስፒታል አድራሻ, ኢትዮጵያ የህፃናት ክሊኒክ ስልክ' : 'contact BiruhKids, pediatric clinic contact, Addis Ababa children hospital contact, Ethiopia pediatric clinic phone'}
+				lang={currentLang}
+			/>
+			<div className="flex flex-col">
 			{/* Intro Section */}
 			<section className="bg-blue-500 text-white text-center py-16 px-4">
 				<h1 className="text-4xl font-bold mb-4">{t.contactTitle}</h1>
@@ -386,7 +404,8 @@ Message: ${form.message}
 			<GoogleMap lang={lang === "En" ? "en" : "am"} />
 			{/* Online Consultation Section */}
 			<OnlineConsultation lang={lang === "En" ? "en" : "am"} />
-		</div>
+			</div>
+		</>
 	);
 };
 

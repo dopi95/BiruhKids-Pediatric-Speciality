@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { FaYoutube, FaTiktok } from "react-icons/fa";
 import { getVideosByPlatform } from "../services/videoApi";
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks/useSEO';
+import { trackPageView, trackVideoInteraction } from '../utils/analytics';
 
 const VideosPage = ({ lang = "En" }) => {
+  const currentLang = lang === 'Am' ? 'am' : 'en';
+  
+  useSEO('videos', {}, currentLang);
+  
+  useEffect(() => {
+    trackPageView(window.location.href, document.title);
+  }, []);
+  
   const translations = {
     En: {
       pageTitle: "Health Videos",
@@ -86,7 +97,14 @@ const VideosPage = ({ lang = "En" }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <>
+      <SEOHead 
+        title={currentLang === 'am' ? 'የጤና ምክሮች እና ትምህርት | ብሩህኪድስ የህፃናት ክሊኒክ' : 'Health Videos & Education | BiruhKids Pediatric Clinic'}
+        description={currentLang === 'am' ? 'በጤና ጉዞዎ ላይ እርስዎን ለማገዝ ትምህርታዊ የጤና ይዞት፣ የባለሙያ ምክር እና አነቃቂ የታካሚ ታሪኮች። የህፃናት ጤና ምክሮች፣ የህክምና ዝማኔዎች እና የጤና ይዞቶች።' : 'Educational health videos, expert pediatric advice, and wellness content from BiruhKids. Watch our YouTube and TikTok channels for children health tips, medical updates, and health education.'}
+        keywords={currentLang === 'am' ? 'የጤና ምክሮች, የህፃናት ጤና ትምህርት, ብሩህኪድስ ምክሮች, የህፃናት ህክምና ምክሮች, የጤና ትምህርት' : 'health videos, pediatric education, BiruhKids videos, children health videos, medical education, YouTube health, TikTok health'}
+        lang={currentLang}
+      />
+      <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Intro Section */}
       <div className="bg-blue-500 text-white text-center py-16 px-4">
         <h1 className="text-4xl sm:text-5xl font-bold mb-4">
@@ -162,6 +180,7 @@ const VideosPage = ({ lang = "En" }) => {
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
+                    onLoad={() => trackVideoInteraction(video.title, 'view', currentLang)}
                   ></iframe>
                 ) : (
                   <div
@@ -229,7 +248,8 @@ const VideosPage = ({ lang = "En" }) => {
           </a>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

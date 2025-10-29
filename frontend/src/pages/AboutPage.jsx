@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   FaHandsHelping,
   FaMedal,
@@ -13,6 +13,9 @@ import {
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import VisionMissionSection from "../components/VisionMissionSection";
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks/useSEO';
+import { trackPageView } from '../utils/analytics';
 const clinicImage = "https://i.postimg.cc/bJ6GYR11/clinic-Image.jpg"
 
 const ceoImage = "https://i.postimg.cc/XJdCW93M/fasil.jpg";
@@ -143,6 +146,13 @@ const translations = {
 
 const AboutPage = ({ lang }) => {
   const t = translations[lang] || translations.en;
+  const currentLang = lang === 'Am' ? 'am' : 'en';
+  
+  useSEO('about', {}, currentLang);
+  
+  useEffect(() => {
+    trackPageView(window.location.href, document.title);
+  }, []);
 
   // Variants
   const cardVariants = {
@@ -156,7 +166,14 @@ const AboutPage = ({ lang }) => {
   };
 
   return (
-    <div className="flex flex-col w-full overflow-hidden">
+    <>
+      <SEOHead 
+        title={currentLang === 'am' ? 'ስለ ብሩህኪድስ | በአዲስ አበባ ኢትዮጵያ ዋና የህፃናት ክሊኒክ' : 'About BiruhKids | Leading Pediatric Clinic in Addis Ababa Ethiopia'}
+        description={currentLang === 'am' ? 'ስለ ብሩህኪድስ የህፃናት ልዩ ክሊኒክ ይወቁ። በአዲስ አበባ፣ ኢትዮጵያ ለህፃናት ርህራሄ የተሞላ፣ በቤተሰብ ላይ ያተኮረ የጤና አገልግሎት የመስጠት ተልእኮአችን።' : 'Learn about BiruhKids Pediatric Specialty Clinic. Our mission to provide compassionate, family-centered healthcare for children in Addis Ababa, Ethiopia.'}
+        keywords={currentLang === 'am' ? 'ስለ ብሩህኪድስ, የህፃናት ክሊኒክ ታሪክ, አዲስ አበባ የህፃናት እንክብካቤ, ኢትዮጵያ የህፃናት ሆስፒታል' : 'about BiruhKids, pediatric clinic history, Addis Ababa pediatric care, Ethiopia children hospital'}
+        lang={currentLang}
+      />
+      <div className="flex flex-col w-full overflow-hidden">
       {/* Intro Section */}
       <section className="bg-blue-500 text-white text-center px-4 py-12 sm:py-16 lg:py-24">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
@@ -387,7 +404,8 @@ const AboutPage = ({ lang }) => {
           </motion.div>
         </div>
       </SectionWrapper>
-    </div>
+      </div>
+    </>
   );
 };
 

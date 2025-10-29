@@ -12,9 +12,20 @@ import {
 } from "lucide-react";
 import departmentService from "../services/departmentService";
 import { useLanguage } from "../context/LanguageContext";
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks/useSEO';
+import { trackPageView } from '../utils/analytics';
 
 const Services = () => {
   const { language: lang } = useLanguage();
+  const currentLang = lang === 'Am' ? 'am' : 'en';
+  
+  useSEO('services', {}, currentLang);
+  
+  useEffect(() => {
+    trackPageView(window.location.href, document.title);
+  }, []);
+  
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -203,7 +214,14 @@ const Services = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <SEOHead 
+        title={currentLang === 'am' ? 'የህፃናት የህክምና አገልግሎት | ብሩህኪድስ የህፃናት ጤና አገልግሎት አዲስ አበባ' : 'Pediatric Medical Services | BiruhKids Children Healthcare Addis Ababa'}
+        description={currentLang === 'am' ? 'በብሩህኪድስ ሰፊ የህፃናት የህክምና አገልግሎት። ክትባቶች፣ ምርመራዎች፣ አስችኳይ እንክብካቤ፣ በአዲስ አበባ፣ ኢትዮጵያ ለህፃናት ልዩ ህክምናዎች።' : 'Comprehensive pediatric medical services at BiruhKids. Vaccinations, check-ups, emergency care, specialized treatments for children in Addis Ababa, Ethiopia.'}
+        keywords={currentLang === 'am' ? 'የህፃናት አገልግሎት, የህፃናት ህክምና, ክትባቶች, ምርመራዎች, አስችኳይ እንክብካቤ, ብሩህኪድስ አገልግሎት' : 'pediatric services, children medical services, vaccinations, check-ups, emergency care, BiruhKids services'}
+        lang={currentLang}
+      />
+      <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="relative bg-blue-500 text-white py-20">
         <div className="absolute inset-0 bg-black opacity-20"></div>
@@ -517,7 +535,8 @@ const Services = () => {
           </div>
         </section>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
