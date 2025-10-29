@@ -3,6 +3,9 @@ import { User, Calendar, CheckCircle } from "lucide-react";
 import { Listbox } from "@headlessui/react";
 import { Check, ChevronDown } from "lucide-react";
 import { doctorAPI } from "../services/doctorApi.js";
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks/useSEO';
+import { trackPageView, trackAppointmentBooking } from '../utils/analytics';
 
 // Appointment service
 const appointmentService = {
@@ -112,6 +115,13 @@ const translations = {
 
 const AppointmentPage = ({ lang = "En" }) => {
   const t = translations[lang];
+  const currentLang = lang === 'Am' ? 'am' : 'en';
+  
+  useSEO('appointments', {}, currentLang);
+  
+  useEffect(() => {
+    trackPageView(window.location.href, document.title);
+  }, []);
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -221,6 +231,7 @@ const AppointmentPage = ({ lang = "En" }) => {
 
         if (result.success) {
           setConfirmed(true);
+          trackAppointmentBooking(formData.doctor, formData.date, currentLang);
         } else {
           alert("Failed to book appointment. Please try again.");
         }
@@ -297,7 +308,14 @@ const AppointmentPage = ({ lang = "En" }) => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <>
+      <SEOHead 
+        title={currentLang === 'am' ? 'የህፃናት ቀጠሮ በመስመር ላይ ያስይዙ | ብሩህኪድስ ክሊኒክ አዲስ አበባ' : 'Book Pediatric Appointment Online | BiruhKids Clinic Addis Ababa'}
+        description={currentLang === 'am' ? 'በብሩህኪድስ የህፃናት ክሊኒክ የልጅዎን ቀጠሮ በመስመር ላይ ያስይዙ። በአዲስ አበባ፣ ኢትዮጵያ ካሉ የባለሙያ የህፃናት ዶክተሮች ጋር ቀላል የመስመር ላይ ቀጠሮ።' : 'Book your child\'s appointment online at BiruhKids Pediatric Clinic. Easy online scheduling with expert pediatricians in Addis Ababa, Ethiopia.'}
+        keywords={currentLang === 'am' ? 'ቀጠሮ ማስያዝ, የመስመር ላይ ቀጠሮ, የህፃናት ቀጠሮ, ብሩህኪድስ ቀጠሮ, አዲስ አበባ የህፃናት ቀጠሮ' : 'book appointment, online appointment, pediatric appointment, BiruhKids booking, Addis Ababa pediatric appointment'}
+        lang={currentLang}
+      />
+      <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Intro Section */}
       <div className="bg-blue-500 text-white text-center py-12 w-full">
         <h1 className="text-4xl sm:text-5xl font-bold mb-4">{t.title}</h1>
@@ -550,7 +568,8 @@ const AppointmentPage = ({ lang = "En" }) => {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

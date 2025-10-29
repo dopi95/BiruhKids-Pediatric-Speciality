@@ -43,8 +43,7 @@ Allow: /contact
 Allow: /testimonials
 
 # Sitemap location
-Sitemap: https://biruhkidsclinic.com/sitemap.xml
-Sitemap: https://biruhkidsclinic.com/sitemap-images.xml
+Sitemap: https://www.biruhkidsclinic.com/sitemap.xml
 
 # Host directive
-Host: https://biruhkidsclinic.com
+Host: https://www.biruhkidsclinic.com

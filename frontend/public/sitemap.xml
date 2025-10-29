@@ -6,7 +6,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://www.biruhkidsclinic.com/</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/" />
@@ -21,83 +21,65 @@
   <!-- About Page -->
   <url>
     <loc>https://www.biruhkidsclinic.com/about</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/about" />
     <xhtml:link rel="alternate" hreflang="am" href="https://www.biruhkidsclinic.com/about?lang=am" />
   </url>
 
-  <!-- Doctors Page -->
-  <url>
-    <loc>https://www.biruhkidsclinic.com/doctors</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/doctors" />
-    <xhtml:link rel="alternate" hreflang="am" href="https://www.biruhkidsclinic.com/doctors?lang=am" />
-  </url>
-
   <!-- Services Page -->
   <url>
     <loc>https://www.biruhkidsclinic.com/services</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/services" />
     <xhtml:link rel="alternate" hreflang="am" href="https://www.biruhkidsclinic.com/services?lang=am" />
   </url>
 
-  <!-- Appointments Page -->
+  <!-- Appointment Page -->
   <url>
-    <loc>https://www.biruhkidsclinic.com/appointments</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <loc>https://www.biruhkidsclinic.com/appointment</loc>
+    <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/appointments" />
-    <xhtml:link rel="alternate" hreflang="am" href="https://www.biruhkidsclinic.com/appointments?lang=am" />
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/appointment" />
+    <xhtml:link rel="alternate" hreflang="am" href="https://www.biruhkidsclinic.com/appointment?lang=am" />
   </url>
 
   <!-- Contact Page -->
   <url>
     <loc>https://www.biruhkidsclinic.com/contact</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/contact" />
     <xhtml:link rel="alternate" hreflang="am" href="https://www.biruhkidsclinic.com/contact?lang=am" />
   </url>
 
-  <!-- Testimonials Page -->
+  <!-- Videos Page -->
   <url>
-    <loc>https://www.biruhkidsclinic.com/testimonials</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <loc>https://www.biruhkidsclinic.com/videos</loc>
+    <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/testimonials" />
-    <xhtml:link rel="alternate" hreflang="am" href="https://www.biruhkidsclinic.com/testimonials?lang=am" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.biruhkidsclinic.com/videos" />
+    <xhtml:link rel="alternate" hreflang="am" href="https://www.biruhkidsclinic.com/videos?lang=am" />
   </url>
 
-  <!-- Admin Login -->
+  <!-- Login Page -->
   <url>
-    <loc>https://www.biruhkidsclinic.com/admin/login</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- Patient Login -->
-  <url>
-    <loc>https://www.biruhkidsclinic.com/patient/login</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <loc>https://www.biruhkidsclinic.com/login</loc>
+    <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
 
-  <!-- Patient Register -->
+  <!-- Register Page -->
   <url>
-    <loc>https://www.biruhkidsclinic.com/patient/register</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
+    <loc>https://www.biruhkidsclinic.com/register</loc>
+    <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
